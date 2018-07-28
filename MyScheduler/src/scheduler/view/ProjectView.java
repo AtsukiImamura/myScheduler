@@ -38,7 +38,7 @@ public class ProjectView extends AbstractView{
 		//案件の表示に必要な行数
 		int numOfNecessaryColumns = Util.getNumOfNecessaryColumns(project);
 		//表示に要する高さを登録
-		this.viewHeight = Constant.PROJECT_CALENDAR_ROW_HEIGHT*numOfNecessaryColumns;
+		this.viewHeight.set(Constant.PROJECT_CALENDAR_ROW_HEIGHT*numOfNecessaryColumns);
 
 	}
 

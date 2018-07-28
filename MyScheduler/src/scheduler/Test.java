@@ -8,7 +8,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import scheduler.bean.TaskBean;
 import scheduler.view.calendar.CalendarViewTask;
-import scheduler.view.calendar.CalenderRow;
 
 public class Test extends Application{
 
@@ -19,8 +18,8 @@ public class Test extends Application{
 		stage.show();
 
 		//CalenderDay cd = new CalenderDay();
-		CalenderRow cr = new CalenderRow();
-		cr.setTranslateY(100);
+		//CalenderRow cr = new CalenderRow();
+		//cr.setTranslateY(100);
 
 
 		TaskBean task = new TaskBean();
@@ -33,6 +32,9 @@ public class Test extends Application{
 		task.setStartAt(startAt);
 		task.setFinishAt(finishAt);
 		CalendarViewTask calendarViewTask = new CalendarViewTask(task);
+		Calendar viewStartAt = (Calendar)finishAt.clone();
+		viewStartAt.add(Calendar.DAY_OF_MONTH, -1);
+		calendarViewTask.setViewFinishAt(viewStartAt);
 
 
 

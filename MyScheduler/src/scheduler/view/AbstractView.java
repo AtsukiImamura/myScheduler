@@ -1,5 +1,7 @@
 package scheduler.view;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 
 /**
@@ -10,27 +12,18 @@ import javafx.scene.Group;
 public abstract class AbstractView extends Group implements Drawable{
 
 
-	protected static final double DEFAULT_VIEW_WIDTH = 33;
-	protected static final double DEFAULT_VIEW_HEIGHT = 33;
-	protected double viewWidth;
-	protected double viewHeight;
+	public final DoubleProperty viewWidth;
+	public final DoubleProperty viewHeight;
 
 
 
-
-
-	public double getViewWidth() {
-		return viewWidth;
-	}
-
-	public double getViewHeight() {
-		return viewHeight;
-	}
 
 
 
 	public AbstractView(){
 		init();
+		viewWidth = new SimpleDoubleProperty();
+		viewHeight = new SimpleDoubleProperty();
 	}
 
 	protected abstract void init();

@@ -1,5 +1,6 @@
 package scheduler.common.utils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -67,6 +68,18 @@ public class Util {
 
     	return numOfNecessaryColumns;
     }
+
+
+    /**
+     * タスクを開始日順で並び替える
+     * @param taskList
+     * @return
+     */
+    public static List<TaskBean> sortTasksByStartAt(List<TaskBean> taskList){
+
+    	return new ArrayList<TaskBean>();
+    }
+
 
 
     /**

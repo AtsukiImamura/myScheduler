@@ -1,5 +1,6 @@
 package scheduler.common.constant;
 
+import javafx.scene.paint.Color;
 
 /**
  * 固定値保存用クラス
@@ -28,4 +29,17 @@ public class Constant {
 
 	/** ポップアップ : 詳細ラベルの幅 */
 	public static final double TASK_POPUP_DETAIL_LABEL_PREF_WIDTH = 340;
+
+
+	public static final Color CALENDAR_HILIGHT_COLOR = Color.rgb(255, 245, 220);
+
+
+	public static final Color CALENDAR_NOMAL_COLOR = Color.rgb(250, 250, 250);
+
+
+
+
+	public static final double CALENDAR_ROW_VIEW_WIDTH = 400;
+
+	public static final double CALENDAR_ROW_VIEW_HEIGHT = 33;
 }

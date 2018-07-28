@@ -36,6 +36,7 @@ public class TaskPopup extends AbstractView{
 
 		//タスク名
 		Label projectNameLabel = new Label(task.getTaskCode());
+		projectNameLabel.setPrefWidth(Constant.TASK_POPUP_DETAIL_LABEL_PREF_WIDTH);
 		projectNameLabel.getStyleClass().add(NameConstant.TASK_POPUP_PROJECT_NAME_LABEL_CSS);
 
 

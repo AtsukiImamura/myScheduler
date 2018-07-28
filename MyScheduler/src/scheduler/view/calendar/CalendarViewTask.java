@@ -35,6 +35,25 @@ public class CalendarViewTask  extends AbstractView{
 	private TaskBean task;
 
 
+	/** ビューに表示する開始日 */
+	private Calendar viewStartAt;
+
+	/** ビューに表示する終了日 */
+	private Calendar viewFinishAt;
+
+
+
+	public void setViewStartAt(Calendar viewStartAt) {
+		this.viewStartAt = viewStartAt;
+		init();
+	}
+
+
+	public void setViewFinishAt(Calendar viewFinishAt) {
+		this.viewFinishAt = viewFinishAt;
+		init();
+	}
+
 
 	public Color getStoneColor() {
 		if(stoneColor==null){
@@ -60,12 +79,30 @@ public class CalendarViewTask  extends AbstractView{
 			return;
 		}
 
+		this.getChildren().clear();
+		this.CalendarDayList.clear();
+
 		Calendar startAt = task.getStartAt();
 		Calendar finishAt = task.getFinishAt();
-		Calendar tmpDate = (Calendar) startAt.clone();
+
+		Calendar tmpDate;
+		if(viewStartAt == null){
+			tmpDate  = (Calendar) startAt.clone();
+		}else{
+			//startAtとviewStartAtの後のほうの日付を取得
+			tmpDate = startAt.before(viewStartAt) ? viewStartAt : (Calendar)startAt.clone();
+		}
+
+		Calendar tmpFinishAt;
+		if(viewFinishAt == null){
+			tmpFinishAt  = (Calendar) finishAt.clone();
+		}else{
+			//startAtとviewStartAtの後のほうの日付を取得
+			tmpFinishAt = finishAt.before(viewFinishAt) ?  (Calendar)finishAt.clone() : viewFinishAt;
+		}
 
 		int index = 0;
-		while(!tmpDate.after(finishAt)){
+		while(!tmpDate.after(tmpFinishAt)){
 			CalendarDay calendarDay = new CalendarDay();
 			//cd.setTranslateX(value);
 			calendarDay.setTranslateX(CalendarDay.DEFAULT_WIDTH*calendarDay.getScaleX()*index);

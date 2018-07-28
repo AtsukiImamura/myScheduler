@@ -13,7 +13,7 @@
 	-fx-padding: 5px;
 }
 .task_popup_project_name_label{
-
+	-fx-background-color: #e6f0ff;
 }
 .task_popup_project_detail_label{
 	-fx-alignment:top-left;
@@ -26,6 +26,8 @@
 	-fx-border-color:#a2e0d9;
 	-fx-border-radius: 3px;
 	-fx-background-radius: 3px;
+	-fx-pref-width:80px;
+	-fx-alignment: center;
 
 }
 .task_popup_finish_at_label{
@@ -33,6 +35,8 @@
 	-fx-border-color:#a2e0d9;
 	-fx-border-radius: 3px;
 	-fx-background-radius: 3px;
+	-fx-pref-width:80px;
+	-fx-alignment: center;
 }
 .task_popup_hbox_for_create{
 

@@ -88,7 +88,7 @@ public class ProjectsController extends Controller{
 			projectView.setTranslateY(transY);
 
 			//ここまでのy軸報告調整の累積
-			transY += projectView.getViewHeight();
+			transY += projectView.viewHeight.doubleValue();
 
 			projectViewList.add(projectView);
 		}
