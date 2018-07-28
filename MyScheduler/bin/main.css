@@ -1,0 +1,56 @@
+
+
+// --------------------------------
+// TaskPopup関連
+// --------------------------------
+
+
+.task_popup_detail_vbox{
+	-fx-background-color:#ffffff;
+	-fx-border-color:#a0a0a0;
+	-fx-border-radius: 3px;
+	-fx-background-radius: 3px;
+	-fx-padding: 5px;
+}
+.task_popup_project_name_label{
+
+}
+.task_popup_project_detail_label{
+	-fx-alignment:top-left;
+}
+.task_popup_period_hbox{
+
+}
+.task_popup_start_at_label{
+	-fx-background-color:#a2f0c9;
+	-fx-border-color:#a2e0d9;
+	-fx-border-radius: 3px;
+	-fx-background-radius: 3px;
+
+}
+.task_popup_finish_at_label{
+	-fx-background-color:#a2f0c9;
+	-fx-border-color:#a2e0d9;
+	-fx-border-radius: 3px;
+	-fx-background-radius: 3px;
+}
+.task_popup_hbox_for_create{
+
+}
+.task_popup_created_at_label{
+
+}
+.task_popup_created_by_label{
+
+}
+.task_popup_hbox_for_change{
+
+}
+.task_popup_changed_at_label{
+
+}
+.task_popup_changed_by_label{
+
+}
+
+
