@@ -3,20 +3,17 @@ package scheduler.facade;
 import java.util.ArrayList;
 import java.util.List;
 
-import scheduler.bean.AttributeBean;
 import scheduler.bean.TAttributeBean;
 
-public class AttributeBeanFacade extends AbstractFacade<AttributeBean> {
+public class TAttributeBeanFacade  extends AbstractFacade<TAttributeBean> {
 
 
-	protected final static String FILENAME = "aaa.csv";
 
 	@Override
-	public List<AttributeBean> findAll() {
-		this.findAll(AttributeBean.class);
+	public List<TAttributeBean> findAll() {
+		this.findAll(TAttributeBean.class);
 		return null;
 	}
-
 
 	/**
 	 * 案件番号に基づいて紐づく属性のリストを取得する

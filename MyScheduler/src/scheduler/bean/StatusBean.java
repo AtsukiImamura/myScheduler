@@ -2,7 +2,9 @@ package scheduler.bean;
 
 import java.util.Date;
 
-public class StatusColorBean {
+import javafx.scene.paint.Color;
+
+public class StatusBean {
 
 	/**
 	 * 主キー
@@ -10,7 +12,7 @@ public class StatusColorBean {
 	private String statusColorCode;
 
 	/**色*/
-	private String color;
+	private Color color;
 
 	/**タイトル*/
 	private String tytle;
@@ -36,11 +38,11 @@ public class StatusColorBean {
 		this.statusColorCode = statusColorCode;
 	}
 
-	public String getColor() {
+	public Color getColor() {
 		return color;
 	}
 
-	public void setColor(String color) {
+	public void setColor(Color color) {
 		this.color = color;
 	}
 

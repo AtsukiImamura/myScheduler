@@ -42,4 +42,9 @@ public class Constant {
 	public static final double CALENDAR_ROW_VIEW_WIDTH = 400;
 
 	public static final double CALENDAR_ROW_VIEW_HEIGHT = 33;
+
+
+	public static final double ATTRIBUTE_PRIMITIVE_ROW_DEFAULT_WIDTH = 120;
+
+	public static final double ATTRIBUTE_PRIMITIVE_ROW_DEFAULT_HEIGHT = 40;
 }

@@ -1,6 +1,6 @@
 package scheduler.bean;
 
-public class StoneColorBean {
+public class StoneBean {
 
 	/**
 	 * 主キー
