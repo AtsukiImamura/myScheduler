@@ -154,6 +154,12 @@ public class CalendarDateView extends AbstractView{
 	}
 
 
+	public void setViewWidth(double width){
+		this.viewWidth.set(width);
+		initCalendarDays();
+	}
+
+
 
 	/**
 	 * 与えられたCalendarDay（日付のビュー）が何番目の要素化を返す
