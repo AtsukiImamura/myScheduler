@@ -192,8 +192,7 @@ public class CalenderPrimitiveRow extends AbstractView {
 
 
 		//カレンダーの表示長
-		int length = (int)(this.viewWidth.doubleValue()/CalendarDay.DEFAULT_WIDTH);
-		reset(length);
+		reset();
 
 		Util.log("initialized");
 	}
@@ -222,16 +221,23 @@ public class CalenderPrimitiveRow extends AbstractView {
 
 			this.getChildren().add(calendarDay);
 		}
-		taskList.forEach(task->{
-			if(inCalendar(task)){
-				//TODO カレンダーにタスク表示を加える
-			}
-		});
+
+
 		//表示の開始日に表示長を足したものを表示の終了日とする
 		viewFinishAt = (Calendar)viewStartAt.clone();
 		viewFinishAt.add(Calendar.DAY_OF_MONTH, length);
 
-		initViewTaskStartAndFinish();
+
+		taskList.forEach(task->{
+			CalendarViewTask calendarViewTask = new CalendarViewTask(task);
+
+			//カレンダーの表示の開始日・終了日を登録
+			calendarViewTask.setViewStartAt(viewStartAt);
+			calendarViewTask.setViewFinishAt(viewFinishAt);
+			this.getChildren().add(calendarViewTask);
+		});
+
+		//initViewTaskStartAndFinish();
 	}
 
 

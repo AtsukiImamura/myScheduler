@@ -54,4 +54,23 @@ public class Constant {
 
 
 	public static final String ATTRIBUTE_CODE_PROJECT_NAME = "1";
+
+
+	public static final Color CALENDAR_DATE_VIEW_SUNDAY = Color.rgb(255, 240, 200);
+
+	public static final Color CALENDAR_DATE_VIEW_SATURDAY = Color.rgb(200, 240, 255);
+
+	public static final Color CALENDAR_DATE_VIEW_NOMAL = Color.rgb(250,250, 250);
+
+	public static final Color CALENDAR_DATE_VIEW_SUNDAY_HOVERED = Color.rgb(255, 245, 210);
+
+	public static final Color CALENDAR_DATE_VIEW_SATURDAY_HOVERED = Color.rgb(210, 245, 255);
+
+	public static final Color CALENDAR_DATE_VIEW_NOMAL_HOVERED = Color.rgb(255,255, 255);
+
+	public static final Color CALENDAR_DATE_VIEW_SUNDAY_CLICKED = Color.rgb(255, 180, 90);
+
+	public static final Color CALENDAR_DATE_VIEW_SATURDAY_CLICKED = Color.rgb(90, 180, 255);
+
+	public static final Color CALENDAR_DATE_VIEW_NOMAL_CLICKED = Color.rgb(210,210, 210);
 }

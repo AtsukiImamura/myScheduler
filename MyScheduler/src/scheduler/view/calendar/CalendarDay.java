@@ -2,6 +2,11 @@ package scheduler.view.calendar;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -37,12 +42,42 @@ public class CalendarDay extends AbstractView{
 
 	private Color currentColor;
 
+
+	/** （日付表示用）曜日の値 */
+	private int dayOfWeek;
+
+
+	private int displayDate;
+
+
+	private Label displayDateLabel;
+
+
+	/**
+	 * （日付表示用）日付をセットする
+	 * @param date
+	 */
+	public void setDisplayDate(int date){
+		displayDate = date;
+		if(displayDateLabel !=null){
+			displayDateLabel.setText(date+"");
+		}
+	}
+
+
 	/**選択されているかどうか*/
 	private boolean isSelected = false;
 
 	public final BooleanProperty selectedProperty;
 
 
+	public int getDayOfWeek() {
+		return dayOfWeek;
+	}
+
+	public void setDayOfWeek(int dayOfWeek) {
+		this.dayOfWeek = dayOfWeek;
+	}
 
 	public boolean isSelected() {
 		return isSelected;
@@ -117,7 +152,6 @@ public class CalendarDay extends AbstractView{
 
 
 
-
 	@Override
 	protected void init(){
 
@@ -153,6 +187,12 @@ public class CalendarDay extends AbstractView{
 			//選択フラグを逆に設定
 			this.setSelected(!this.isSelected);
 		});
+
+
+		displayDateLabel = new Label();
+		//重なっても大丈夫なように色は透明にしておく
+		displayDateLabel.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,new CornerRadii(0),new Insets(3))));
+		this.getChildren().add(displayDateLabel);
 	}
 
 
