@@ -4,6 +4,7 @@ import java.util.List;
 
 import scheduler.bean.ProjectBean;
 import scheduler.bean.TAttributeBean;
+import scheduler.bean.TaskBean;
 import scheduler.common.constant.Constant;
 import scheduler.view.calendar.CalenderRow;
 
@@ -88,8 +89,15 @@ public class ProjectView extends AbstractView{
 		this.viewWidth.set(Constant.APP_PREF_WIDTH);
 
 		//属性部
-		projectAttributesView = new ProjectAttributesView(attributes);
+		projectAttributesView = new ProjectAttributesView(attributes,calenderRow.viewHeight.doubleValue());
 		projectAttributesView.setViewWidth(Constant.APP_PREF_WIDTH*(1-rateOfCalendarWidth));
+
+
+		//カレンダーの高さが変更されたときは属性部の高さも変更する
+		calenderRow.viewHeight.addListener((ov,newValue,oldValue)->{
+			projectAttributesView.setViewHeight(newValue.doubleValue());
+			this.viewHeight.set(newValue.doubleValue());
+		});
 
 
 		this.getChildren().addAll(
@@ -97,6 +105,7 @@ public class ProjectView extends AbstractView{
 				calenderRow
 				);
 	}
+
 
 
 
@@ -111,6 +120,16 @@ public class ProjectView extends AbstractView{
 		calenderRow.setTranslateX(width*(1-rateOfCalendarWidth));
 
 		projectAttributesView.setViewWidth(width*(1-rateOfCalendarWidth));
+	}
+
+
+	/**
+	 * タスクを一つ追加する。これによってカレンダーの高さが変化した場合は全体の高さも更新される
+	 * @param task
+	 */
+	public void addTask(TaskBean task){
+		this.calenderRow.addTask(task);
+		//全体高さ更新はlistenerで
 	}
 
 

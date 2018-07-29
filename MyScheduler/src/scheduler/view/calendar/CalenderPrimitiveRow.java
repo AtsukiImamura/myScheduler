@@ -43,7 +43,7 @@ public class CalenderPrimitiveRow extends AbstractView {
 	 * カレンダーに表示する最初の日付を設定する。表示幅に基づいて自動的に表示する最後の日付がセットされる。
 	 * @param viewStartAt
 	 */
-	public void setviewStartAt(Calendar viewStartAt) {
+	public void setViewStartAt(Calendar viewStartAt) {
 		this.viewStartAt = viewStartAt;
 
 		//変更した開始日で再描画する
@@ -56,7 +56,7 @@ public class CalenderPrimitiveRow extends AbstractView {
 	 */
 	public void backViewDate(){
 		viewStartAt.add(Calendar.DAY_OF_MONTH, -1);
-		setviewStartAt(viewStartAt);
+		setViewStartAt(viewStartAt);
 	}
 
 
@@ -65,7 +65,7 @@ public class CalenderPrimitiveRow extends AbstractView {
 	 */
 	public void forwardViewDate(){
 		viewStartAt.add(Calendar.DAY_OF_MONTH, 1);
-		setviewStartAt(viewStartAt);
+		setViewStartAt(viewStartAt);
 	}
 
 
