@@ -90,7 +90,7 @@ public class CalendarViewTask  extends AbstractView{
 			tmpDate  = (Calendar) startAt.clone();
 		}else{
 			//startAtとviewStartAtの後のほうの日付を取得
-			tmpDate = startAt.before(viewStartAt) ? viewStartAt : (Calendar)startAt.clone();
+			tmpDate = startAt.before(viewStartAt) ? (Calendar)viewStartAt.clone() : (Calendar)startAt.clone();
 		}
 
 		Calendar tmpFinishAt;
@@ -98,7 +98,7 @@ public class CalendarViewTask  extends AbstractView{
 			tmpFinishAt  = (Calendar) finishAt.clone();
 		}else{
 			//startAtとviewStartAtの後のほうの日付を取得
-			tmpFinishAt = finishAt.before(viewFinishAt) ?  (Calendar)finishAt.clone() : viewFinishAt;
+			tmpFinishAt = finishAt.before(viewFinishAt) ?  (Calendar)finishAt.clone() : (Calendar)viewFinishAt.clone();
 		}
 
 		int index = 0;

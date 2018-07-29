@@ -60,7 +60,12 @@ public class CalenderRow extends AbstractView{
 		List<TaskBean> taskBeanList = Util.sortTasksByStartAt(project.getTaskBeanList());
 
 		//primitiveRowList[0]に直前に入れたタスク
-		TaskBean primaryTask = taskBeanList.get(0);
+		TaskBean primaryTask = null;
+		try{
+			primaryTask = taskBeanList.get(0);
+		}catch(ArrayIndexOutOfBoundsException e){
+			this.resetViewHeight();
+		}
 		int primitiveRowListIndex = 0;
 		int primitiveRowListSize;
 		for(TaskBean task : taskBeanList){
@@ -76,6 +81,7 @@ public class CalenderRow extends AbstractView{
 			//primitiveRowListIndexがprimitiveRowListの容量を超えた場合は新たに作成していれる
 			if(primitiveRowListIndex ==primitiveRowListSize ){
 				CalenderPrimitiveRow newPrimitiveRow = getInitializedPrimitiveRow();
+				newPrimitiveRow.setTranslateY(Constant.CALENDAR_ROW_VIEW_HEIGHT*primitiveRowListIndex);
 				primitiveRowList.add(newPrimitiveRow);
 			}
 			primitiveRowList.get(primitiveRowListIndex).setTask(task);

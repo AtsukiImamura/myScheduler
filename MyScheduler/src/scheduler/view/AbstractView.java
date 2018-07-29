@@ -21,9 +21,9 @@ public abstract class AbstractView extends Group implements Drawable{
 
 
 	public AbstractView(){
-		init();
 		viewWidth = new SimpleDoubleProperty();
 		viewHeight = new SimpleDoubleProperty();
+		init();
 	}
 
 	protected abstract void init();

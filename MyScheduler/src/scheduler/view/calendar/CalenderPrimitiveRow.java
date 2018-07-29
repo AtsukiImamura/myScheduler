@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import scheduler.bean.TaskBean;
@@ -27,6 +29,7 @@ public class CalenderPrimitiveRow extends AbstractView {
 
 	/**タスク*/
 	private List<TaskBean> taskList;
+
 
 
 	/**表示する最初の日*/
@@ -179,6 +182,7 @@ public class CalenderPrimitiveRow extends AbstractView {
 
 	@Override
 	protected void init() {
+
 		Util.log("initializing...");
 		this.viewWidth.set(DEFAULT_VIEW_WIDTH);
 		this.viewHeight.set(DEFAULT_VIEW_HEIGHT);
@@ -191,10 +195,18 @@ public class CalenderPrimitiveRow extends AbstractView {
 		viewFinishAt = Calendar.getInstance();
 
 
-		//カレンダーの表示長
 		reset();
 
 		Util.log("initialized");
+	}
+
+
+	public CalenderPrimitiveRow(){
+		selectedIndex = new SimpleIntegerProperty();
+		//viewWidth = new SimpleDoubleProperty();
+
+		init();
+
 	}
 
 
@@ -206,20 +218,29 @@ public class CalenderPrimitiveRow extends AbstractView {
 	}
 
 
+
+	/** 選択されている日付のインデックス */
+	public final IntegerProperty selectedIndex;
+
+
 	/**
 	 * カレンダーの表示長が変化したときに表示全体をリセットする<br>
 	 * 表示する最後の日は自動的に更新される
 	 * @param length 表示する日数
 	 */
 	private void reset(int length){
-		Util.log("length="+length+"  viewWidth="+this.viewWidth);
-		this.getChildren().clear();
-		for(int i=0;i<length;i++){
-			CalendarDay calendarDay = new CalendarDay();
-			calendarDay.setTranslateX(CalendarDay.DEFAULT_WIDTH*calendarDay.getScaleX()*i);
-			calendarDay.setStoneColor(Constant.CALENDAR_NOMAL_COLOR);
+		if(viewStartAt == null){
+			viewStartAt  = Calendar.getInstance();
+		}
 
+		Calendar tmpDate = (Calendar)viewStartAt.clone();
+
+		this.getChildren().clear();
+		for(int index=0;index<length;index++){
+			CalendarDay calendarDay = getInitializedCalendarDay(tmpDate,index);
 			this.getChildren().add(calendarDay);
+
+			tmpDate.add(Calendar.DAY_OF_MONTH, 1);
 		}
 
 
@@ -238,6 +259,57 @@ public class CalenderPrimitiveRow extends AbstractView {
 		});
 
 		//initViewTaskStartAndFinish();
+	}
+
+
+
+
+	private CalendarDay getInitializedCalendarDay(Calendar date,int index){
+		CalendarDay calendarDay = new CalendarDay();
+		calendarDay.setTranslateX(CalendarDay.DEFAULT_WIDTH*calendarDay.getScaleX()*index);
+
+
+		switch(date.get(Calendar.DAY_OF_WEEK)){
+		case Calendar.SUNDAY:
+			calendarDay.setStoneColor(Constant.CALENDAR_DATE_VIEW_SUNDAY);
+			calendarDay.setMouseClickedColor(Constant.CALENDAR_DATE_VIEW_SUNDAY_CLICKED);
+			calendarDay.setMouseHoveredColor(Constant.CALENDAR_DATE_VIEW_SUNDAY_HOVERED);
+			break;
+		case Calendar.SATURDAY:
+			calendarDay.setStoneColor(Constant.CALENDAR_DATE_VIEW_SATURDAY);
+			calendarDay.setMouseClickedColor(Constant.CALENDAR_DATE_VIEW_SATURDAY_CLICKED);
+			calendarDay.setMouseHoveredColor(Constant.CALENDAR_DATE_VIEW_SATURDAY_HOVERED);
+			break;
+		default:
+			calendarDay.setStoneColor(Constant.CALENDAR_DATE_VIEW_NOMAL);
+			calendarDay.setMouseClickedColor(Constant.CALENDAR_DATE_VIEW_NOMAL_CLICKED);
+			calendarDay.setMouseHoveredColor(Constant.CALENDAR_DATE_VIEW_NOMAL_HOVERED);
+			break;
+		}
+
+
+		//選択フラグが立った時の処理
+		calendarDay.selectedProperty.addListener((ov,oldValue,newValue)->{
+			if(!newValue){
+				return;
+			}
+			if(newValue){
+				//選択されたCalendarDayのインデックスをセット
+				this.selectedIndex.set(index);
+				for(Node child : this.getChildren()){
+					if(!(child instanceof CalendarDay)){
+						continue;
+					}
+					if(calendarDay.equals(child)){
+						continue;
+					}
+					((CalendarDay)child).setSelected(false);
+				}
+			}
+		});
+
+
+		return calendarDay;
 	}
 
 
