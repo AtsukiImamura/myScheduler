@@ -78,7 +78,6 @@ public class ProjectView extends AbstractView{
 		this.attributeList = attributes;
 		this.rateOfCalendarWidth = Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH;
 
-
 		//カレンダー部
 		calenderRow = new CalenderRow(project);
 		calenderRow.setViewWidth(Constant.APP_PREF_WIDTH*rateOfCalendarWidth);
