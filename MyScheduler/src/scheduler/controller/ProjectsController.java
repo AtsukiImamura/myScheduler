@@ -7,8 +7,8 @@ import java.util.Map;
 
 import scheduler.bean.ProjectBean;
 import scheduler.bean.TAttributeBean;
-import scheduler.facade.AttributeBeanFacade;
 import scheduler.facade.ProjectBeanFacade;
+import scheduler.facade.TAttributeBeanFacade;
 import scheduler.view.ProjectView;
 
 /**
@@ -28,7 +28,7 @@ public class ProjectsController extends Controller{
 	private final ProjectBeanFacade projectBeanFacade;
 
 	/** 属性ファサード */
-	private final AttributeBeanFacade attributeBeanFacade;
+	private final TAttributeBeanFacade tAttributeBeanFacade;
 
 	/** 属性のリスト（マップ） <br>
 	 * <ul>
@@ -62,7 +62,7 @@ public class ProjectsController extends Controller{
 	ProjectsController(){
 		projectViewList = new ArrayList<ProjectView>();
 		projectBeanFacade = new ProjectBeanFacade();
-		attributeBeanFacade = new AttributeBeanFacade();
+		tAttributeBeanFacade = new TAttributeBeanFacade();
 		projectList = projectBeanFacade.findAll();
 		attributeLists = new HashMap<String,List<TAttributeBean>>();
 
@@ -110,7 +110,7 @@ public class ProjectsController extends Controller{
 		for(ProjectBean project : projectList){
 			String projectCode = project.getProjectCode();
 			//案件に紐づく属性のリストを引き当て
-			List<TAttributeBean> attributeList = attributeBeanFacade.findByProjectCode(projectCode);
+			List<TAttributeBean> attributeList = tAttributeBeanFacade.findByProjectCode(projectCode);
 			attributeLists.put(projectCode, attributeList);
 		}
 	}

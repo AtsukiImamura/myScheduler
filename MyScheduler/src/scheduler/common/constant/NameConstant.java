@@ -50,6 +50,19 @@ public class NameConstant {
 	public static final String TASK_POPUP_CHANGED_BY_LABEL_CSS = "task_popup_changed_by_label";
 
 
+
+
+
+	/* ---------------------------------------------------
+	 * AttributePrimitiveViewで使うcssクラス名
+	 -----------------------------------------------------*/
+
+	public static final String ATTRIBUTE_PRIMITIVE_VIEW_LABEL_CSS = "attribute_primitive_view_attribute_label";
+
+
+
+
+
 	/* ---------------------------------------------------
 	 * （テンプレ）
 	 -----------------------------------------------------*/

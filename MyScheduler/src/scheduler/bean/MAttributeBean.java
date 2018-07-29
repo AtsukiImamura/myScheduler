@@ -2,7 +2,7 @@ package scheduler.bean;
 
 import java.util.Date;
 
-public class AttributeBean {
+public class MAttributeBean {
 
 	/**
 	 * 主キー
