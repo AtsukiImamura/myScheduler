@@ -37,7 +37,7 @@ public class Constant {
 	public static final Color CALENDAR_NOMAL_COLOR = Color.rgb(250, 250, 250);
 
 
-
+	public static final double DEFAULT_RATE_OF_CALENDAR_WIDTH = 0.7;
 
 	public static final double CALENDAR_ROW_VIEW_WIDTH = 400;
 
