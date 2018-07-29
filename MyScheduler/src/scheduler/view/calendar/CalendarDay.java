@@ -3,6 +3,7 @@ package scheduler.view.calendar;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -189,7 +190,10 @@ public class CalendarDay extends AbstractView{
 		});
 
 
+		//日付描画用のラベル
 		displayDateLabel = new Label();
+		displayDateLabel.setPrefSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
+		displayDateLabel.setAlignment(Pos.CENTER);
 		//重なっても大丈夫なように色は透明にしておく
 		displayDateLabel.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,new CornerRadii(0),new Insets(3))));
 		this.getChildren().add(displayDateLabel);

@@ -105,34 +105,28 @@ public class CalendarDateView extends AbstractView{
 		setDateColor(calendarDay);
 
 		//選択フラグが立った時の処理
-		calendarDay.selectedProperty.addListener((ov,newValue,oldValue)->{
+		calendarDay.selectedProperty.addListener((ov,oldValue,newValue)->{
 			if(!newValue){
 				return;
 			}
-			//selectedIndexに登録する
-			onMouseClicked(calendarDay);
+			if(newValue){
+				//選択されたCalendarDayのインデックスをセット
+				this.selectedIndex.set(index);
+				for(Node child : this.getChildren()){
+					if(!(child instanceof CalendarDay)){
+						continue;
+					}
+					if(calendarDay.equals(child)){
+						continue;
+					}
+					((CalendarDay)child).setSelected(false);
+				}
+			}
 		});
 		return calendarDay;
 	}
 
 
-
-
-	/**
-	 * クリックされたときの挙動を設定する
-	 * @param calendarDay
-	 */
-	private void onMouseClicked(CalendarDay calendarDay){
-		int selectedIndex = 0;
-		for(Node child : this.getChildren()){
-			if(!(child instanceof CalendarDay)){
-				continue;
-			}
-			((CalendarDay)child).setSelected(false);
-			selectedIndex++;
-		}
-		this.selectedIndex.set(selectedIndex);
-	}
 
 
 	/**

@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import scheduler.bean.TaskBean;
+import scheduler.view.calendar.CalendarDateView;
 import scheduler.view.calendar.CalendarViewTask;
 
 public class Test extends Application{
@@ -17,10 +18,12 @@ public class Test extends Application{
 
 		stage.show();
 
-		//CalenderDay cd = new CalenderDay();
-		//CalenderRow cr = new CalenderRow();
-		//cr.setTranslateY(100);
 
+		/*
+		CalenderDay cd = new CalenderDay();
+		CalenderRow cr = new CalenderRow();
+		cr.setTranslateY(100);
+		*/
 
 		TaskBean task = new TaskBean();
 		Calendar startAt = Calendar.getInstance();
@@ -38,6 +41,11 @@ public class Test extends Application{
 
 
 
+
+
+		CalendarDateView calendarDateView = new CalendarDateView(900);
+
+
 		/*
 		Scene scene = new Scene(new Group(),840,680);
 
@@ -48,9 +56,9 @@ public class Test extends Application{
 		content.addAll(cd,cr);
 */
 		Pane root = new Pane();
-		root.getChildren().addAll(calendarViewTask);
+		root.getChildren().addAll(calendarDateView);
 		root.setPrefHeight(500);
-		root.setPrefWidth(700);
+		root.setPrefWidth(1000);
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add("main.css");
 		stage.setScene(scene);
