@@ -113,7 +113,15 @@ public class CalenderRow extends AbstractView{
 
 
 
-
+	/**
+	 * コンストラクタ<br>
+	 * 案件がもつタスクを表示するカレンダーのビューを作成する。
+	 * タスク同士の期間が重なっている部分は複数行に分けて表示される。
+	 * デフォルトでは表示の開始時点は今日である。変更はsetViewStartAtを用いる。
+	 * viewWidthは初期時点ではデフォルト値に設定されるから、あとでsetViewWidthを用いる必要がある。
+	 * viewHeightはタスクの表示に要された行数に基づいて適切に設定される。
+	 * @param project
+	 */
 	public CalenderRow(ProjectBean project){
 		this.project = project;
 		primitiveRowList = new ArrayList<CalenderPrimitiveRow>();
@@ -134,6 +142,17 @@ public class CalenderRow extends AbstractView{
 		}
 	}
 
+
+
+	/**
+	 * 指定の日付を先頭に表示する
+	 * @param date
+	 */
+	public void setViewStartAt(Calendar date){
+		for(CalenderPrimitiveRow primitiveRow : primitiveRowList){
+			primitiveRow.setViewStartAt(date);
+		}
+	}
 
 
 	/**

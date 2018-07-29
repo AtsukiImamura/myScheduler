@@ -47,4 +47,11 @@ public class Constant {
 	public static final double ATTRIBUTE_PRIMITIVE_ROW_DEFAULT_WIDTH = 120;
 
 	public static final double ATTRIBUTE_PRIMITIVE_ROW_DEFAULT_HEIGHT = 40;
+
+	//incremental
+	public static final double ATTRIBUTES_VIEW_INCREMENTAL_RATE_OF_ATTR_NAME = 1.4;
+
+
+
+	public static final String ATTRIBUTE_CODE_PROJECT_NAME = "1";
 }
