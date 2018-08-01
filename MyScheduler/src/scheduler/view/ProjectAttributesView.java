@@ -66,10 +66,11 @@ public class ProjectAttributesView extends AbstractView{
 		primitiveViewList = new ArrayList<AttributePrimitiveView>();
 		attributeList = attributes;
 
+		init();
+
 		this.viewHeight.set(height);
 		this.setViewWidth((1-Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH)*Constant.APP_PREF_WIDTH);
 
-		init();
 	}
 
 
@@ -119,6 +120,11 @@ public class ProjectAttributesView extends AbstractView{
 		double incrementaRate = Constant.ATTRIBUTES_VIEW_INCREMENTAL_RATE_OF_ATTR_NAME;
 		/** incrementaRateを考慮して属性全体がviewHeightに収まりきるような属性表示の幅 */
 		double defaultPrimitiveViewWidth = this.viewWidth.doubleValue()/(incrementaRate + attributeList.size()-1);
+
+
+		//TODO ここでいちいちclearするのはすごく無駄な感じが。
+		this.getChildren().clear();
+		this.primitiveViewList.clear();
 
 		int index = 0;
 		for(AttributePrimitiveView primitiveView:primitiveViewList){

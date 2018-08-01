@@ -92,7 +92,6 @@ public class ProjectView extends AbstractView{
 		projectAttributesView = new ProjectAttributesView(attributes,calenderRow.viewHeight.doubleValue());
 		projectAttributesView.setViewWidth(Constant.APP_PREF_WIDTH*(1-rateOfCalendarWidth));
 
-
 		//カレンダーの高さが変更されたときは属性部の高さも変更する
 		calenderRow.viewHeight.addListener((ov,newValue,oldValue)->{
 			projectAttributesView.setViewHeight(newValue.doubleValue());

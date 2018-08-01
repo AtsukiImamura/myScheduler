@@ -109,6 +109,8 @@ public class AttributePrimitiveView extends AbstractView{
 	public AttributePrimitiveView(TAttributeBean attribute,double width,double height){
 		this.attribute = attribute;
 
+		init();
+
 		this.viewWidth.set(width);
 		this.viewHeight.set(height);
 	}
