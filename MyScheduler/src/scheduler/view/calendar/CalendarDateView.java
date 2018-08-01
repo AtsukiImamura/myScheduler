@@ -71,6 +71,11 @@ public class CalendarDateView extends AbstractView{
 
 
 
+	public Calendar getViewStartAt(){
+		return this.viewStartAt;
+	}
+
+
 	/**
 	 * カレンダーを一日前にする
 	 */

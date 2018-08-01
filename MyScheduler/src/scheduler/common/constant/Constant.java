@@ -80,4 +80,7 @@ public class Constant {
 	public static final double POPUP_TRANSLATE_X = 30;
 
 	public static final double POPUP_TRANSLATE_Y = 30;
+
+
+	public static final double CALENDAR_DATE_CTRL_HEIGHT = 40;
 }

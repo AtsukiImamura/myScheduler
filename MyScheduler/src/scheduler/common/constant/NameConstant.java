@@ -61,6 +61,42 @@ public class NameConstant {
 
 
 
+	/* ---------------------------------------------------
+	 * CalendarDateCTRLViewで使う画像URL
+	 -----------------------------------------------------*/
+
+	//TODO 画像作成
+	//TODO 画像は一か所にまとめたい
+
+	public static final String PIC_URL_FORWARD_WEEK = "forwardWeek.png";
+
+	public static final String PIC_URL_FORWARD_DAY = "forwardDay.png";
+
+	public static final String PIC_URL_BACK_WEEK = "backWeek.png";
+
+	public static final String PIC_URL_BACK_DAY = "backDay.png";
+
+
+
+
+	/* ---------------------------------------------------
+	 * CalendarDateCTRLViewで使うcssクラス名
+	 -----------------------------------------------------*/
+
+	public static final String CALENDAR_DATE_CTRL_BACK_WEEK_CSS = "back_week_button";
+
+	public static final String CALENDAR_DATE_CTRL_BACK_DAY_CSS = "back_day_button";
+
+	public static final String CALENDAR_DATE_CTRL_FORWARD_WEEK_CSS = "forward_week_button";
+
+	public static final String CALENDAR_DATE_CTRL_FORWARD_DAY_CSS = "forward_day_button";
+
+	public static final String CALENDAR_DATE_CTRL_SELECT_YEAR_CSS = "select_year_box";
+
+	public static final String CALENDAR_DATE_CTRL_SELECT_MONTH_CSS = "select_month_box";
+
+	public static final String CALENDAR_DATE_CTRL_SELECT_DAY_CSS = "select_day_box";
+
 
 
 	/* ---------------------------------------------------

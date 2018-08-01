@@ -67,3 +67,61 @@
 }
 
 
+
+
+.back_week_button{
+	-fx-padding: 0;
+	-fx-background-radius: 3px;
+	-fx-border-radius: 3px;
+}
+
+.back_day_button{
+	-fx-padding: 0;
+	-fx-background-radius: 3px;
+	-fx-border-radius: 3px;
+}
+
+.forward_week_button{
+	-fx-padding: 0;
+	-fx-background-radius: 3px;
+	-fx-border-radius: 3px;
+}
+
+.forward_day_button{
+	-fx-padding: 0;
+	-fx-background-radius: 3px;
+	-fx-border-radius: 3px;
+}
+
+
+
+
+.select_year_box>.combo-box-popup .list-view {
+	-fx-border-color:#0000ff;
+	-fx-background-color:#a0fff0;
+}
+
+.select_year_box>.combo-box-popup .list-view .list-cell:filled:hover
+{
+    -fx-background-color: #d6eaff;
+}
+.select_year_box>.combo-box-popup .list-view .list-cell:selected
+{
+    -fx-background-color: #90b7ff;
+}
+
+.combo-box-base.select_year_box {
+	-fx-background-color: #a0e4ff;
+	-fx-border-color: #80b4ff;
+}
+
+
+
+.select_month_box{
+
+}
+
+.select_day_box{
+
+}
+

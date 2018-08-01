@@ -199,7 +199,7 @@ public class Util {
 	 * @return date1の日付 - date2の日付 （年月の繰上りは考慮される）
 	 * @throws Exception
 	 */
-	public static int getOffsetOfDate(Calendar date1,Calendar date2) throws Exception{
+	public static int getOffsetOfDate(Calendar date1,Calendar date2){
 		//System.out.println("getOffsetOfDate : date1="+getBarFormatCalendarValue(date1,true)+"  date2="+getBarFormatCalendarValue(date2,true));
 		int diffOfDays = 0;
 		Calendar tmpDate = (Calendar)date1.clone();
