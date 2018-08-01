@@ -7,9 +7,11 @@ import java.util.Map;
 import javafx.scene.Group;
 import scheduler.bean.ProjectBean;
 import scheduler.bean.TAttributeBean;
+import scheduler.common.constant.Constant;
 import scheduler.facade.ProjectBeanFacade;
 import scheduler.facade.TAttributeBeanFacade;
 import scheduler.view.ProjectsView;
+import scheduler.view.calendar.CalendarDateView;
 
 /**
  * 表示部のコントローラ
@@ -32,6 +34,9 @@ public class ProjectsController extends Controller{
 	private final ProjectsView projectsView;
 
 
+	private final CalendarDateView calendarDateView;
+
+
 
 	/** 属性のリスト（マップ） <br>
 	 * <ul>
@@ -52,8 +57,11 @@ public class ProjectsController extends Controller{
 	public Group getView(){
 		Group view = new Group();
 
+		this.calendarDateView.setTranslateX(Constant.APP_PREF_WIDTH*(1-Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH));
+		view.getChildren().add(calendarDateView);
 
-		//TODO 他のコンポーネントを入れる
+		double calendarHeight = this.calendarDateView.viewHeight.doubleValue();
+		this.projectsView.setTranslateY(calendarHeight);
 
 		view.getChildren().add(projectsView);
 
@@ -73,6 +81,7 @@ public class ProjectsController extends Controller{
 		tAttributeBeanFacade = new TAttributeBeanFacade();
 		projectList = projectBeanFacade.findAll();
 		attributeLists = new HashMap<String,List<TAttributeBean>>();
+		calendarDateView = new CalendarDateView(Constant.APP_PREF_WIDTH*Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH);
 
 		//属性リスト初期化
 		initAttributeLists(projectList);
