@@ -39,7 +39,7 @@ public class Constant {
 
 	public static final double DEFAULT_RATE_OF_CALENDAR_WIDTH = 0.7;
 
-	public static final double CALENDAR_ROW_VIEW_WIDTH = 400;
+	public static final double CALENDAR_ROW_VIEW_WIDTH = 850;
 
 	public static final double CALENDAR_ROW_VIEW_HEIGHT = 33;
 
@@ -50,7 +50,6 @@ public class Constant {
 
 	//incremental
 	public static final double ATTRIBUTES_VIEW_INCREMENTAL_RATE_OF_ATTR_NAME = 1.4;
-
 
 
 	public static final String ATTRIBUTE_CODE_PROJECT_NAME = "1";
@@ -73,4 +72,10 @@ public class Constant {
 	public static final Color CALENDAR_DATE_VIEW_SATURDAY_CLICKED = Color.rgb(90, 180, 255);
 
 	public static final Color CALENDAR_DATE_VIEW_NOMAL_CLICKED = Color.rgb(210,210, 210);
+
+
+
+	public static final double POPUP_TRANSLATE_X = 30;
+
+	public static final double POPUP_TRANSLATE_Y = 30;
 }

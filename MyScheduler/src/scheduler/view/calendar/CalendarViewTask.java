@@ -6,8 +6,11 @@ import java.util.List;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import scheduler.bean.TaskBean;
+import scheduler.common.constant.Constant;
+import scheduler.common.utils.Util;
 import scheduler.view.AbstractView;
 import scheduler.view.TaskPopup;
 
@@ -42,16 +45,92 @@ public class CalendarViewTask  extends AbstractView{
 	private Calendar viewFinishAt;
 
 
-
-	public void setViewStartAt(Calendar viewStartAt) {
+	/**
+	 * このビューの表示対象の開始日を設定する。<br>
+	 * それに伴ってタスクの表示長さを調節する
+	 * @param viewStartAt
+	 * @throws Exception
+	 */
+	public void setViewStartAt(Calendar viewStartAt) throws Exception{
+		//更新
 		this.viewStartAt = viewStartAt;
-		init();
+
+		//調整を加える
+		ajustNumOfCalendarDays();
+	}
+
+	/**
+	 * 表示の対象期間とタスクに基づいてCalendarDayの数を調節する。<br>
+	 * initと同様の作業を行っているが、すでにあるCalendarDayは破棄されずに再利用される点に違いがある
+	 */
+	public void ajustNumOfCalendarDays(){
+		int numOfDuplicatedPeriod = getNumOfDuplicatedPeriod();
+		int index = 0;
+		List<Node> deleteChildList = new ArrayList<Node>();
+		for(Node child : this.getChildren()){
+			if(!(child instanceof CalendarDay)){
+				continue;
+			}
+			if(index >=numOfDuplicatedPeriod){
+				//以前より重なる期間が少なくなった場合は無駄なものを削除する
+				deleteChildList.add(child);
+				continue;
+			}
+			//インデックスを振りなおす
+			((CalendarDay)child).setIndex(index);
+			child.setTranslateX(CalendarDay.DEFAULT_WIDTH*child.getScaleX()*index);
+			index ++;
+		}
+		//ビューの持つCalendarDayが必要数に足りていなければ新たに作成する
+		while(index < numOfDuplicatedPeriod){
+			CalendarDay calendarDay = this.getInitializedCalendarDay();
+			calendarDay.setIndex(index);
+			calendarDay.setTranslateX(CalendarDay.DEFAULT_WIDTH*calendarDay.getScaleX()*index);
+			this.getChildren().add(calendarDay);
+			index++;
+		}
+
+		//不要なCalendarDayたちは削除する
+		this.getChildren().removeAll(deleteChildList);
 	}
 
 
-	public void setViewFinishAt(Calendar viewFinishAt) {
+	/**
+	 * このビューの表示対象の期間とタスクの期間の重なっている日数を返す
+	 * @return
+	 */
+	private int getNumOfDuplicatedPeriod(){
+		Calendar start = this.getTaskViewStartAt();
+		Calendar finish = this.getTaskViewFinishAt();
+
+		return Util.getAbsOffsetOfDate(start, finish);
+	}
+
+
+	public void setViewFinishAt(Calendar viewFinishAt)  throws Exception{
 		this.viewFinishAt = viewFinishAt;
-		init();
+
+		ajustNumOfCalendarDays();
+	}
+
+
+	/**
+	 * 表示の開始日・終了日を考慮して、タスクとしてあらわされる部分の最初の日付を返す。<br>
+	 * 具体的には、viewStartAtとタスクの開始日の後ろのほうの日付を返す。
+	 * @return
+	 */
+	public Calendar getTaskViewStartAt(){
+		return Util.compareCalendarDate(viewStartAt, task.getStartAt())==1 ?  (Calendar)viewStartAt.clone() : (Calendar)task.getStartAt().clone();
+	}
+
+
+	/**
+	 * 表示の開始日・終了日を考慮して、タスクとしてあらわされる部分の最後の日付を返す。<br>
+	 * 具体的には、viewFinishAtとタスクの終了日の早いのほうの日付を返す。
+	 * @return
+	 */
+	public Calendar getTaskViewFinishAt(){
+		return Util.compareCalendarDate(viewFinishAt,task.getFinishAt())==1 ? (Calendar)task.getFinishAt().clone() : (Calendar)viewFinishAt.clone();
 	}
 
 
@@ -90,64 +169,25 @@ public class CalendarViewTask  extends AbstractView{
 			tmpDate  = (Calendar) startAt.clone();
 		}else{
 			//startAtとviewStartAtの後のほうの日付を取得
-			tmpDate = startAt.before(viewStartAt) ? viewStartAt : (Calendar)startAt.clone();
+			tmpDate = this.getTaskViewStartAt();
 		}
 
 		Calendar tmpFinishAt;
 		if(viewFinishAt == null){
 			tmpFinishAt  = (Calendar) finishAt.clone();
 		}else{
-			//startAtとviewStartAtの後のほうの日付を取得
-			tmpFinishAt = finishAt.before(viewFinishAt) ?  (Calendar)finishAt.clone() : viewFinishAt;
+			//finishAtとviewFinishAtの後のほうの日付を取得
+			tmpFinishAt = this.getTaskViewFinishAt();
 		}
 
 		int index = 0;
-		while(!tmpDate.after(tmpFinishAt)){
-			CalendarDay calendarDay = new CalendarDay();
-			//cd.setTranslateX(value);
+		while(Util.compareCalendarDate(tmpDate, tmpFinishAt)!=1){
+			CalendarDay calendarDay = getInitializedCalendarDay();
 			calendarDay.setTranslateX(CalendarDay.DEFAULT_WIDTH*calendarDay.getScaleX()*index);
+			calendarDay.setIndex(index);
 
-			//TODO カラーリング
-			calendarDay.setStoneColor(Color.RED);
-			//cd.setColor(task.getStoneColor());
 			CalendarDayList.add(calendarDay);
 			tmpDate.add(Calendar.DAY_OF_MONTH, 1);
-
-			int selectedIndex = index;
-			calendarDay.selectedProperty.addListener((ov,oldValue,newValue)->{
-				if(newValue){
-					//選択されたCalendarDayのインデックスをセット
-					this.selectedIndexProperty.set(selectedIndex);
-					for(CalendarDay day : CalendarDayList){
-						if(calendarDay.equals(day)){
-							continue;
-						}
-						day.setSelected(false);
-					}
-				}
-			});
-
-
-			/* マウスが入ったとき : ポップアップを出す */
-			calendarDay.setOnMouseEntered(event->{
-				double mouseX = event.getX();
-				double mouseY = event.getY();
-
-				/* TODO ここを、マウスからの相対位置にしたい。
-				 * そのためには、thisの絶対位置を知らないといけない
-				 */
-				taskPopup.setTranslateX(30);
-				taskPopup.setTranslateY(30);
-				this.getChildren().add(taskPopup);
-
-			});
-
-			/* マウスが出たとき : ポップアップを消す */
-			calendarDay.setOnMouseExited(event->{
-				//TODO 無理やり消しているので、もう少し安定的な方法でやりたい
-				this.getChildren().remove(this.getChildren().size()-1);
-			});
-
 			index ++;
 		}
 		this.getChildren().addAll(CalendarDayList);
@@ -155,8 +195,75 @@ public class CalendarViewTask  extends AbstractView{
 
 		//TODO 自身のy方向位置を調整
 		//this.setTranslateY(value);
+	}
 
 
+
+
+	/**
+	 * このビューのために初期化されたCalendarDayを返す。<br>
+	 * ただし、index,translateXはあとで登録する必要がある。
+	 * @return
+	 */
+	private CalendarDay getInitializedCalendarDay(){
+		CalendarDay calendarDay = new CalendarDay();
+
+		//カラーリング
+		Color stoneColor = task.getStoneColor() == null ? Color.RED : task.getStoneColor();
+		calendarDay.setStoneColor(stoneColor);
+
+		calendarDay.selectedProperty.addListener((ov,oldValue,newValue)->{
+			if(newValue){
+				//選択されたCalendarDayのインデックスをセット
+				if(calendarDay.getIndex() != -1){
+					this.selectedIndexProperty.set(calendarDay.getIndex());
+				}
+				for(CalendarDay day : CalendarDayList){
+					if(calendarDay.equals(day)){
+						continue;
+					}
+					day.setSelected(false);
+				}
+			}
+		});
+
+
+		/* マウスが入ったとき : ポップアップを出す */
+		calendarDay.setOnMouseEntered(event->{
+			double mouseX = event.getX();
+			double mouseY = event.getY();
+
+			/* TODO ここを、マウスからの相対位置にしたい。
+			 * そのためには、thisの絶対位置を知らないといけない
+			 */
+			taskPopup.setTranslateX(Constant.POPUP_TRANSLATE_X);
+			taskPopup.setTranslateY(Constant.POPUP_TRANSLATE_Y);
+			this.getChildren().add(taskPopup);
+
+		});
+
+		/* マウスが出たとき : ポップアップを消す */
+		calendarDay.setOnMouseExited(event->{
+			undisplayPopup();
+		});
+
+		return calendarDay;
+
+	}
+
+
+
+	/**
+	 * ポップアップを消す（ポップアップは同時に複数出ていないことが前提）
+	 */
+	private void undisplayPopup(){
+		for(Node child : this.getChildren()){
+			if(!(child instanceof TaskPopup)){
+				continue;
+			}
+			this.getChildren().remove(child);
+			return;
+		}
 	}
 
 
@@ -176,11 +283,14 @@ public class CalendarViewTask  extends AbstractView{
 	 * コンストラクタ
 	 * @param task このビューが扱うタスク
 	 */
-	public CalendarViewTask(TaskBean task){
+	public CalendarViewTask(TaskBean task,Calendar viewStartAt,Calendar viewFinishAt){
 		this.task = task;
 		CalendarDayList = new ArrayList<CalendarDay>();
 		selectedIndexProperty = new SimpleIntegerProperty();
 		taskPopup = new TaskPopup(task);
+
+		this.viewStartAt = viewStartAt;
+		this.viewFinishAt = viewFinishAt;
 
 		init();
 	}
