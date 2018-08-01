@@ -180,6 +180,7 @@ public class CalendarDateView extends AbstractView{
 	 */
 	public CalendarDateView(double width){
 		this.viewWidth.set(width);
+		this.viewHeight.set(Constant.PROJECT_CALENDAR_ROW_HEIGHT);
 		selectedIndex = new SimpleIntegerProperty();
 
 		init();

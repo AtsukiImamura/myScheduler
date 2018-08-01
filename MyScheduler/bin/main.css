@@ -62,7 +62,8 @@
 // AttributePrimitiveView関連
 // --------------------------------
 .attribute_primitive_view_attribute_label{
-
+	-fx-alignment: center-left;
+	-fx-padding: 3px;
 }
 
 

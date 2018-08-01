@@ -51,6 +51,8 @@ public class Constant {
 	//incremental
 	public static final double ATTRIBUTES_VIEW_INCREMENTAL_RATE_OF_ATTR_NAME = 1.4;
 
+	public static final Color ATTRIBUTES_VIEW_DEFAULT_STATUS_COLOR = Color.WHITE;
+
 
 	public static final String ATTRIBUTE_CODE_PROJECT_NAME = "1";
 

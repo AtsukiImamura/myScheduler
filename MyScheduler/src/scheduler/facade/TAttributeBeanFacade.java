@@ -21,8 +21,24 @@ public class TAttributeBeanFacade  extends AbstractFacade<TAttributeBean> {
 	 * @return
 	 */
 	public List<TAttributeBean> findByProjectCode(String projectCode){
+
+		/*
 		//TODO 実装
 		return new ArrayList<TAttributeBean>();
+		*/
+
+		List<TAttributeBean> attributes = new ArrayList<TAttributeBean>();
+		for(int i=0;i<3;i++){
+			TAttributeBean attr = new TAttributeBean();
+			attr.setAttributeCode("ATTR-"+i);
+			attr.setDispOrder(i);
+			attr.setProjectCode(projectCode);
+			attr.setValue("valuevalue");
+			attr.setSelectionCode("");
+			attributes.add(attr);
+		}
+
+		return attributes;
 	}
 
 }

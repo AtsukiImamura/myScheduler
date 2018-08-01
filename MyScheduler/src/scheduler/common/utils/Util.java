@@ -260,7 +260,7 @@ public class Util {
 	 */
 	public static int compareCalendarDate(Calendar date1,Calendar date2){
 
-		System.out.print("compareCalendarDate : date1="+getBarFormatCalendarValue(date1,true)+" date2="+getBarFormatCalendarValue(date2,true));
+		//System.out.print("compareCalendarDate : date1="+getBarFormatCalendarValue(date1,true)+" date2="+getBarFormatCalendarValue(date2,true));
 
 		int 	year1 = date1.get(Calendar.YEAR),
 				year2 = date2.get(Calendar.YEAR),
@@ -276,7 +276,7 @@ public class Util {
 										1: day1 < day2 ?
 												-1 : day1 > day2 ?
 														1 : 0;
-		System.out.println("  --> res="+res);
+		//System.out.println("  --> res="+res);
 		return res;
 	}
 

@@ -9,7 +9,7 @@ import java.util.List;
  * @author ohmoon
  *
  */
-public class ProjectBean {
+public class ProjectBean{
 
 
 	/**

@@ -23,7 +23,7 @@ public class ProjectAttributesView extends AbstractView{
 	@Override
 	protected void init() {
 
-		if(attributeList == null || primitiveViewList == null ){
+		if(attributeList == null || primitiveViewList == null || viewWidth == null){
 			return;
 		}
 
@@ -46,7 +46,6 @@ public class ProjectAttributesView extends AbstractView{
 				primitiveView  = new AttributePrimitiveView(attribute,defaultPrimitiveViewWidth, this.viewHeight.doubleValue());
 				primitiveView.setTranslateX(defaultPrimitiveViewWidth*(incrementaRate+index-1));
 			}
-
 			this.getChildren().add(primitiveView);
 			this.primitiveViewList.add(primitiveView);
 
@@ -66,10 +65,10 @@ public class ProjectAttributesView extends AbstractView{
 		primitiveViewList = new ArrayList<AttributePrimitiveView>();
 		attributeList = attributes;
 
-		init();
-
 		this.viewHeight.set(height);
 		this.setViewWidth((1-Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH)*Constant.APP_PREF_WIDTH);
+
+		init();
 
 	}
 
@@ -122,9 +121,6 @@ public class ProjectAttributesView extends AbstractView{
 		double defaultPrimitiveViewWidth = this.viewWidth.doubleValue()/(incrementaRate + attributeList.size()-1);
 
 
-		//TODO ここでいちいちclearするのはすごく無駄な感じが。
-		this.getChildren().clear();
-		this.primitiveViewList.clear();
 
 		int index = 0;
 		for(AttributePrimitiveView primitiveView:primitiveViewList){
@@ -138,8 +134,8 @@ public class ProjectAttributesView extends AbstractView{
 				primitiveView.setTranslateX(defaultPrimitiveViewWidth*(incrementaRate+index-1));
 			}
 
-			this.getChildren().add(primitiveView);
-			this.primitiveViewList.add(primitiveView);
+			//this.getChildren().add(primitiveView);
+			//this.primitiveViewList.add(primitiveView);
 
 			index++;
 		}

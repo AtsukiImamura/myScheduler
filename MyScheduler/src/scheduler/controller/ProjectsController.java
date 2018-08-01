@@ -1,15 +1,15 @@
 package scheduler.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javafx.scene.Group;
 import scheduler.bean.ProjectBean;
 import scheduler.bean.TAttributeBean;
 import scheduler.facade.ProjectBeanFacade;
 import scheduler.facade.TAttributeBeanFacade;
-import scheduler.view.ProjectView;
+import scheduler.view.ProjectsView;
 
 /**
  * 表示部のコントローラ
@@ -21,14 +21,17 @@ public class ProjectsController extends Controller{
 	/** 案件のリスト */
 	private final List<ProjectBean> projectList;
 
-	/** 案件のビューのリスト */
-	private final List<ProjectView> projectViewList;
 
 	/** 案件ファサード */
 	private final ProjectBeanFacade projectBeanFacade;
 
 	/** 属性ファサード */
 	private final TAttributeBeanFacade tAttributeBeanFacade;
+
+	/** 案件のビュー */
+	private final ProjectsView projectsView;
+
+
 
 	/** 属性のリスト（マップ） <br>
 	 * <ul>
@@ -45,11 +48,17 @@ public class ProjectsController extends Controller{
 	}
 
 
-	public List<ProjectView> getProjectViewList() {
-		return projectViewList;
+
+	public Group getView(){
+		Group view = new Group();
+
+
+		//TODO 他のコンポーネントを入れる
+
+		view.getChildren().add(projectsView);
+
+		return view;
 	}
-
-
 
 
 	@Override
@@ -59,8 +68,7 @@ public class ProjectsController extends Controller{
 	}
 
 
-	ProjectsController(){
-		projectViewList = new ArrayList<ProjectView>();
+	public ProjectsController(){
 		projectBeanFacade = new ProjectBeanFacade();
 		tAttributeBeanFacade = new TAttributeBeanFacade();
 		projectList = projectBeanFacade.findAll();
@@ -69,30 +77,15 @@ public class ProjectsController extends Controller{
 		//属性リスト初期化
 		initAttributeLists(projectList);
 
-		//案件のビュー初期化
-		initProjectViewList(projectList);
+		projectsView = new ProjectsView(projectList,this.attributeLists);
 	}
 
 
-	/**
-	 * 案件のビューを初期化する。<br>
-	 * 各案件ごとに対応するビューを作成し、必要なカレンダー上の行数を計算して高さを確保する。
-	 * @param projectList
-	 */
-	private void initProjectViewList( List<ProjectBean> projectList){
-		double transY = 0;
-		for(ProjectBean project : projectList){
-			String projectCode = project.getProjectCode();
-			ProjectView projectView = new ProjectView(project,this.attributeLists.get(projectCode));
-			//y軸方向調整
-			projectView.setTranslateY(transY);
 
-			//ここまでのy軸報告調整の累積
-			transY += projectView.viewHeight.doubleValue();
-
-			projectViewList.add(projectView);
-		}
+	public void setWidth(double width){
+		this.projectsView.setViewWidth(width);
 	}
+
 
 
 	/**

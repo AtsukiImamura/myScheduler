@@ -54,6 +54,7 @@ public class CalenderRow extends AbstractView{
 				this.getChildren().add(primitiveRowList.get(index));
 			}
 			//this.getChildren().addAll(primitiveRowList);
+			this.viewHeight.set(CalendarDay.DEFAULT_HEIGHT*(primitiveRowList.size()));
 		}
 	}
 
@@ -290,6 +291,20 @@ public class CalenderRow extends AbstractView{
 	 */
 	private void setHovered(Calendar date){
 		//TODO 実装
+	}
+
+
+
+	public void setHovered(int index,boolean selected){
+		for(CalenderPrimitiveRow primitiveRow: this.primitiveRowList){
+			primitiveRow.setHovered(index, selected);
+		}
+	}
+
+	public void setSelected(int index,boolean selected){
+		for(CalenderPrimitiveRow primitiveRow: this.primitiveRowList){
+			primitiveRow.setSelected(index, selected);
+		}
 	}
 
 
