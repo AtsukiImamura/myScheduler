@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 import scheduler.bean.TaskBean;
 import scheduler.common.constant.Constant;
 import scheduler.common.constant.NameConstant;
+import scheduler.common.utils.Util;
 
 
 /**
@@ -47,20 +48,21 @@ public class TaskPopup extends AbstractView{
 
 		//期間
 		HBox periodHBox = new HBox();
+
+		//開始日
 		Label startAtLabel = new Label();
 		startAtLabel.getStyleClass().add(NameConstant.TASK_POPUP_START_AT_LABEL_CSS);
-
 		Calendar startAt = task.getStartAt();
-		if(startAt!=null){
-			startAtLabel.setText(startAt.get(Calendar.YEAR)+"/"+startAt.get(Calendar.MONTH)+"/"+startAt.get(Calendar.DATE));
-		}
+		startAtLabel.setText(Util.getSlashFormatCalendarValue(startAt, true));
+
 		Label dateLabel = new Label(" - ");
+
+		//終了日
 		Label finishAtLabel = new Label();
 		finishAtLabel.getStyleClass().add(NameConstant.TASK_POPUP_FINISH_AT_LABEL_CSS);
 		Calendar finishAt = task.getFinishAt();
-		if(finishAt != null){
-			finishAtLabel.setText(finishAt.get(Calendar.YEAR)+"/"+finishAt.get(Calendar.MONTH)+"/"+finishAt.get(Calendar.DATE));
-		}
+		finishAtLabel.setText(Util.getSlashFormatCalendarValue(finishAt, true));
+
 		periodHBox.getChildren().addAll(startAtLabel,dateLabel,finishAtLabel);
 
 		//作成者・作成日
@@ -69,10 +71,9 @@ public class TaskPopup extends AbstractView{
 		Label createdByLabel = new Label(" 作成者 : "+task.getCreatedBy());
 
 		Calendar createdAt = task.getCreatedAt();
-		Label createdAtLabel = new Label(" 作成日 : ");
-		if(createdAt!=null){
-			createdAtLabel.setText(" 作成日 : "+createdAt.get(Calendar.YEAR)+"/"+createdAt.get(Calendar.MONTH)+"/"+createdAt.get(Calendar.DATE));
-		}
+		Label createdAtLabel = new Label();
+		createdAtLabel.setText(" 作成日 : "+Util.getSlashFormatCalendarValue(createdAt, true));
+
 		hboxForCreate.getChildren().addAll(
 				createdByLabel,
 				createdAtLabel
@@ -83,11 +84,10 @@ public class TaskPopup extends AbstractView{
 		HBox hboxForChange = new HBox();
 		//TODO 作成者コードではなく名前にする
 		Label changeddByLabel = new Label(" 変更者 : "+task.getChangedBy());
-		Label changedAtLabel = new Label(" 変更日 : ");
+		Label changedAtLabel = new Label();
 		Calendar changedAt = task.getChangedAt();
-		if(changedAt != null){
-			changedAtLabel.setText(" 変更日 : "+changedAt.get(Calendar.YEAR)+"/"+changedAt.get(Calendar.MONTH)+"/"+changedAt.get(Calendar.DATE));
-		}
+		changedAtLabel.setText(" 変更日 : "+Util.getSlashFormatCalendarValue(changedAt, true));
+
 		hboxForChange.getChildren().addAll(
 				changeddByLabel,
 				changedAtLabel

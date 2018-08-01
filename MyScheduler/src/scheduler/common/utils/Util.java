@@ -168,6 +168,120 @@ public class Util {
 
 
 
+	/**
+	 * 二つの日付の差の絶対値を返す
+	 * @param date1
+	 * @param date2
+	 * @return
+	 */
+	public static int getAbsOffsetOfDate(Calendar date1,Calendar date2){
+		//System.out.println("getOffsetOfDate : date1="+getBarFormatCalendarValue(date1,true)+"  date2="+getBarFormatCalendarValue(date2,true));
+		int diffOfDays = 0;
+		Calendar tmpDate = (Calendar)date1.clone();
+
+		int offset;
+		while((offset = compareCalendarDate(tmpDate,date2)) != 0){
+			//System.out.print("   ["+diffOfDays+"] tmpDate="+getBarFormatCalendarValue(tmpDate,true)+"  offset="+offset);
+			diffOfDays++;
+			// A.compareTo(B)はAのほうが大きい時に１が返るので、逆の方向に進めるためにー１をかける
+			tmpDate.add(Calendar.DAY_OF_MONTH, offset*(-1));
+			//System.out.println("   --> tmpDate="+getBarFormatCalendarValue(tmpDate,true));
+		}
+		return diffOfDays;
+	}
+
+
+
+	/**
+	 * 二つの日付の差を返す
+	 * @param date1
+	 * @param date2
+	 * @return date1の日付 - date2の日付 （年月の繰上りは考慮される）
+	 * @throws Exception
+	 */
+	public static int getOffsetOfDate(Calendar date1,Calendar date2) throws Exception{
+		//System.out.println("getOffsetOfDate : date1="+getBarFormatCalendarValue(date1,true)+"  date2="+getBarFormatCalendarValue(date2,true));
+		int diffOfDays = 0;
+		Calendar tmpDate = (Calendar)date1.clone();
+
+		int offset;
+		while((offset = compareCalendarDate(tmpDate,date2)) != 0){
+			diffOfDays += offset;
+			// A.compareTo(B)はAのほうが大きい時に１が返るので、逆の方向に進めるためにー１をかける
+			tmpDate.add(Calendar.DAY_OF_MONTH, offset*(-1));
+		}
+		return diffOfDays;
+	}
+
+
+
+	public static void printCalendarValue(Calendar date){
+		System.out.println(date.get(Calendar.YEAR)+"-"+(date.get(Calendar.MONTH)+1)+"-"+date.get(Calendar.DAY_OF_MONTH));
+	}
+
+
+	public static String getBarFormatCalendarValue(Calendar date,boolean addZero){
+		return getFormatCalendarValue(date,"-",addZero);
+
+	}
+
+
+	private static String getFormatCalendarValue(Calendar date,String split,boolean addZero){
+		if(date == null){
+			return "  "+split+"  "+split+"  ";
+		}
+		int 	year = date.get(Calendar.YEAR),
+				month = date.get(Calendar.MONTH)+1,
+				day = date.get(Calendar.DAY_OF_MONTH);
+		String 	monthValue = month+"",
+				dayValue = day+"";
+		if(addZero){
+			if(month<10){
+				monthValue = "0"+month;
+			}
+			if(day<10){
+				dayValue = "0"+day;
+			}
+		}
+		return year+split+monthValue+split+dayValue;
+	}
+
+
+	public static String getSlashFormatCalendarValue(Calendar date,boolean addZero){
+		return getFormatCalendarValue(date,"/",addZero);
+	}
+
+
+	/**
+	 * 二つの日付を比較する
+	 * @param date1
+	 * @param date2
+	 * @return 年月日を比較して<ul><li>date1＜date2ならば-1 <li>date1=date2ならば0<li>date1＞date2ならば1<ul>
+	 */
+	public static int compareCalendarDate(Calendar date1,Calendar date2){
+
+		System.out.print("compareCalendarDate : date1="+getBarFormatCalendarValue(date1,true)+" date2="+getBarFormatCalendarValue(date2,true));
+
+		int 	year1 = date1.get(Calendar.YEAR),
+				year2 = date2.get(Calendar.YEAR),
+				month1 = date1.get(Calendar.MONTH),
+				month2 = date2.get(Calendar.MONTH),
+				day1 = date1.get(Calendar.DAY_OF_MONTH),
+				day2 = date2.get(Calendar.DAY_OF_MONTH);
+
+		int res =  year1 < year2 ?
+				-1 : year1 > year2 ?
+						1 : month1 < month2 ?
+								-1 : month1 > month2 ?
+										1: day1 < day2 ?
+												-1 : day1 > day2 ?
+														1 : 0;
+		System.out.println("  --> res="+res);
+		return res;
+	}
+
+
+
 
 
 

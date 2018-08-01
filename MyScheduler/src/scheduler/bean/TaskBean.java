@@ -2,6 +2,8 @@ package scheduler.bean;
 
 import java.util.Calendar;
 
+import javafx.scene.paint.Color;
+
 /**
  * タスクを管理するビーン
  * @author ohmoon
@@ -30,7 +32,7 @@ public class TaskBean {
 	private String projectDetail;
 
 	/** ストーンカラー */
-	private int stoneColor;
+	private Color stoneColor;
 
 	/**タスク作成日時*/
 	private Calendar createdAt;
@@ -92,11 +94,11 @@ public class TaskBean {
 		this.projectDetail = projectDetail;
 	}
 
-	public int getStoneColor() {
+	public Color getStoneColor() {
 		return stoneColor;
 	}
 
-	public void setStoneColor(int stoneColor) {
+	public void setStoneColor(Color stoneColor) {
 		this.stoneColor = stoneColor;
 	}
 

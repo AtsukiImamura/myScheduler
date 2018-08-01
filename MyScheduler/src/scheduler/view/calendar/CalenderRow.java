@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import scheduler.bean.ProjectBean;
 import scheduler.bean.TaskBean;
 import scheduler.common.constant.Constant;
@@ -26,6 +28,12 @@ public class CalenderRow extends AbstractView{
 	private final List<CalenderPrimitiveRow> primitiveRowList;
 
 
+	public final IntegerProperty selectedIndex;
+
+
+	public final IntegerProperty hoveredIndex;
+
+
 
 
 
@@ -41,7 +49,11 @@ public class CalenderRow extends AbstractView{
 		initPrimitiveRowList();
 
 		if(primitiveRowList != null){
-			this.getChildren().addAll(primitiveRowList);
+
+			for(int index = primitiveRowList.size()-1;index>=0;index--){
+				this.getChildren().add(primitiveRowList.get(index));
+			}
+			//this.getChildren().addAll(primitiveRowList);
 		}
 	}
 
@@ -81,7 +93,57 @@ public class CalenderRow extends AbstractView{
 			//primitiveRowListIndexがprimitiveRowListの容量を超えた場合は新たに作成していれる
 			if(primitiveRowListIndex ==primitiveRowListSize ){
 				CalenderPrimitiveRow newPrimitiveRow = getInitializedPrimitiveRow();
-				newPrimitiveRow.setTranslateY(Constant.CALENDAR_ROW_VIEW_HEIGHT*primitiveRowListIndex);
+				newPrimitiveRow.setTranslateY(CalendarDay.DEFAULT_HEIGHT*primitiveRowListIndex);
+
+				//選択されている列に変化があった場合
+				newPrimitiveRow.selectedIndex.addListener((ov,oldValue,newValue)->{
+					System.out.println("newPrimitiveRow clicked :");
+					System.out.println(" oldValue						="+oldValue);
+					System.out.println(" newValue						="+newValue);
+					System.out.println(" selectedIndex					="+selectedIndex.intValue());
+					System.out.println(" hoveredIndex					="+hoveredIndex.intValue());
+					System.out.println(" newPrimitiveRow.selectedIndex	="+newPrimitiveRow.selectedIndex.intValue());
+					System.out.println(" newPrimitiveRow.hoveredIndex	="+newPrimitiveRow.hoveredIndex.intValue());
+					boolean selected;
+					if(this.selectedIndex.intValue() == newValue.intValue()){
+						selected = false;
+						this.selectedIndex.set(-1);
+					}else{
+						selected = true;
+						this.selectedIndex.set(newValue.intValue());
+					}
+					System.out.println("   --> selected						="+selected);
+					System.out.println("   --> selectedIndex				="+selectedIndex.intValue());
+					System.out.println("   --> hoveredIndex					="+hoveredIndex.intValue());
+					System.out.println("   --> newPrimitiveRow.selectedIndex="+newPrimitiveRow.selectedIndex.intValue());
+					System.out.println("   --> newPrimitiveRow.hoveredIndex	="+newPrimitiveRow.hoveredIndex.intValue());
+					for(CalenderPrimitiveRow primitiveRow: primitiveRowList){
+						primitiveRow.setSelected(oldValue.intValue(),!selected);
+					}
+					for(CalenderPrimitiveRow primitiveRow: primitiveRowList){
+						primitiveRow.setSelected(newValue.intValue(),selected);
+					}
+				});
+				//マウスホバーに変化があった場合
+				newPrimitiveRow.hoveredIndex.addListener((ov,oldValue,newValue)->{
+					if(newValue.intValue() == selectedIndex.intValue()){
+						return;
+					}
+/*
+					if(this.hoveredIndex.intValue() == newValue.intValue()){
+						return;
+					}
+					*/
+					hoveredIndex.set(newValue.intValue());
+					for(CalenderPrimitiveRow primitiveRow: primitiveRowList){
+						primitiveRow.setHovered(oldValue.intValue(),false);
+					}
+
+					for(CalenderPrimitiveRow primitiveRow: primitiveRowList){
+						primitiveRow.setHovered(newValue.intValue(),true);
+					}
+				});
+
 				primitiveRowList.add(newPrimitiveRow);
 			}
 			primitiveRowList.get(primitiveRowListIndex).setTask(task);
@@ -93,12 +155,13 @@ public class CalenderRow extends AbstractView{
 
 
 
+
 	/**
 	 * このビューで用いるために初期化されたCalenderPrimitiveRowを返す
 	 * @return
 	 */
 	private CalenderPrimitiveRow getInitializedPrimitiveRow(){
-		CalenderPrimitiveRow newPrimitiveRow = new CalenderPrimitiveRow();
+		CalenderPrimitiveRow newPrimitiveRow = new CalenderPrimitiveRow(this.viewWidth.doubleValue());
 		newPrimitiveRow.setViewWidth(this.viewWidth.doubleValue());
 
 		return newPrimitiveRow;
@@ -131,6 +194,8 @@ public class CalenderRow extends AbstractView{
 	public CalenderRow(ProjectBean project){
 		this.project = project;
 		primitiveRowList = new ArrayList<CalenderPrimitiveRow>();
+		selectedIndex = new SimpleIntegerProperty();
+		hoveredIndex = new SimpleIntegerProperty();
 
 		init();
 	}
@@ -215,6 +280,16 @@ public class CalenderRow extends AbstractView{
 
 	private void resetViewHeight(){
 		this.viewHeight.set(primitiveRowList.size()*Constant.PROJECT_CALENDAR_ROW_HEIGHT);
+	}
+
+
+
+	/**
+	 * 指定する日をマウスホバー状態にする
+	 * @param date
+	 */
+	private void setHovered(Calendar date){
+		//TODO 実装
 	}
 
 
