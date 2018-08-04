@@ -155,6 +155,23 @@ public class CalenderRow extends AbstractView{
 
 
 
+	/**
+	 * タスクを一つ消去する
+	 * @param taskCode 消去するタスクのコード
+	 * @return このビューに対象タスクが存在して消去したか
+	 */
+	public boolean removeTask(String taskCode){
+		boolean isSucceed = false;
+		for(CalenderPrimitiveRow primitiveRow : this.primitiveRowList){
+			isSucceed = primitiveRow.removeTask(taskCode);
+			if(isSucceed){
+				return isSucceed;
+			}
+		}
+		return isSucceed;
+	}
+
+
 
 
 	/**
