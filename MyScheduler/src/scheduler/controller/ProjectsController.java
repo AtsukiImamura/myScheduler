@@ -1,15 +1,20 @@
 package scheduler.controller;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javafx.scene.Group;
 import scheduler.bean.ProjectBean;
 import scheduler.bean.TAttributeBean;
+import scheduler.common.constant.Constant;
+import scheduler.common.utils.Util;
 import scheduler.facade.ProjectBeanFacade;
 import scheduler.facade.TAttributeBeanFacade;
-import scheduler.view.ProjectView;
+import scheduler.view.ProjectsView;
+import scheduler.view.calendar.CalendarDateCTRLView;
+import scheduler.view.calendar.CalendarDateView;
 
 /**
  * 表示部のコントローラ
@@ -21,14 +26,22 @@ public class ProjectsController extends Controller{
 	/** 案件のリスト */
 	private final List<ProjectBean> projectList;
 
-	/** 案件のビューのリスト */
-	private final List<ProjectView> projectViewList;
-
 	/** 案件ファサード */
 	private final ProjectBeanFacade projectBeanFacade;
 
 	/** 属性ファサード */
 	private final TAttributeBeanFacade tAttributeBeanFacade;
+
+	/** 案件のビュー */
+	private final ProjectsView projectsView;
+
+	/** カレンダーの日付のビュー */
+	private final CalendarDateView calendarDateView;
+
+	/** カレンダーをコントロールするビュー */
+	private final CalendarDateCTRLView calendarDateCTRLView;
+
+
 
 	/** 属性のリスト（マップ） <br>
 	 * <ul>
@@ -39,17 +52,34 @@ public class ProjectsController extends Controller{
 	private final Map<String,List<TAttributeBean>> attributeLists;
 
 
-
 	public List<ProjectBean> getProjectList() {
 		return projectList;
 	}
 
 
-	public List<ProjectView> getProjectViewList() {
-		return projectViewList;
+
+	/**
+	 * 表示部で使うべきビューを返す
+	 * @return
+	 */
+	public Group getView(){
+		Group view = new Group();
+
+		calendarDateCTRLView.setTranslateX(Constant.APP_PREF_WIDTH*(1-Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH));
+		calendarDateCTRLView.setTranslateY(0);
+
+		calendarDateView.setTranslateX(Constant.APP_PREF_WIDTH*(1-Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH));
+		calendarDateView.setTranslateY(Constant.CALENDAR_DATE_CTRL_HEIGHT);
+		view.getChildren().addAll(calendarDateView,calendarDateCTRLView);
+
+
+		double calendarHeight = this.calendarDateView.viewHeight.doubleValue();
+		this.projectsView.setTranslateY(Constant.CALENDAR_DATE_CTRL_HEIGHT+calendarHeight);
+
+		view.getChildren().add(projectsView);
+
+		return view;
 	}
-
-
 
 
 	@Override
@@ -59,40 +89,37 @@ public class ProjectsController extends Controller{
 	}
 
 
-	ProjectsController(){
-		projectViewList = new ArrayList<ProjectView>();
+	public ProjectsController(){
 		projectBeanFacade = new ProjectBeanFacade();
 		tAttributeBeanFacade = new TAttributeBeanFacade();
 		projectList = projectBeanFacade.findAll();
 		attributeLists = new HashMap<String,List<TAttributeBean>>();
+		calendarDateView = new CalendarDateView(Constant.APP_PREF_WIDTH*Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH);
+
+		calendarDateCTRLView = new CalendarDateCTRLView();
+
 
 		//属性リスト初期化
 		initAttributeLists(projectList);
 
-		//案件のビュー初期化
-		initProjectViewList(projectList);
+		//案件のビューを作成
+		projectsView = new ProjectsView(projectList,this.attributeLists);
+
+		calendarDateCTRLView.dayOffsetProperty().addListener((ov,oldValue,newValue)->{
+			System.out.println("source="+Util.getSlashFormatCalendarValue(calendarDateView.getViewStartAt(), true));
+			Calendar newViewStartAt = calendarDateCTRLView.getCurrentDate();
+			calendarDateView.setViewStartAt(newViewStartAt);
+			projectsView.setViewStartAt(newViewStartAt);
+			System.out.println("  -> new="+Util.getSlashFormatCalendarValue(calendarDateView.getViewStartAt(), true));
+		});
 	}
 
 
-	/**
-	 * 案件のビューを初期化する。<br>
-	 * 各案件ごとに対応するビューを作成し、必要なカレンダー上の行数を計算して高さを確保する。
-	 * @param projectList
-	 */
-	private void initProjectViewList( List<ProjectBean> projectList){
-		double transY = 0;
-		for(ProjectBean project : projectList){
-			String projectCode = project.getProjectCode();
-			ProjectView projectView = new ProjectView(project,this.attributeLists.get(projectCode));
-			//y軸方向調整
-			projectView.setTranslateY(transY);
 
-			//ここまでのy軸報告調整の累積
-			transY += projectView.viewHeight.doubleValue();
-
-			projectViewList.add(projectView);
-		}
+	public void setWidth(double width){
+		this.projectsView.setViewWidth(width);
 	}
+
 
 
 	/**

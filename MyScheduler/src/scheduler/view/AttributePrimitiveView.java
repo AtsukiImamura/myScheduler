@@ -46,10 +46,10 @@ public class AttributePrimitiveView extends AbstractView{
 				this.viewWidth == null ? Constant.ATTRIBUTE_PRIMITIVE_ROW_DEFAULT_WIDTH : this.viewWidth.doubleValue(),
 				this.viewHeight == null ? Constant.ATTRIBUTE_PRIMITIVE_ROW_DEFAULT_HEIGHT : this.viewHeight.doubleValue()
 				);
+
 		attributeLabel.getStyleClass().add(NameConstant.ATTRIBUTE_PRIMITIVE_VIEW_LABEL_CSS);
-
+		this.setLabelBackgroundColor(Constant.ATTRIBUTES_VIEW_DEFAULT_STATUS_COLOR);
 		this.getChildren().add(attributeLabel);
-
 	}
 
 
@@ -74,6 +74,10 @@ public class AttributePrimitiveView extends AbstractView{
 	 */
 	public void setStatus(StatusBean status){
 		this.status = status;
+		Color statusColor = status.getColor();
+		if(statusColor == null){
+			return;
+		}
 		setLabelBackgroundColor(status.getColor());
 	}
 
@@ -83,9 +87,19 @@ public class AttributePrimitiveView extends AbstractView{
 	 * @param color
 	 */
 	private void setLabelBackgroundColor(Color color){
-		List<BackgroundFill> fills =  attributeLabel.getBackground().getFills();
+		List<BackgroundFill> fills = null;
+		try{
+			fills =  attributeLabel.getBackground().getFills();
+		}catch(NullPointerException e){
+
+		}
 		//fillsのサイズが0の場合は適当に新しいBackgroundFillを作成する
-		BackgroundFill sourceBackGroundFill = fills.size() > 0 ? fills.get(0) : new BackgroundFill(Color.WHITE,new CornerRadii(3),new Insets(3)) ;
+		BackgroundFill sourceBackGroundFill;
+		if(fills == null || fills.size() == 0){
+			sourceBackGroundFill =  new BackgroundFill(Color.WHITE,new CornerRadii(0),new Insets(0));
+		}else{
+			sourceBackGroundFill = fills.get(0);
+		}
 
 		attributeLabel.setBackground(
 				new Background(
@@ -111,6 +125,8 @@ public class AttributePrimitiveView extends AbstractView{
 
 		this.viewWidth.set(width);
 		this.viewHeight.set(height);
+
+		init();
 	}
 
 }

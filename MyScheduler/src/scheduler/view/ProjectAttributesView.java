@@ -3,8 +3,10 @@ package scheduler.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import scheduler.bean.StatusBean;
 import scheduler.bean.TAttributeBean;
 import scheduler.common.constant.Constant;
+import scheduler.facade.StatusFacade;
 
 /**
  * 案件の属性部を担うビュークラス
@@ -20,10 +22,15 @@ public class ProjectAttributesView extends AbstractView{
 	/** 属性リスト */
 	private final List<TAttributeBean>  attributeList;
 
+
+	private final StatusBean status;
+
+	private final StatusFacade statusFacade;
+
 	@Override
 	protected void init() {
 
-		if(attributeList == null || primitiveViewList == null ){
+		if(attributeList == null || primitiveViewList == null || viewWidth == null){
 			return;
 		}
 
@@ -46,7 +53,7 @@ public class ProjectAttributesView extends AbstractView{
 				primitiveView  = new AttributePrimitiveView(attribute,defaultPrimitiveViewWidth, this.viewHeight.doubleValue());
 				primitiveView.setTranslateX(defaultPrimitiveViewWidth*(incrementaRate+index-1));
 			}
-
+			primitiveView.setStatus(status);
 			this.getChildren().add(primitiveView);
 			this.primitiveViewList.add(primitiveView);
 
@@ -65,12 +72,18 @@ public class ProjectAttributesView extends AbstractView{
 	public ProjectAttributesView(List<TAttributeBean> attributes,double height){
 		primitiveViewList = new ArrayList<AttributePrimitiveView>();
 		attributeList = attributes;
+		statusFacade = new StatusFacade();
+		status = statusFacade.findByProjectCode(attributes.get(0).getProjectCode());
 
 		this.viewHeight.set(height);
 		this.setViewWidth((1-Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH)*Constant.APP_PREF_WIDTH);
 
 		init();
+
 	}
+
+
+
 
 
 
@@ -120,6 +133,8 @@ public class ProjectAttributesView extends AbstractView{
 		/** incrementaRateを考慮して属性全体がviewHeightに収まりきるような属性表示の幅 */
 		double defaultPrimitiveViewWidth = this.viewWidth.doubleValue()/(incrementaRate + attributeList.size()-1);
 
+
+
 		int index = 0;
 		for(AttributePrimitiveView primitiveView:primitiveViewList){
 
@@ -132,8 +147,8 @@ public class ProjectAttributesView extends AbstractView{
 				primitiveView.setTranslateX(defaultPrimitiveViewWidth*(incrementaRate+index-1));
 			}
 
-			this.getChildren().add(primitiveView);
-			this.primitiveViewList.add(primitiveView);
+			//this.getChildren().add(primitiveView);
+			//this.primitiveViewList.add(primitiveView);
 
 			index++;
 		}

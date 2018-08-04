@@ -1,7 +1,10 @@
 package scheduler.view;
 
+import java.util.Calendar;
 import java.util.List;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import scheduler.bean.ProjectBean;
 import scheduler.bean.TAttributeBean;
 import scheduler.bean.TaskBean;
@@ -30,6 +33,11 @@ public class ProjectView extends AbstractView{
 
 	/** アプリの幅のうちカレンダーが占める割合 */
 	private double rateOfCalendarWidth;
+
+
+	public final IntegerProperty selectedIndex;
+
+	public final IntegerProperty hoveredIndex;
 
 
 
@@ -78,6 +86,8 @@ public class ProjectView extends AbstractView{
 		this.project = project;
 		this.attributeList = attributes;
 		this.rateOfCalendarWidth = Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH;
+		selectedIndex = new SimpleIntegerProperty();
+		hoveredIndex = new SimpleIntegerProperty();
 
 		//カレンダー部
 		calenderRow = new CalenderRow(project);
@@ -90,8 +100,7 @@ public class ProjectView extends AbstractView{
 
 		//属性部
 		projectAttributesView = new ProjectAttributesView(attributes,calenderRow.viewHeight.doubleValue());
-		projectAttributesView.setViewWidth(Constant.APP_PREF_WIDTH*(1-rateOfCalendarWidth));
-
+		projectAttributesView.setSize(Constant.APP_PREF_WIDTH*(1-rateOfCalendarWidth), this.viewHeight.doubleValue());
 
 		//カレンダーの高さが変更されたときは属性部の高さも変更する
 		calenderRow.viewHeight.addListener((ov,newValue,oldValue)->{
@@ -99,12 +108,52 @@ public class ProjectView extends AbstractView{
 			this.viewHeight.set(newValue.doubleValue());
 		});
 
+		calenderRow.selectedIndex.addListener((ov,oldValue,newValue)->{
+			this.selectedIndex.set(newValue.intValue());
+		});
+
+		calenderRow.hoveredIndex.addListener((ov,oldValue,newValue)->{
+			this.hoveredIndex.set(newValue.intValue());
+		});
 
 		this.getChildren().addAll(
-				projectAttributesView,
-				calenderRow
+				calenderRow,
+				projectAttributesView
 				);
 	}
+
+
+
+	public void setHovered(int index){
+		this.calenderRow.setHovered(index, true);
+	}
+
+	public void setSelected(int index){
+		this.calenderRow.setSelected(index, true);
+	}
+
+
+	public void setViewStartAt(Calendar date){
+		this.calenderRow.setViewStartAt(date);
+	}
+
+
+	/**
+	 * カレンダーを一日前にする
+	 */
+	public void backViewDate(){
+		this.calenderRow.backViewDate();
+	}
+
+
+
+	/**
+	 * カレンダーを一日後ろにする
+	 */
+	public void forwardViewDate(){
+		this.calenderRow.forwardViewDate();
+	}
+
 
 
 
