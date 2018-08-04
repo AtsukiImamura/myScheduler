@@ -41,6 +41,19 @@ public class ProjectView extends AbstractView{
 
 
 
+
+
+
+	public ProjectBean getProject() {
+		return project;
+	}
+
+
+	public void setProject(ProjectBean project) {
+		this.project = project;
+	}
+
+
 	public double getRateOfCalendarWidth() {
 		return rateOfCalendarWidth;
 	}
@@ -179,6 +192,16 @@ public class ProjectView extends AbstractView{
 	public void addTask(TaskBean task){
 		this.calenderRow.addTask(task);
 		//全体高さ更新はlistenerで
+	}
+
+
+	/**
+	 * タスクを一つ消去する
+	 * @param taskCode 消去するタスクのコード
+	 * @return このビューに対象タスクが存在して消去したか
+	 */
+	public boolean removeTask(String taskCode){
+		return this.calenderRow.removeTask(taskCode);
 	}
 
 

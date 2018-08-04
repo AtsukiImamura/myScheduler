@@ -129,6 +129,30 @@ public class CalenderPrimitiveRow extends AbstractView {
 	}
 
 
+
+	/**
+	 * タスクを一つ消去する
+	 * @param taskCode 消去するタスクのコード
+	 * @return このビューに対象タスクが存在して消去したか
+	 */
+	public boolean removeTask(String taskCode){
+		for(Node child : this.getChildren()){
+			if(!(child instanceof CalendarViewTask)){
+				continue;
+			}
+			TaskBean task = ((CalendarViewTask)child).getTask();
+			if(task.getTaskCode() == taskCode){
+				this.taskList.remove(task);
+				this.getChildren().remove(child);
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+
+
 	/**
 	 * 行の持つタスクを全て消去する
 	 */

@@ -120,4 +120,21 @@ public class ProjectsView extends AbstractView{
 		}
 	}
 
+
+	/**
+	 * タスクを除去する
+	 * @param projectCode
+	 * @param taskCode
+	 * @return タスクの除去に成功したかどうか
+	 */
+	public boolean removeTask(String projectCode,String taskCode){
+		for(ProjectView projectView : this.projectViewList){
+			if(projectView.getProject().getProjectCode() != projectCode){
+				continue;
+			}
+			return true && projectView.removeTask(taskCode);
+		}
+		return false;
+	}
+
 }
