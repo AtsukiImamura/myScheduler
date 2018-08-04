@@ -26,7 +26,13 @@ public class App extends Application{
 
 		root.setPrefHeight(Constant.APP_PREF_HEIGHT*0.6);
 		root.setPrefWidth(Constant.APP_PREF_WIDTH);
+
+
 		Scene scene = new Scene(root);
+
+		scene.widthProperty().addListener((ov,oldValue,newValue)->{
+			projectsController.setWidth(newValue.doubleValue());
+		});
 		scene.getStylesheets().add("main.css");
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("MyScheduler App 0.0");

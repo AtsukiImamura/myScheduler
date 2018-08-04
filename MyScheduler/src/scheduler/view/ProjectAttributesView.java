@@ -3,8 +3,10 @@ package scheduler.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import scheduler.bean.StatusBean;
 import scheduler.bean.TAttributeBean;
 import scheduler.common.constant.Constant;
+import scheduler.facade.StatusFacade;
 
 /**
  * 案件の属性部を担うビュークラス
@@ -19,6 +21,11 @@ public class ProjectAttributesView extends AbstractView{
 
 	/** 属性リスト */
 	private final List<TAttributeBean>  attributeList;
+
+
+	private final StatusBean status;
+
+	private final StatusFacade statusFacade;
 
 	@Override
 	protected void init() {
@@ -46,6 +53,7 @@ public class ProjectAttributesView extends AbstractView{
 				primitiveView  = new AttributePrimitiveView(attribute,defaultPrimitiveViewWidth, this.viewHeight.doubleValue());
 				primitiveView.setTranslateX(defaultPrimitiveViewWidth*(incrementaRate+index-1));
 			}
+			primitiveView.setStatus(status);
 			this.getChildren().add(primitiveView);
 			this.primitiveViewList.add(primitiveView);
 
@@ -64,6 +72,8 @@ public class ProjectAttributesView extends AbstractView{
 	public ProjectAttributesView(List<TAttributeBean> attributes,double height){
 		primitiveViewList = new ArrayList<AttributePrimitiveView>();
 		attributeList = attributes;
+		statusFacade = new StatusFacade();
+		status = statusFacade.findByProjectCode(attributes.get(0).getProjectCode());
 
 		this.viewHeight.set(height);
 		this.setViewWidth((1-Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH)*Constant.APP_PREF_WIDTH);
@@ -71,6 +81,9 @@ public class ProjectAttributesView extends AbstractView{
 		init();
 
 	}
+
+
+
 
 
 

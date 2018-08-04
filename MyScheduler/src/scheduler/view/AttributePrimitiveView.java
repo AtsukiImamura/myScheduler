@@ -74,6 +74,10 @@ public class AttributePrimitiveView extends AbstractView{
 	 */
 	public void setStatus(StatusBean status){
 		this.status = status;
+		Color statusColor = status.getColor();
+		if(statusColor == null){
+			return;
+		}
 		setLabelBackgroundColor(status.getColor());
 	}
 
