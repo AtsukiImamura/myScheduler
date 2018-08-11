@@ -1,4 +1,4 @@
-package scheduler.view;
+package scheduler.view.projectDisplayer;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -7,6 +7,7 @@ import java.util.Map;
 
 import scheduler.bean.ProjectBean;
 import scheduler.bean.TAttributeBean;
+import scheduler.view.AbstractView;
 
 /**
  * 表示部全体のビュークラス

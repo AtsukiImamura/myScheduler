@@ -69,6 +69,10 @@
 
 
 
+
+// --------------------------------
+// カレンダー移動関連
+// --------------------------------
 .back_week_button{
 	-fx-padding: 0;
 	-fx-background-radius: 3px;
@@ -122,6 +126,31 @@
 }
 
 .select_day_box{
+
+}
+
+
+// --------------------------------
+//　テスト用
+// --------------------------------
+.test_text_area{
+	-fx-border-insets: 10 10 5 0;
+	-fx-background-insets: 10 10 5 0;
+	-fx-border-color:#a050ff;
+	-fx-background-radius: 3px;
+	-fx-border-radius: 3px;
+}
+
+.test_text_area .content{
+	-fx-background-color: #fbf4ff;
+}
+.test_text_field{
+	-fx-border-insets: 10 10 5 0;
+	-fx-background-insets: 10 10 5 0;
+	-fx-border-color:#a050ff;
+	-fx-background-color: #fbf4ff;
+	-fx-background-radius: 3px;
+	-fx-border-radius: 3px;
 
 }
 
