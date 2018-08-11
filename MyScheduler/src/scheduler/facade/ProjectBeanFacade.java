@@ -1,11 +1,9 @@
 package scheduler.facade;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import scheduler.bean.ProjectBean;
-import scheduler.bean.TaskBean;
+import scheduler.common.constant.NameConstant;
 
 
 /**
@@ -24,6 +22,8 @@ public class ProjectBeanFacade extends AbstractFacade<ProjectBean>{
 		 * TODO テスト中
 		return this.findAll(ProjectBean.class);
 		*/
+
+		/*
 		List<ProjectBean> res = new ArrayList<ProjectBean>();
 
 
@@ -57,7 +57,17 @@ public class ProjectBeanFacade extends AbstractFacade<ProjectBean>{
 		}
 
 		return res;
+		*/
 
+		List<ProjectBean> projectBeanList = this.findAll(NameConstant.TABLE_NAME_T_PROJECT, NameConstant.TEST_USER_CODE, NameConstant.TEST_PASSWORD,ProjectBean.class);
+		return projectBeanList;
+
+
+	}
+
+
+	public void insert(ProjectBean bean){
+		this.insert("", "", "", bean);
 	}
 
 

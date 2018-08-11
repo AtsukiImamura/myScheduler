@@ -100,6 +100,61 @@ public class NameConstant {
 
 
 	/* ---------------------------------------------------
+	 * データベースのテーブル名
+	 -----------------------------------------------------*/
+
+	public static final String TABLE_NAME_T_ATTRIBUTES = "T_ATTRIBUTES";
+
+	public static final String TABLE_NAME_T_PROJECT = "T_PROJECT";
+
+	public static final String TABLE_NAME_T_TASK = "T_TASK";
+
+	public static final String TABLE_NAME_M_USER = "M_USER";
+
+	public static final String TABLE_NAME_M_STATUS = "M_STATUS";
+
+	public static final String TABLE_NAME_M_STONE = "M_STONE";
+
+	public static final String TABLE_NAME_M_ATTRIBUTES = "M_ATTRIBUTES";
+
+	public static final String TABLE_NAME_M_ATTRIBUTE_SELECTION = "M_ATTRIBUTE_SELECTION";
+
+
+	public static final String DATABASE_URL_GET_DATA = "https://tonkotsu-ohmoon.ssl-lolipop.jp/myscheduler/data_test.php";
+
+
+	public static final String DATABASE_URL_INSERT_DATA = "https://tonkotsu-ohmoon.ssl-lolipop.jp/myscheduler/insert_data.php";
+
+
+
+
+	/* ---------------------------------------------------
+	 * テスト関係
+	 -----------------------------------------------------*/
+
+	public static final String TEST_USER_CODE = "test_001";
+
+	public static final String TEST_PASSWORD = "test";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/* ---------------------------------------------------
 	 * （テンプレ）
 	 -----------------------------------------------------*/
 

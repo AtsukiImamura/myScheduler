@@ -4,6 +4,7 @@ import java.util.List;
 
 import javafx.scene.paint.Color;
 import scheduler.bean.StatusBean;
+import scheduler.common.constant.NameConstant;
 
 public class StatusFacade extends AbstractFacade<StatusBean>{
 
@@ -12,7 +13,9 @@ public class StatusFacade extends AbstractFacade<StatusBean>{
 
 	@Override
 	public List<StatusBean> findAll() {
-		return this.findAll(StatusBean.class);
+		List<StatusBean> statusBeanList = this.findAll(NameConstant.TABLE_NAME_M_STATUS, NameConstant.TEST_USER_CODE, NameConstant.TEST_PASSWORD,StatusBean.class);
+		//return this.findAll(StatusBean.class);
+		return statusBeanList;
 	}
 
 

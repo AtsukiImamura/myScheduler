@@ -1,7 +1,12 @@
 package scheduler.bean;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import scheduler.common.constant.NameConstant;
 
 
 /**
@@ -9,7 +14,11 @@ import java.util.List;
  * @author ohmoon
  *
  */
-public class ProjectBean{
+public class ProjectBean implements DatabaseRelated{
+
+	public String getTableName(){
+		return NameConstant.TABLE_NAME_T_PROJECT;
+	}
 
 
 	/**
@@ -27,6 +36,8 @@ public class ProjectBean{
 	/** ステータス */
 	private int status;
 
+	private boolean delFlag;
+
 	/**タスク作成日時*/
 	private Date createdAt;
 
@@ -37,7 +48,7 @@ public class ProjectBean{
 	private Date changedAt;
 
 	/**タスク変更者*/
-	private Date changedBy;
+	private String changedBy;
 
 	/** このタスクに紐づいたプロジェクトのリスト */
 	private List<TaskBean> taskBeanList;
@@ -74,6 +85,23 @@ public class ProjectBean{
 		this.status = status;
 	}
 
+	public void setStatus(String status) throws Exception{
+		this.status = Integer.parseInt(status);
+	}
+
+	public boolean isDelFlag() {
+		return delFlag;
+	}
+
+	public void setDelFlag(boolean delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	public void setDelFlag(String delFlag) {
+		this.delFlag = Boolean.parseBoolean(delFlag);
+	}
+
+
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -81,6 +109,7 @@ public class ProjectBean{
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
+
 
 	public String getCreatedBy() {
 		return createdBy;
@@ -98,11 +127,13 @@ public class ProjectBean{
 		this.changedAt = changedAt;
 	}
 
-	public Date getChangedBy() {
+
+
+	public String getChangedBy() {
 		return changedBy;
 	}
 
-	public void setChangedBy(Date changedBy) {
+	public void setChangedBy(String changedBy) {
 		this.changedBy = changedBy;
 	}
 
@@ -115,6 +146,17 @@ public class ProjectBean{
 	}
 
 
+
+	public void setCreatedAt(String createdAt) throws ParseException {
+		//String[] args = createdAt.split(" ");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		this.createdAt = format.parse(createdAt);
+		//this.createdAt = DateFormat.getDateInstance().parse(args[0]);
+	}
+
+	public void setChangedAt(String changedAt) throws ParseException {
+		this.changedAt = DateFormat.getDateInstance().parse(changedAt);
+	}
 
 
 }

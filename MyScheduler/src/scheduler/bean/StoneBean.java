@@ -1,6 +1,12 @@
 package scheduler.bean;
 
-public class StoneBean {
+import scheduler.common.constant.NameConstant;
+
+public class StoneBean  implements DatabaseRelated{
+
+	public String getTableName(){
+		return NameConstant.TABLE_NAME_M_STONE;
+	}
 
 	/**
 	 * 主キー

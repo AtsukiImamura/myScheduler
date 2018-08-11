@@ -1,20 +1,17 @@
 package scheduler.facade;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import scheduler.bean.MAttributeBean;
-import scheduler.bean.TAttributeBean;
+import scheduler.common.constant.NameConstant;
 
 public class MAttributeBeanFacade extends AbstractFacade<MAttributeBean> {
 
 
-	protected final static String FILENAME = "aaa.csv";
-
 	@Override
 	public List<MAttributeBean> findAll() {
-		this.findAll(MAttributeBean.class);
-		return null;
+		List<MAttributeBean> attributeBeanList = this.findAll(NameConstant.TABLE_NAME_M_ATTRIBUTES, NameConstant.TEST_USER_CODE, NameConstant.TEST_PASSWORD,MAttributeBean.class);
+		return attributeBeanList;
 	}
 
 
