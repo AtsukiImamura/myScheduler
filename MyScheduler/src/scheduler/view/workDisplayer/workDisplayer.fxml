@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<!--
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+-->
+<?import javafx.scene.control.*?>
+
+
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.ProjectEditorController">
+	<children>
+		<HBox>
+			<Label prefWidth="130.0" prefHeight="35.0" alignment="center_left">
+				<text>案件番号</text>
+			</Label>
+			<Label alignment="center_left">
+				<text>0001</text>
+			</Label>
+		</HBox>
+		<HBox>
+			<Label prefWidth="130.0" prefHeight="35.0"  alignment="center_left">
+				<text>案件名</text>
+			</Label>
+			<TextField 	prefWidth="420.0"
+						prefHeight="35.0"
+						styleClass="test_text_field"
+						/>
+		</HBox>
+		<HBox>
+			<Label prefWidth="130.0" prefHeight="35.0" alignment="center_left">
+				<text>詳細</text>
+			</Label>
+			<TextArea 	prefWidth="420.0"
+						prefHeight="200.0"
+						styleClass="test_text_area"
+						/>
+		</HBox>
+		<VBox fx:id="attributesVBox">
+
+		</VBox>
+		<Button fx:id="my_button" onAction="#onMyButtonClicked" text="click!"/>
+	</children>
+</fx:root>

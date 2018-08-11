@@ -12,7 +12,7 @@ import scheduler.bean.TaskBean;
 import scheduler.common.constant.Constant;
 import scheduler.common.utils.Util;
 import scheduler.view.AbstractView;
-import scheduler.view.TaskPopup;
+import scheduler.view.projectDisplayer.TaskPopup;
 
 /**
  * カレンダーで一つのタスクを保持するビューのクラス。

@@ -1,4 +1,4 @@
-package scheduler.view;
+package scheduler.view.projectDisplayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,8 @@ import scheduler.bean.StatusBean;
 import scheduler.bean.TAttributeBean;
 import scheduler.common.constant.Constant;
 import scheduler.facade.StatusFacade;
+import scheduler.view.AbstractView;
+import scheduler.view.AttributePrimitiveView;
 
 /**
  * 案件の属性部を担うビュークラス

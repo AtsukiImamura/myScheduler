@@ -1,4 +1,4 @@
-package scheduler.view;
+package scheduler.view.projectDisplayer;
 
 import java.util.Calendar;
 
@@ -9,6 +9,7 @@ import scheduler.bean.TaskBean;
 import scheduler.common.constant.Constant;
 import scheduler.common.constant.NameConstant;
 import scheduler.common.utils.Util;
+import scheduler.view.AbstractView;
 
 
 /**

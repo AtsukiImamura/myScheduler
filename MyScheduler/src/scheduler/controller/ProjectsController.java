@@ -12,9 +12,9 @@ import scheduler.common.constant.Constant;
 import scheduler.common.utils.Util;
 import scheduler.facade.ProjectBeanFacade;
 import scheduler.facade.TAttributeBeanFacade;
-import scheduler.view.ProjectsView;
 import scheduler.view.calendar.CalendarDateCTRLView;
 import scheduler.view.calendar.CalendarDateView;
+import scheduler.view.projectDisplayer.ProjectsView;
 
 /**
  * 表示部のコントローラ

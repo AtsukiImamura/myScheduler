@@ -50,6 +50,7 @@ public class AttributePrimitiveView extends AbstractView{
 		attributeLabel.getStyleClass().add(NameConstant.ATTRIBUTE_PRIMITIVE_VIEW_LABEL_CSS);
 		this.setLabelBackgroundColor(Constant.ATTRIBUTES_VIEW_DEFAULT_STATUS_COLOR);
 		this.getChildren().add(attributeLabel);
+
 	}
 
 
