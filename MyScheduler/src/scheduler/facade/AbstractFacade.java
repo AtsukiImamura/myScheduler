@@ -106,7 +106,7 @@ public abstract class AbstractFacade<T extends DatabaseRelated> {
 	}
 
 
-	protected void insert(String requestType,String userCode,String password,T bean) {
+	protected void insert(String requestType,String userCode,String password,T bean,List<String> primaryKey) {
 		Field[] fields = bean.getClass().getDeclaredFields();
 		Map<String,Object> dataMap = new HashMap<String,Object>();
 		for(Field field : fields){
@@ -139,7 +139,7 @@ public abstract class AbstractFacade<T extends DatabaseRelated> {
 			dataMap.put(key, value);
 		}
 
-		DatabaseUtil.insert(requestType, userCode, password,dataMap);
+		DatabaseUtil.insert(requestType, userCode, password,dataMap,primaryKey);
 	}
 
 

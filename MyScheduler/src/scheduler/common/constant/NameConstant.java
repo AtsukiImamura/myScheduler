@@ -126,6 +126,8 @@ public class NameConstant {
 	public static final String DATABASE_URL_INSERT_DATA = "https://tonkotsu-ohmoon.ssl-lolipop.jp/myscheduler/insert_data.php";
 
 
+	public static final String DATABASE_URL_UPDATE_DATA = "https://tonkotsu-ohmoon.ssl-lolipop.jp/myscheduler/insert_data.php";
+
 
 
 	/* ---------------------------------------------------

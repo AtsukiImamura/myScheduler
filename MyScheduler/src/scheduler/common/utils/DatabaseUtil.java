@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
@@ -26,7 +27,7 @@ import scheduler.common.constant.NameConstant;
 
 public class DatabaseUtil {
 
-    private static int socketTimeout = 5500;
+    private static int socketTimeout = 12200;
     private static int connectionTimeout = 1500;
 
 
@@ -78,17 +79,43 @@ public class DatabaseUtil {
 	 * @param data
 	 * @return
 	 */
-	public static boolean insert(String requestType,String userCode,String password,Map<String,Object> data){
+	public static boolean insert(String requestType,String userCode,String password,Map<String,Object> data,List<String> primaryKeys){
+		DatabaseUtil.send(NameConstant.DATABASE_URL_INSERT_DATA, requestType, userCode, password, data, primaryKeys);
+		//TODO 結果によるエラーハンドリング
+		return true;
+	}
+
+
+	/**
+	 * データをアップデートする
+	 * @param requestType
+	 * @param userCode
+	 * @param password
+	 * @param data
+	 * @return
+	 */
+	public static boolean update(String requestType,String userCode,String password,Map<String,Object> data,List<String> primaryKeys){
+		DatabaseUtil.send(NameConstant.DATABASE_URL_UPDATE_DATA, requestType, userCode, password, data, primaryKeys);
+		//TODO 結果によるエラーハンドリング
+		return true;
+	}
+
+
+
+
+
+	private static boolean send(String url,String requestType,String userCode,String password,Map<String,Object> data,List<String> primaryKeys){
 	    HttpEntity entity = null;
 
 	    HttpClient httpclient = getInitializedHttpClient();
 
 	    Map<String,Object> attributes = DatabaseUtil.getBasicAttributeMap(requestType, userCode, password);
 	    attributes.put("data", data);
+	    attributes.put("primary_keys", primaryKeys);
 	    HttpPost post;
 	    HttpResponse response = null;
 		try {
-			post = DatabaseUtil.getInitializedHttpPost(attributes, NameConstant.DATABASE_URL_INSERT_DATA);
+			post = DatabaseUtil.getInitializedHttpPost(attributes,url);
 			response = httpclient.execute(post);
 		} catch ( IOException e) {
 			e.printStackTrace();
@@ -116,6 +143,7 @@ public class DatabaseUtil {
 
 		return true;
 	}
+
 
 
 	/**

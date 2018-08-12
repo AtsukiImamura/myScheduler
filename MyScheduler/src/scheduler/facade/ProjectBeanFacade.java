@@ -1,5 +1,6 @@
 package scheduler.facade;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import scheduler.bean.ProjectBean;
@@ -59,6 +60,8 @@ public class ProjectBeanFacade extends AbstractFacade<ProjectBean>{
 		return res;
 		*/
 
+		//TODO タスクのリストを入れる
+
 		List<ProjectBean> projectBeanList = this.findAll(NameConstant.TABLE_NAME_T_PROJECT, NameConstant.TEST_USER_CODE, NameConstant.TEST_PASSWORD,ProjectBean.class);
 		return projectBeanList;
 
@@ -67,7 +70,9 @@ public class ProjectBeanFacade extends AbstractFacade<ProjectBean>{
 
 
 	public void insert(ProjectBean bean){
-		this.insert("", "", "", bean);
+		List<String> primaryKeys = new ArrayList<String>();
+		primaryKeys.add("PROJECT_CODE");
+		this.insert("T_PROJECT", NameConstant.TEST_USER_CODE, NameConstant.TEST_PASSWORD, bean,primaryKeys);
 	}
 
 
