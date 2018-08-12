@@ -148,10 +148,8 @@ public class ProjectBean implements DatabaseRelated{
 
 
 	public void setCreatedAt(String createdAt) throws ParseException {
-		//String[] args = createdAt.split(" ");
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		this.createdAt = format.parse(createdAt);
-		//this.createdAt = DateFormat.getDateInstance().parse(args[0]);
 	}
 
 	public void setChangedAt(String changedAt) throws ParseException {
