@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import scheduler.bean.TAttributeBean;
+import scheduler.common.constant.NameConstant;
 
 public class TAttributeBeanFacade  extends AbstractFacade<TAttributeBean> {
 
@@ -11,8 +12,10 @@ public class TAttributeBeanFacade  extends AbstractFacade<TAttributeBean> {
 
 	@Override
 	public List<TAttributeBean> findAll() {
-		this.findAll(TAttributeBean.class);
-		return null;
+		//this.findAll(TAttributeBean.class);
+		//return null;
+		List<TAttributeBean> attributeBeanList = this.findAll(NameConstant.TABLE_NAME_T_ATTRIBUTES, NameConstant.TEST_USER_CODE, NameConstant.TEST_PASSWORD,TAttributeBean.class);
+		return attributeBeanList;
 	}
 
 	/**

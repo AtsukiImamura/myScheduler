@@ -2,7 +2,13 @@ package scheduler.bean;
 
 import java.util.Date;
 
-public class MAttributeBean {
+import scheduler.common.constant.NameConstant;
+
+public class MAttributeBean implements DatabaseRelated{
+
+	public String getTableName(){
+		return NameConstant.TABLE_NAME_M_ATTRIBUTES;
+	}
 
 	/**
 	 * 主キー

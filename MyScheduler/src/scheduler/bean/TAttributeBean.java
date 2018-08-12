@@ -2,12 +2,18 @@ package scheduler.bean;
 
 import java.util.Date;
 
+import scheduler.common.constant.NameConstant;
+
 /**
  * 属性のトランザクション用ビーン
  * @author ohmoon
  *
  */
-public class TAttributeBean {
+public class TAttributeBean  implements DatabaseRelated{
+
+	public String getTableName(){
+		return NameConstant.TABLE_NAME_T_ATTRIBUTES;
+	}
 
 
 	/*

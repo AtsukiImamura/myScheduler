@@ -3,8 +3,14 @@ package scheduler.bean;
 import java.util.Date;
 
 import javafx.scene.paint.Color;
+import scheduler.common.constant.NameConstant;
 
-public class StatusBean {
+public class StatusBean  implements DatabaseRelated{
+
+	public String getTableName(){
+		return NameConstant.TABLE_NAME_M_STATUS;
+	}
+
 
 	/**
 	 * 主キー

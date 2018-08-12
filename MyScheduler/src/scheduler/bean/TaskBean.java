@@ -3,13 +3,18 @@ package scheduler.bean;
 import java.util.Calendar;
 
 import javafx.scene.paint.Color;
+import scheduler.common.constant.NameConstant;
 
 /**
  * タスクを管理するビーン
  * @author ohmoon
  *
  */
-public class TaskBean {
+public class TaskBean  implements DatabaseRelated{
+
+	public String getTableName(){
+		return NameConstant.TABLE_NAME_T_TASK;
+	}
 
 
 
