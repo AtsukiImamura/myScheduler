@@ -1,21 +1,28 @@
 package scheduler.bean;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.scene.paint.Color;
 import scheduler.common.constant.NameConstant;
 
-public class StatusBean  implements DatabaseRelated{
+public class StatusBean  extends DatabaseRelated{
 
 	public String getTableName(){
 		return NameConstant.TABLE_NAME_M_STATUS;
+	}
+
+	public List<String> getPrimaryKeyList(){
+		 List<String> primaryKeys = new ArrayList<String>();
+		 primaryKeys.add("STATUS_CODE");
+		 return primaryKeys;
 	}
 
 
 	/**
 	 * 主キー
 	 * ステータスカラーコード*/
-	private String statusColorCode;
+	private String statusCode;
 
 	/**色*/
 	private Color color;
@@ -26,22 +33,13 @@ public class StatusBean  implements DatabaseRelated{
 	/**説明*/
 	private String detail;
 
-	/**作成日時*/
-	private Date createdAt;
 
-	/**変更日時*/
-	private Date changedAt;
-
-	/**変更者*/
-	private Date changedBy;
-
-
-	public String getStatusColorCode() {
-		return statusColorCode;
+	public String getStatusCode() {
+		return statusCode;
 	}
 
-	public void setStatusColorCode(String statusColorCode) {
-		this.statusColorCode = statusColorCode;
+	public void setStatusCode(String statusCode) {
+		this.statusCode = statusCode;
 	}
 
 	public Color getColor() {
@@ -68,28 +66,5 @@ public class StatusBean  implements DatabaseRelated{
 		this.detail = detail;
 	}
 
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public Date getChangedAt() {
-		return changedAt;
-	}
-
-	public void setChangedAt(Date changedAt) {
-		this.changedAt = changedAt;
-	}
-
-	public Date getChangedBy() {
-		return changedBy;
-	}
-
-	public void setChangedBy(Date changedBy) {
-		this.changedBy = changedBy;
-	}
 
 }

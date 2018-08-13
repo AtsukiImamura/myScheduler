@@ -17,6 +17,9 @@ public class StatusFacade extends AbstractFacade<StatusBean>{
 		//return this.findAll(StatusBean.class);
 		return statusBeanList;
 	}
+	
+	
+	
 
 
 	public StatusBean findByStatusCode(String code){
@@ -35,7 +38,7 @@ public class StatusFacade extends AbstractFacade<StatusBean>{
 		//TODO 実装
 		StatusBean status = new StatusBean();
 		status.setColor(Color.rgb(255, 245, 210));
-		status.setStatusColorCode(projectCode);
+		status.setStatusCode(projectCode);
 		return status;
 	}
 

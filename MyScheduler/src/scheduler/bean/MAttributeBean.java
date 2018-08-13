@@ -1,13 +1,21 @@
 package scheduler.bean;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import scheduler.common.constant.NameConstant;
 
-public class MAttributeBean implements DatabaseRelated{
+public class MAttributeBean extends DatabaseRelated{
 
 	public String getTableName(){
 		return NameConstant.TABLE_NAME_M_ATTRIBUTES;
+	}
+
+
+	public List<String> getPrimaryKeyList(){
+		 List<String> primaryKeys = new ArrayList<String>();
+		 primaryKeys.add("ATTR_CODE");
+		 return primaryKeys;
 	}
 
 	/**
@@ -25,14 +33,6 @@ public class MAttributeBean implements DatabaseRelated{
 	/**カスタマイズタイプ*/
 	private int costamaizeType;
 
-	/**タスク作成日時*/
-	private Date createdAt;
-
-	/**タスク変更日時*/
-	private Date changedAt;
-
-	/**タスク変更者*/
-	private Date changedBy;
 
 
 	public String getAttrCode() {
@@ -66,31 +66,5 @@ public class MAttributeBean implements DatabaseRelated{
 	public void setCostamaizeType(int costamaizeType) {
 		this.costamaizeType = costamaizeType;
 	}
-
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public Date getChangedAt() {
-		return changedAt;
-	}
-
-	public void setChangedAt(Date changedAt) {
-		this.changedAt = changedAt;
-	}
-
-	public Date getChangedBy() {
-		return changedBy;
-	}
-
-	public void setChangedBy(Date changedBy) {
-		this.changedBy = changedBy;
-	}
-
-
 
 }

@@ -1,6 +1,8 @@
 package scheduler.bean;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javafx.scene.paint.Color;
 import scheduler.common.constant.NameConstant;
@@ -10,13 +12,18 @@ import scheduler.common.constant.NameConstant;
  * @author ohmoon
  *
  */
-public class TaskBean  implements DatabaseRelated{
+public class TaskBean  extends DatabaseRelated{
 
 	public String getTableName(){
 		return NameConstant.TABLE_NAME_T_TASK;
 	}
 
-
+	public List<String> getPrimaryKeyList(){
+		 List<String> primaryKeys = new ArrayList<String>();
+		 primaryKeys.add("PROJECT_CODE");
+		 primaryKeys.add("TASK_CODE");
+		 return primaryKeys;
+	}
 
 	/** タスクコード */
 	private String projectCode;
@@ -39,17 +46,6 @@ public class TaskBean  implements DatabaseRelated{
 	/** ストーンカラー */
 	private Color stoneColor;
 
-	/**タスク作成日時*/
-	private Calendar createdAt;
-
-	/** タスク作成者 */
-	private String createdBy;
-
-	/**タスク変更日時*/
-	private Calendar changedAt;
-
-	/**タスク変更者*/
-	private Calendar changedBy;
 
 	public String getProjectCode() {
 		return projectCode;
@@ -107,37 +103,6 @@ public class TaskBean  implements DatabaseRelated{
 		this.stoneColor = stoneColor;
 	}
 
-	public Calendar getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Calendar createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Calendar getChangedAt() {
-		return changedAt;
-	}
-
-	public void setChangedAt(Calendar changedAt) {
-		this.changedAt = changedAt;
-	}
-
-	public Calendar getChangedBy() {
-		return changedBy;
-	}
-
-	public void setChangedBy(Calendar changedBy) {
-		this.changedBy = changedBy;
-	}
 
 	/**
 	 * 指定した日付がタスクの開始日から終了日の間にあるかどうかを返す

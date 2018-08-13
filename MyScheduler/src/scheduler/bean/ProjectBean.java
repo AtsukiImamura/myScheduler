@@ -1,9 +1,6 @@
 package scheduler.bean;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import scheduler.common.constant.NameConstant;
@@ -14,10 +11,16 @@ import scheduler.common.constant.NameConstant;
  * @author ohmoon
  *
  */
-public class ProjectBean implements DatabaseRelated{
+public class ProjectBean extends DatabaseRelated{
 
 	public String getTableName(){
 		return NameConstant.TABLE_NAME_T_PROJECT;
+	}
+
+	public List<String> getPrimaryKeyList(){
+		 List<String> primaryKeys = new ArrayList<String>();
+		 primaryKeys.add("PROJECT_CODE");
+		 return primaryKeys;
 	}
 
 
@@ -36,22 +39,15 @@ public class ProjectBean implements DatabaseRelated{
 	/** ステータス */
 	private int status;
 
+	/** 削除フラグ */
 	private boolean delFlag;
-
-	/**タスク作成日時*/
-	private Date createdAt;
-
-	/** タスク作成者 */
-	private String createdBy;
-
-	/**タスク変更日時*/
-	private Date changedAt;
-
-	/**タスク変更者*/
-	private String changedBy;
 
 	/** このタスクに紐づいたプロジェクトのリスト */
 	private List<TaskBean> taskBeanList;
+
+
+
+
 
 	public String getProjectCode() {
 		return projectCode;
@@ -101,42 +97,6 @@ public class ProjectBean implements DatabaseRelated{
 		this.delFlag = Boolean.parseBoolean(delFlag);
 	}
 
-
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Date getChangedAt() {
-		return changedAt;
-	}
-
-	public void setChangedAt(Date changedAt) {
-		this.changedAt = changedAt;
-	}
-
-
-
-	public String getChangedBy() {
-		return changedBy;
-	}
-
-	public void setChangedBy(String changedBy) {
-		this.changedBy = changedBy;
-	}
-
 	public List<TaskBean> getTaskBeanList() {
 		return taskBeanList;
 	}
@@ -145,16 +105,6 @@ public class ProjectBean implements DatabaseRelated{
 		this.taskBeanList = taskBeanList;
 	}
 
-
-
-	public void setCreatedAt(String createdAt) throws ParseException {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		this.createdAt = format.parse(createdAt);
-	}
-
-	public void setChangedAt(String changedAt) throws ParseException {
-		this.changedAt = DateFormat.getDateInstance().parse(changedAt);
-	}
 
 
 }

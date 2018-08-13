@@ -19,24 +19,21 @@ import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 
-import scheduler.bean.ProjectBean;
-import scheduler.facade.ProjectBeanFacade;
-
 
 public class FuncTest {
 
 
 	public static void main(String[] args) throws Exception{
 
-		String TARGET_HOST = "https://tonkotsu-ohmoon.ssl-lolipop.jp/myscheduler/update_data.php";
+		//String TARGET_HOST = "https://tonkotsu-ohmoon.ssl-lolipop.jp/myscheduler/update_data.php";
 	    //String TARGET_HOST = "https://tonkotsu-ohmoon.ssl-lolipop.jp/myscheduler/insert_data.php";
-	    //String TARGET_HOST = "https://tonkotsu-ohmoon.ssl-lolipop.jp/myscheduler/data_test.php";
+	    String TARGET_HOST = "https://tonkotsu-ohmoon.ssl-lolipop.jp/myscheduler/data_test.php";
 	    HttpClient httpclient = null;
 	    HttpPost post = null;
 	    HttpEntity entity = null;
 
 	    int socketTimeout = 12000;
-	    int connectionTimeout = 1800;
+	    int connectionTimeout =24000;
 
 	    RequestConfig requestConfig = RequestConfig.custom()
 	    	      .setConnectTimeout(connectionTimeout)
@@ -59,14 +56,14 @@ public class FuncTest {
         attributes.put("user_info", userInfo);
         Map<String,Object> requestInfo = new HashMap<String,Object>();
         requestInfo.put("db_name", "T_PROJECT");
-        requestInfo.put("request_type", "T_TASK");
+        requestInfo.put("request_type", "T_PROJECT");
         attributes.put("request_info", requestInfo);
 
         Map<String,Object> data = new HashMap<String,Object>();
         data.put("PROJECT_CODE", "prj001");
-        data.put("TASK_CODE", "T-002");
-        data.put("START_AT", "2018-08-02 00:00:00");
-        data.put("FINISH_AT", "2018-08-08 00:00:00");
+        data.put("TASK_CODE", "T-007");
+        data.put("START_AT", "2018-08-09 00:00:00");
+        data.put("FINISH_AT", "2018-08-11 00:00:00");
         data.put("TASK_NAME", "hogehoge");
         data.put("CREATED_BY", "test_001");
         attributes.put("data", data);
@@ -85,7 +82,13 @@ public class FuncTest {
         params.add(new BasicNameValuePair("request_json",jsonAttributes));
         post.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 
-        HttpResponse response = httpclient.execute(post);
+        HttpResponse response;
+        try{
+        	response = httpclient.execute(post);
+        }catch(Exception e){
+        	post.abort();
+        	throw e;
+        }
 
         if(response.getStatusLine().getStatusCode() != 200 ){
 
@@ -119,13 +122,13 @@ public class FuncTest {
         post.abort();
 
 
-		ProjectBeanFacade projectFacade = new ProjectBeanFacade();
-		List<ProjectBean> projectBeanList = projectFacade.findAll();
-
-		ProjectBean bean = projectBeanList.get(0);
-		bean.setProjectCode("P-002");
-
-		projectFacade.insert(bean);
+//		ProjectBeanFacade projectFacade = new ProjectBeanFacade();
+//		List<ProjectBean> projectBeanList = projectFacade.findAll();
+//
+//		ProjectBean bean = projectBeanList.get(0);
+//		bean.setProjectCode("P-002");
+//
+//		projectFacade.insert(bean);
 
 
 		System.out.println("finish");

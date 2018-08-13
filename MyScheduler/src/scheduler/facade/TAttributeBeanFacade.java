@@ -31,6 +31,7 @@ public class TAttributeBeanFacade  extends AbstractFacade<TAttributeBean> {
 		*/
 
 		List<TAttributeBean> attributes = new ArrayList<TAttributeBean>();
+		/*
 		for(int i=0;i<3;i++){
 			TAttributeBean attr = new TAttributeBean();
 			attr.setAttributeCode("ATTR-"+i);
@@ -40,6 +41,9 @@ public class TAttributeBeanFacade  extends AbstractFacade<TAttributeBean> {
 			attr.setSelectionCode("");
 			attributes.add(attr);
 		}
+		*/
+		attributes = this.findAll(NameConstant.TABLE_NAME_T_ATTRIBUTES, NameConstant.TEST_USER_CODE, NameConstant.TEST_PASSWORD, TAttributeBean.class);
+
 
 		return attributes;
 	}
