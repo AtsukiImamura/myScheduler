@@ -1,11 +1,13 @@
 package scheduler.bean;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import javafx.scene.paint.Color;
 import scheduler.common.constant.NameConstant;
+import scheduler.common.utils.Util;
 
 /**
  * タスクを管理するビーン
@@ -25,6 +27,7 @@ public class TaskBean  extends DatabaseRelated{
 		 return primaryKeys;
 	}
 
+
 	/** タスクコード */
 	private String projectCode;
 
@@ -38,13 +41,15 @@ public class TaskBean  extends DatabaseRelated{
 	private Calendar finishAt;
 
 	/** 名称 */
-	private String projectName;
+	private String taskName;
 
 	/** 詳細 */
-	private String projectDetail;
+	private String detail;
 
 	/** ストーンカラー */
 	private Color stoneColor;
+
+	private boolean delFlag;
 
 
 	public String getProjectCode() {
@@ -71,6 +76,10 @@ public class TaskBean  extends DatabaseRelated{
 		this.startAt = startAt;
 	}
 
+	public void setStartAt(String startAt) throws ParseException {
+		this.startAt = Util.createCalendarByStringValue(startAt);
+	}
+
 	public Calendar getFinishAt() {
 		return finishAt;
 	}
@@ -79,20 +88,38 @@ public class TaskBean  extends DatabaseRelated{
 		this.finishAt = finishAt;
 	}
 
-	public String getProjectName() {
-		return projectName;
+	public void setFinishAt(String finishAt) throws ParseException {
+		this.finishAt = Util.createCalendarByStringValue(finishAt);
 	}
 
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
+
+	public String getTaskName() {
+		return taskName;
 	}
 
-	public String getProjectDetail() {
-		return projectDetail;
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
 
-	public void setProjectDetail(String projectDetail) {
-		this.projectDetail = projectDetail;
+	public String getDetail() {
+		return this.detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+
+
+	public boolean isDelFlag() {
+		return delFlag;
+	}
+
+	public void setDelFlag(boolean delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	public void setDelFlag(String delFlag) {
+		this.delFlag = Boolean.parseBoolean(delFlag);
 	}
 
 	public Color getStoneColor() {
@@ -101,6 +128,10 @@ public class TaskBean  extends DatabaseRelated{
 
 	public void setStoneColor(Color stoneColor) {
 		this.stoneColor = stoneColor;
+	}
+
+	public void setStoneColor(String stoneColor) throws Exception{
+		this.stoneColor = Util.createColorByString(stoneColor);
 	}
 
 

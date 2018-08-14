@@ -1,44 +1,66 @@
 package scheduler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-
-import com.google.gson.Gson;
-
+import java.io.File;
 
 public class FuncTest {
 
 
 	public static void main(String[] args) throws Exception{
 
-		//String TARGET_HOST = "https://tonkotsu-ohmoon.ssl-lolipop.jp/myscheduler/update_data.php";
-	    //String TARGET_HOST = "https://tonkotsu-ohmoon.ssl-lolipop.jp/myscheduler/insert_data.php";
+
+
+//		List<ProjectBean> projectList = facade.findAll(ProjectBean.class);
+//
+//		ProjectBean project = projectList.get(0);
+//
+//		project.setDetail("piyo");
+//		facade.update(project);
+
+//		Map<String,String> keys = new HashMap<String,String>();
+//		keys.put("PROJECT_CODE", "P_002");
+//
+//		String filePath = "T_PROJECT"+".csv";
+//		CSVReader reader = new CSVReader(filePath);
+//
+//		String[] record = reader.one(keys);
+//		record[1] = "hogehoge";
+//		List<String> pKeys = new ArrayList<String>();
+//		pKeys.add("PROJECT_CODE");
+//		reader.update(pKeys, record);
+//		AttributeSelectionBeanFacade facade = new AttributeSelectionBeanFacade();
+//		facade.createNewDatabase();
+//
+		File file = new File("");
+		System.out.println(file.getAbsoluteFile().getParentFile().getAbsolutePath());
+
+		String num = "001";
+		int no = Integer.parseInt(num);
+		System.out.println(no);
+
+
+
+
+		/*
+
+		System.out.printf("FuncTest start\n");
+		long start = System.currentTimeMillis();
+
+//		String TARGET_HOST = "https://tonkotsu-ohmoon.ssl-lolipop.jp/myscheduler/update_data.php";
+//	    String TARGET_HOST = "https://tonkotsu-ohmoon.ssl-lolipop.jp/myscheduler/insert_data.php";
 	    String TARGET_HOST = "https://tonkotsu-ohmoon.ssl-lolipop.jp/myscheduler/data_test.php";
 	    HttpClient httpclient = null;
 	    HttpPost post = null;
 	    HttpEntity entity = null;
 
-	    int socketTimeout = 12000;
-	    int connectionTimeout =24000;
+	    int socketTimeout = 3300;
+	    int connectionTimeout =300;
 
 	    RequestConfig requestConfig = RequestConfig.custom()
 	    	      .setConnectTimeout(connectionTimeout)
 	    	      .setSocketTimeout(socketTimeout)
 	    	      .build();
+
+		System.out.printf("         check1 : %.1f\n",(double)(System.currentTimeMillis() - start));
 
 
         httpclient = HttpClientBuilder.create()
@@ -46,8 +68,13 @@ public class FuncTest {
         			.build();
 
 
+		System.out.printf("         check2 : %.1f\n",(double)(System.currentTimeMillis() - start));
+
         post = new HttpPost(TARGET_HOST);
         post.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+
+
+		System.out.printf("         http prepared : %.1f\n",(double)(System.currentTimeMillis() - start));
 
         Map<String,Object> attributes = new HashMap<String,Object>();
         Map<String,Object> userInfo = new HashMap<String,Object>();
@@ -83,12 +110,17 @@ public class FuncTest {
         post.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 
         HttpResponse response;
+
+
+		System.out.printf("         execute : %.1f\n",(double)(System.currentTimeMillis() - start));
         try{
         	response = httpclient.execute(post);
         }catch(Exception e){
         	post.abort();
+    		System.out.printf("         ERROR : %.1f\n",(double)(System.currentTimeMillis() - start));
         	throw e;
         }
+		System.out.printf("         received : %.1f\n",(double)(System.currentTimeMillis() - start));
 
         if(response.getStatusLine().getStatusCode() != 200 ){
 
@@ -104,6 +136,7 @@ public class FuncTest {
 
         String json  = EntityUtils.toString(entity);
         System.out.println("* "+json);
+        */
 
         /*
         JsonObject jsonResponse = (JsonObject) new Gson().fromJson(json, JsonObject.class);
@@ -118,8 +151,8 @@ public class FuncTest {
 
 
 
-        EntityUtils.consume(entity);
-        post.abort();
+//        EntityUtils.consume(entity);
+//        post.abort();
 
 
 //		ProjectBeanFacade projectFacade = new ProjectBeanFacade();
@@ -129,10 +162,6 @@ public class FuncTest {
 //		bean.setProjectCode("P-002");
 //
 //		projectFacade.insert(bean);
-
-
-		System.out.println("finish");
-
 
 	}
 }

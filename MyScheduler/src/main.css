@@ -129,28 +129,158 @@
 
 }
 
+// --------------------------------
+// 案件登録用
+// --------------------------------
+.project_edit_output_label{
+	-fx-alignment: center-left;
+	-fx-pref-height: 35;
+	-fx-pref-width: 130;
+}
 
-// --------------------------------
-//　テスト用
-// --------------------------------
-.test_text_area{
+.project_edit_title{
+	-fx-alignment: center-left;
+	-fx-pref-height: 35;
+	-fx-pref-width: 130;
+	-fx-padding: 5 5 5 12;
+}
+
+.project_edit_font{
+	-fx-font-size: 16px;
+	-fx-text-fill: #002080;
+}
+
+
+.project_edit_input_basic{
 	-fx-border-insets: 10 10 5 0;
 	-fx-background-insets: 10 10 5 0;
 	-fx-border-color:#a050ff;
+	-fx-background-color: #fbf4ff;
 	-fx-background-radius: 3px;
 	-fx-border-radius: 3px;
 }
 
-.test_text_area .content{
+.project_edit_input_basic .content{
 	-fx-background-color: #fbf4ff;
 }
-.test_text_field{
-	-fx-border-insets: 10 10 5 0;
-	-fx-background-insets: 10 10 5 0;
-	-fx-border-color:#a050ff;
-	-fx-background-color: #fbf4ff;
-	-fx-background-radius: 3px;
-	-fx-border-radius: 3px;
 
+.project_edit_input_textarea{
+	-fx-pref-height: 220;
+	-fx-pref-width: 820;
+}
+
+.project_edit_input_textfield{
+	-fx-pref-height: 38;
+	-fx-pref-width: 820;
+}
+
+
+.project_edit_button_base{
+	-fx-pref-height: 40;
+	-fx-pref-width: 85;
+	-fx-font-size: 20px;
+}
+
+.project_edit_button_regist:hover{
+	-fx-background-color: #ffe3e3;
+}
+
+.project_edit_button_regist{
+	-fx-background-color: #ffe8e8;
+	-fx-text-fill: #a00000;
+	-fx-font-weight: bold;
+	-fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
+
+.project_edit_button_clear:hover{
+	-fx-background-color: #e3e3ff;
+}
+
+.project_edit_button_clear{
+	-fx-background-color: #e8e8ff;
+	-fx-text-fill: #0000a0;
+	-fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
+
+
+.project_edit_attribute_selection{
+	-fx-pref-width: 270;
+	-fx-background-insets: 5;
+	-fx-border-insets: 5;
+}
+
+.project_edit_attribute_selection>.combo-box-popup.list-view {
+	-fx-border-color:#0000ff;
+	-fx-background-color:#a0fff0;
+}
+
+.project_edit_attribute_selection>.combo-box-popup .list-view .list-cell:filled:hover
+{
+    -fx-background-color: #d6eaff;
+}
+.project_edit_attribute_selection>.combo-box-popup .list-view .list-cell:selected
+{
+    -fx-background-color: #90b7ff;
+}
+
+.combo-box-base.project_edit_attribute_selection {
+	-fx-background-color: #a0e4ff;
+	-fx-border-color: #80b4ff;
+}
+
+
+
+
+// --------------------------------
+// 案件詳細用
+// --------------------------------
+
+
+.project_detail_output_basic{
+
+	-fx-background-color: #fbfffb;
+	-fx-padding: 5 12 5 12;
+	-fx-background-insets: 5;
+	-fx-border-insets: 5;
+
+}
+
+
+.project_detail_output_label{
+	-fx-alignment: center-left;
+	-fx-pref-width: 820;
+	-fx-pref-height: 45;
+}
+
+.project_detail_output_area{
+	-fx-alignment: top-left;
+	-fx-pref-width: 820;
+	-fx-pref-height: 200;
+}
+}
+
+.project_detail_font{
+	-fx-font-size: 17px;
+	-fx-text-fill: #004080;
+
+}
+
+.project_detail_title{
+	-fx-pref-width: 100;
+	-fx-pref-height: 45;
+	-fx-padding: 5 5 5 12;
+	-fx-alignment: center-left;
+}
+
+.project_detail_button_edit:hover{
+	-fx-background-color:#00aa00
+}
+
+.project_detail_button_edit{
+	-fx-background-color: #00a000;
+	-fx-text-fill: #e8ffe8;
+	-fx-font-weight: bold;
+	-fx-font-size: 22;
+	-fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,2 );
 }
 

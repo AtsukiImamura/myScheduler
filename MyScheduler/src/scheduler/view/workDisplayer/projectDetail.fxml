@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<!--
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+-->
+<?import javafx.scene.control.*?>
+
+
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.ProjectDetailController">
+	<children>
+		<HBox>
+			<Label styleClass="project_detail_title">
+				<text>案件番号</text>
+			</Label>
+			<Label fx:id="labelProjectCode" styleClass="project_detail_output_label,project_detail_output_basic,project_detail_font">
+				<text></text>
+			</Label>
+		</HBox>
+		<HBox>
+			<Label styleClass="project_detail_title">
+				<text>案件名</text>
+			</Label>
+			<Label fx:id="labelProjectName" styleClass="project_detail_output_label,project_detail_output_basic,project_detail_font"/>
+		</HBox>
+		<HBox>
+			<Label styleClass="project_detail_title">
+				<text>詳細</text>
+			</Label>
+			<Label fx:id="labelDetail" styleClass="project_detail_output_area,project_detail_output_basic,project_detail_font"/>
+		</HBox>
+		<VBox fx:id="attributesVBox">
+
+		</VBox>
+		<HBox>
+			<Button styleClass="project_detail_button_edit,project_edit_button_base" onAction="#onEditButtonClicked">
+				<text>編集</text>
+			</Button>
+		</HBox>
+	</children>
+</fx:root>

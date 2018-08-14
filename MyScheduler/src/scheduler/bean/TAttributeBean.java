@@ -91,4 +91,8 @@ public class TAttributeBean  extends DatabaseRelated{
 		this.dispOrder = dispOrder;
 	}
 
+	public void setDispOrder(String dispOrder) throws Exception{
+		this.dispOrder = Integer.parseInt(dispOrder);
+	}
+
 }

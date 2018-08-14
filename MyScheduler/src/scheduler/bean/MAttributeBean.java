@@ -5,6 +5,12 @@ import java.util.List;
 
 import scheduler.common.constant.NameConstant;
 
+
+/**
+ * （マスタ）属性
+ * @author ohmoon
+ *
+ */
 public class MAttributeBean extends DatabaseRelated{
 
 	public String getTableName(){
@@ -65,6 +71,10 @@ public class MAttributeBean extends DatabaseRelated{
 
 	public void setCostamaizeType(int costamaizeType) {
 		this.costamaizeType = costamaizeType;
+	}
+
+	public void setCostamaizeType(String costamaizeType) {
+		this.costamaizeType = Integer.parseInt(costamaizeType);
 	}
 
 }

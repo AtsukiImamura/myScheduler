@@ -141,8 +141,11 @@ public class NameConstant {
 
 
 
+	/* ---------------------------------------------------
+	 * データベース
+	 -----------------------------------------------------*/
 
-
+	public static final String PROJECT_CODE_PREFIX = "PJ_";
 
 
 

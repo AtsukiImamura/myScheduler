@@ -5,6 +5,7 @@ import java.util.List;
 
 import javafx.scene.paint.Color;
 import scheduler.common.constant.NameConstant;
+import scheduler.common.utils.Util;
 
 public class StatusBean  extends DatabaseRelated{
 
@@ -48,6 +49,10 @@ public class StatusBean  extends DatabaseRelated{
 
 	public void setColor(Color color) {
 		this.color = color;
+	}
+
+	public void setColor(String color) {
+		this.color = Util.createColorByString(color);
 	}
 
 	public String getTytle() {

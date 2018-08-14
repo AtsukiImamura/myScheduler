@@ -27,8 +27,8 @@ import scheduler.common.constant.NameConstant;
 
 public class DatabaseUtil {
 
-    private static int socketTimeout = 2500;
-    private static int connectionTimeout = 8000;
+    private static int socketTimeout = 9000;
+    private static int connectionTimeout = 300;
 
 
     /**
@@ -42,7 +42,7 @@ public class DatabaseUtil {
 	public static JsonArray findData(String requestType,String userCode,String password) throws Exception{
 
 		long start = System.currentTimeMillis();
-		System.out.printf("**** findData start ****\n");
+		System.out.printf("**** findData start **** %s \n",requestType);
 
 	    HttpPost post = null;
 	    HttpEntity entity = null;

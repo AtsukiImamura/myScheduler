@@ -1,10 +1,15 @@
 package scheduler.common.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javafx.scene.paint.Color;
+import scheduler.bean.AttributeSelectionBean;
 import scheduler.bean.ProjectBean;
+import scheduler.bean.StatusBean;
 import scheduler.bean.TaskBean;
 
 public class Util {
@@ -281,6 +286,63 @@ public class Util {
 	}
 
 
+
+	public static Calendar createCalendarByStringValue(String date) throws ParseException{
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar calendarDate = Calendar.getInstance();
+		calendarDate.setTime(format.parse(date));
+
+		return calendarDate;
+	}
+
+
+	public static Color createColorByString(String color){
+		color = color.substring(0, 8);
+		int colorCode = Integer.decode(color);
+		int blue = colorCode%(256);
+		int green = (colorCode/256)%(256);
+		int red = (colorCode/(256*256))%(256);
+
+		return  Color.rgb(red, green, blue);
+	}
+
+
+
+
+	/**
+	 * [(code)] selection value の形のものからcodeだけを取り出す
+	 * @param value
+	 * @return
+	 */
+	public static  String decodeSelectionCodeFromSelection(String selectedValue,int lengthOfCode){
+		return selectedValue.substring(1,lengthOfCode+1);
+
+	}
+
+
+	/**
+	 * [(code)] selection valueの形の選択表示を作成する
+	 * @param selectedValue
+	 * @return
+	 */
+	public static  String createSelection(AttributeSelectionBean selectedValue){
+		return createSelection(selectedValue.getSelectionCode(), selectedValue.getDispName());
+	}
+
+
+	public static  String createSelection(String code,String value){
+		StringBuilder builder = new StringBuilder();
+		builder.append("[");
+		builder.append(code);
+		builder.append("] ");
+		builder.append(value);
+		return builder.toString();
+	}
+
+
+	public static  String createSelection(StatusBean status){
+		return createSelection(status.getStatusCode(), status.getTytle());
+	}
 
 
 

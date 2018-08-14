@@ -13,34 +13,43 @@
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.ProjectEditorController">
 	<children>
 		<HBox>
-			<Label prefWidth="130.0" prefHeight="35.0" alignment="center_left">
+			<Label styleClass="project_edit_title">
 				<text>案件番号</text>
 			</Label>
-			<Label alignment="center_left">
-				<text>0001</text>
+			<Label fx:id="labelProjectCode" styleClass="project_edit_output_label,project_edit_font">
+				<text></text>
 			</Label>
 		</HBox>
 		<HBox>
-			<Label prefWidth="130.0" prefHeight="35.0"  alignment="center_left">
+			<Label styleClass="project_edit_title">
 				<text>案件名</text>
 			</Label>
-			<TextField 	prefWidth="420.0"
-						prefHeight="35.0"
-						styleClass="test_text_field"
-						/>
+			<TextField 	fx:id="textfieldProjectName" styleClass="project_edit_input_basic ,project_edit_input_textfield ,project_edit_font"/>
 		</HBox>
 		<HBox>
-			<Label prefWidth="130.0" prefHeight="35.0" alignment="center_left">
+			<Label styleClass="project_edit_title">
 				<text>詳細</text>
 			</Label>
-			<TextArea 	prefWidth="420.0"
-						prefHeight="200.0"
-						styleClass="test_text_area"
-						/>
+			<TextArea fx:id="detailTextArea" styleClass="project_edit_input_basic ,project_edit_input_textarea ,project_edit_font"/>
+		</HBox>
+		<HBox>
+			<Label styleClass="project_edit_title">
+				<text>ステータス</text>
+			</Label>
+			<ComboBox fx:id="statusCombo" prefWidth="120.0" prefHeight="35.0" promptText="--選択--">
+
+			</ComboBox>
 		</HBox>
 		<VBox fx:id="attributesVBox">
 
 		</VBox>
-		<Button fx:id="my_button" onAction="#onMyButtonClicked" text="click!"/>
+		<HBox>
+			<Button styleClass="project_edit_button_clear,project_edit_button_base" onAction="#onClearButtonClicked">
+				<text>クリア</text>
+			</Button>
+			<Button styleClass="project_edit_button_regist,project_edit_button_base" onAction="#onRegistButtonClicked">
+				<text>登録</text>
+			</Button>
+		</HBox>
 	</children>
 </fx:root>

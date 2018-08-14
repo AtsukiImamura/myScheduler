@@ -1,14 +1,31 @@
 package scheduler.bean;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-public abstract class DatabaseRelated {
+import scheduler.common.utils.Util;
 
+/**
+ * csvでデータを扱う際にデータベース操作に必要な機能を集めた抽象クラス。
+ * <br>また、作成日・作成者・変更日・変更者はデフォルトで整備されている
+ * @author ohmoon
+ *
+ */
+public abstract class DatabaseRelated extends Object{
+
+	/**
+	 * テーブルの名前を呼び出す。テーブル名は任意につけてよい。
+	 * @return
+	 */
 	public abstract String getTableName();
 
+
+	/**
+	 * 継承先のbeanのもつ属性のうち、主キーとして働くもののカラム名のリストを返すように実装する。<br>
+	 * カラム名は、facadeでcsvを作成してからカラム名をコピペするのがよい
+	 * @return
+	 */
 	public abstract List<String> getPrimaryKeyList();
 
 
@@ -26,9 +43,7 @@ public abstract class DatabaseRelated {
 
 
 	public void setCreatedAt(String createdAt) throws ParseException {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		this.createdAt = Calendar.getInstance();
-		this.createdAt.setTime(format.parse(createdAt));
+		this.createdAt = Util.createCalendarByStringValue(createdAt);
 	}
 
 
@@ -60,9 +75,7 @@ public abstract class DatabaseRelated {
 
 
 	public void setChangedAt(String changedAt) throws ParseException {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		this.createdAt = Calendar.getInstance();
-		this.changedAt.setTime(format.parse(changedAt));
+		this.changedAt = Util.createCalendarByStringValue(changedAt);
 	}
 
 

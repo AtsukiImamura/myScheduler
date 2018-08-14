@@ -83,4 +83,25 @@ public class Constant {
 
 
 	public static final double CALENDAR_DATE_CTRL_HEIGHT = 40;
+
+
+	public static final int ATTRIBUTE_COSTAMIZE_TYPE_FREE = 10;
+
+	public static final int ATTRIBUTE_COSTAMIZE_TYPE_SELECT = 20;
+
+	public static final int LENGTH_OF_SELECTION_CODE = 5;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
