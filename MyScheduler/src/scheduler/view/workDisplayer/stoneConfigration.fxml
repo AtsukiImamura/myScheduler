@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
+
+
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.TaskDetailController">
+	<children>
+		<HBox>
+			<VBox fx:id="statusListVbox" styleClass="">
+
+			</VBox>
+			<VBox fx:id="statusConfigVBox">
+				<Label fx:id="confStatusNameLabel">
+					<text></text>
+				</Label>
+				<Pane fx:id="confStatusColorPane">
+					<text></text>
+				</Pane>
+				<Label fx:id="confStatusDetailLabel">
+					<text></text>
+				</Label>
+				<HBox>
+					<Button fx:id="deleteButton" onAction="#onDeleteButtonClicked">
+						<text>削除</text>
+					</Button>
+					<Button fx:id="deleteButton" onAction="#onEditButtonClicked">
+						<text>編集</text>
+					</Button>
+				</HBox>
+			</VBox>
+			<VBox fx:id="statusEditVBox">
+				<TextField  fx:id="editStatusNameForm">
+					<text></text>
+				</TextField>
+				<Button fx:id="colorSelectionButton">
+					<text>選択</text>
+				</Button>
+				<Pane fx:id="editStatusColorPane">
+					<text></text>
+				</Pane>
+				<TextField fx:id="editStatusDetailForm">
+					<text></text>
+				</TextField>
+				<HBox>
+					<Button fx:id="deleteButton" onAction="#onClearButtonClicked">
+						<text>クリア</text>
+					</Button>
+					<Button fx:id="deleteButton" onAction="#onRegistButtonClicked">
+						<text>登録</text>
+					</Button>
+				</HBox>
+			</VBox>
+		</HBox>
+	</children>
+</fx:root>

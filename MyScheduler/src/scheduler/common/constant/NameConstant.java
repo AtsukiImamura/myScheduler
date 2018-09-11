@@ -9,6 +9,9 @@ package scheduler.common.constant;
 public class NameConstant {
 
 
+	public static final String APP_CLASS_NAME = "APP";
+
+
 	/* ---------------------------------------------------
 	 * TaskPopupで使うcssクラス名
 	 -----------------------------------------------------*/
@@ -147,6 +150,10 @@ public class NameConstant {
 
 	public static final String PROJECT_CODE_PREFIX = "PJ_";
 
+	public static final String TASK_CODE_PREFIX = "TK_";
+
+
+	public static final String FXML_PATH_PROJECT_EDITOR = "view/workDisplayer/workDisplayer.fxml";
 
 
 

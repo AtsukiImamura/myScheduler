@@ -257,9 +257,9 @@ public class CalendarDateCTRLView extends AbstractView{
 	 * @param selectedValue
 	 */
 	private void onChangeDay(int selectedValue){
-		System.out.printf("\nonChangeDay\n");
-		System.out.println("   currentDate = "+Util.getSlashFormatCalendarValue(currentDate, true));
-		System.out.println("   dayOffset = "+this.dayOffset.intValue());
+//		System.out.printf("\nonChangeDay\n");
+//		System.out.println("   currentDate = "+Util.getSlashFormatCalendarValue(currentDate, true));
+//		System.out.println("   dayOffset = "+this.dayOffset.intValue());
 
 		int currentOffset = this.dayOffset.intValue();
 		int currentDay = this.currentDate.get(Calendar.DAY_OF_MONTH);
@@ -268,8 +268,8 @@ public class CalendarDateCTRLView extends AbstractView{
 		this.dayOffset.set(newOffset);
 
 
-		System.out.println("     --> currentDate = "+Util.getSlashFormatCalendarValue(currentDate, true));
-		System.out.println("     --> dayOffset = "+this.dayOffset.intValue());
+//		System.out.println("     --> currentDate = "+Util.getSlashFormatCalendarValue(currentDate, true));
+//		System.out.println("     --> dayOffset = "+this.dayOffset.intValue());
 	}
 
 

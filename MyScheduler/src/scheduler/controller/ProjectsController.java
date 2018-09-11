@@ -1,17 +1,16 @@
 package scheduler.controller;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javafx.scene.Group;
 import scheduler.bean.ProjectBean;
-import scheduler.bean.TAttributeBean;
+import scheduler.bean.TaskBean;
 import scheduler.common.constant.Constant;
 import scheduler.common.utils.Util;
 import scheduler.facade.ProjectBeanFacade;
 import scheduler.facade.TAttributeBeanFacade;
+import scheduler.facade.TaskFacade;
 import scheduler.view.calendar.CalendarDateCTRLView;
 import scheduler.view.calendar.CalendarDateView;
 import scheduler.view.projectDisplayer.ProjectsView;
@@ -41,19 +40,48 @@ public class ProjectsController extends Controller{
 	/** カレンダーをコントロールするビュー */
 	private final CalendarDateCTRLView calendarDateCTRLView;
 
+	private static ProjectsController instance;
 
-
-	/** 属性のリスト（マップ） <br>
-	 * <ul>
-	 * <li>キー : 案件番号
-	 * <li>値 : 案件番号にひもづく属性のリスト
-	 * <ul>
-	 */
-	private final Map<String,List<TAttributeBean>> attributeLists;
-
+	public static ProjectsController currentInstance(){
+		return instance;
+	}
 
 	public List<ProjectBean> getProjectList() {
 		return projectList;
+	}
+
+
+	public void addProject(ProjectBean project){
+		projectsView.addProject(project);
+	}
+
+
+	public void addProject(String projectCode){
+		ProjectBean project = projectBeanFacade.one(projectCode);
+		if(project == null){
+			return;
+		}
+		this.addProject(project);
+	}
+
+
+	public void removeProject(ProjectBean project){
+		projectsView.removeProject(project);
+		projectBeanFacade.logicalDelete(project);
+	}
+
+
+	public void removeProject(String projectCode){
+		ProjectBean project = projectBeanFacade.one(projectCode);
+		if(project == null){
+			return;
+		}
+		this.removeProject(project);
+	}
+
+
+	public void addTask(TaskBean task){
+		this.projectsView.addTask(task);
 	}
 
 
@@ -92,18 +120,19 @@ public class ProjectsController extends Controller{
 	public ProjectsController(){
 		projectBeanFacade = new ProjectBeanFacade();
 		tAttributeBeanFacade = new TAttributeBeanFacade();
+		TaskFacade taskFacade = new TaskFacade();
 		projectList = projectBeanFacade.findAll();
-		attributeLists = new HashMap<String,List<TAttributeBean>>();
 		calendarDateView = new CalendarDateView(Constant.APP_PREF_WIDTH*Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH);
 
 		calendarDateCTRLView = new CalendarDateCTRLView();
 
-
-		//属性リスト初期化
-		initAttributeLists(projectList);
+		for(ProjectBean project: projectList){
+			List<TaskBean> taskList = taskFacade.findByProjectCode(project.getProjectCode());
+			project.setTaskBeanList(taskList);
+		}
 
 		//案件のビューを作成
-		projectsView = new ProjectsView(projectList,this.attributeLists);
+		projectsView = new ProjectsView(projectList);
 
 		calendarDateCTRLView.dayOffsetProperty().addListener((ov,oldValue,newValue)->{
 			System.out.println("source="+Util.getSlashFormatCalendarValue(calendarDateView.getViewStartAt(), true));
@@ -112,37 +141,18 @@ public class ProjectsController extends Controller{
 			projectsView.setViewStartAt(newViewStartAt);
 			System.out.println("  -> new="+Util.getSlashFormatCalendarValue(calendarDateView.getViewStartAt(), true));
 		});
+
+		instance = this;
 	}
 
 
 
 	public void setWidth(double width){
 		this.projectsView.setViewWidth(width);
+
+		double attributeWidth = Util.getAttributePartWidth(width);
+		calendarDateCTRLView.setTranslateX(attributeWidth);
+		calendarDateView.setTranslateX(attributeWidth);
+		calendarDateView.setWidth(width - attributeWidth);
 	}
-
-
-
-	/**
-	 * 属性のリスト（マップ）を初期化する<br>
-	 * マップは
-	 * <ul>
-	 * <li>キー : 案件番号
-	 * <li>値 : 案件番号にひもづく属性のリスト
-	 * <ul>
-	 * で作成される
-	 *
-	 * @param projectList
-	 */
-	private void initAttributeLists( List<ProjectBean> projectList){
-		for(ProjectBean project : projectList){
-			String projectCode = project.getProjectCode();
-			//案件に紐づく属性のリストを引き当て
-			List<TAttributeBean> attributeList = tAttributeBeanFacade.findByProjectCode(projectCode);
-			attributeLists.put(projectCode, attributeList);
-		}
-	}
-
-
-
-
 }

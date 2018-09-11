@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 
 
-<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.ProjectEditorController">
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml/1"  styleClass="back_white" fx:controller="scheduler.view.workDisplayer.ProjectEditorController">
 	<children>
 		<HBox>
 			<Label styleClass="project_edit_title">

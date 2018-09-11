@@ -34,9 +34,12 @@ public class CSVReader {
 	private final File csvFile;
 	private int rowCount = 0;
 
+	private String[] rowAttrs;
+
 	public CSVReader(String filePath){
 		this.filePath = filePath;
 		csvFile = new File(filePath);
+		rowAttrs = this.getAttrs();
 		if(!csvFile.exists()){
 
 		}
@@ -107,11 +110,40 @@ public class CSVReader {
 
 
 	/**
-	 * レコードをひとつ挿入する。主キーで重複があった場合は挿入しない
+	 * 指定したキーに合致するものを削除する
+	 * @param keys
+	 */
+	public void delete(Map<String,String> keys){
+		String line = "";
+		String[] tmp;
+		BufferedReader br;
+		List<String> records = new ArrayList<String>();
+		try{
+			br = new BufferedReader(new FileReader(csvFile));
+			//1行目は削除しない
+			records.add(br.readLine());
+			while((line = br.readLine()) != null){
+				tmp = line.split(",");
+				//主キーに合致しないものだけ再度書き出すリストに加える
+				if(!this.validateKeys(tmp, keys)){
+					records.add(line);
+				}
+			}
+			br.close();
+		}catch(IOException ioe){
+			line = "";
+		}
+		this.writeAll(records);
+	}
+
+
+	/**
+	 * レコードを一つ挿入する。
 	 * @param primaryKeys 主キーのリスト
 	 * @param record レコード
+	 * @param force 主キーに重複があった場合にアップデートするか (true=する false=しない)
 	 */
-	public void insert(List<String> primaryKeys,Map<String,String> record){
+	private void insert(List<String> primaryKeys,Map<String,String> record,boolean force){
 		//レコードの中身をcsvの格納順に並べ替え
 		String[] data = this.prepareData(record);
 		if(data == null){
@@ -132,6 +164,10 @@ public class CSVReader {
 				tmp = line.split(",");
 				//主キーが重複するなら
 				if(this.validateKeys(tmp, keysMap)){
+					if(force){
+						this.update(primaryKeys, record);
+					}
+					br.close();
 					return;
 				}
 			}
@@ -149,6 +185,27 @@ public class CSVReader {
 			} catch (IOException e) {
 			}
 		}
+	}
+
+
+	/**
+	 * レコードをひとつ挿入する。主キーで重複があった場合は挿入しない
+	 * @param primaryKeys 主キーのリスト
+	 * @param record レコード
+	 */
+	public void insert(List<String> primaryKeys,Map<String,String> record){
+		this.insert(primaryKeys, record, false);
+	}
+
+
+
+	/**
+	 * データを保存する。主キーが重複していればアップデートする
+	 * @param primaryKeys 主キーのリスト
+	 * @param record レコード
+	 */
+	public void save(List<String> primaryKeys,Map<String,String> record){
+		this.insert(primaryKeys, record, true);
 	}
 
 
@@ -241,12 +298,18 @@ public class CSVReader {
 		String line = "";
 		ArrayList<String[]> list = new ArrayList<String[]>();
 		BufferedReader br;
+
+		int delFlagIndex = this.findArrayIndex("DELETED", this.rowAttrs);
 		try{
 			br = new BufferedReader(new FileReader(csvFile));
 			//先頭行をとばす
 			br.readLine();
 			while((line = br.readLine()) != null){
-				list.add(line.split(","));
+				String[] data = line.split(",");
+				if(delFlagIndex >= 0 && data[delFlagIndex].equals("true")){
+					continue;
+				}
+				list.add(data);
 			}
 			br.close();
 		}catch(IOException ioe){
@@ -300,7 +363,7 @@ public class CSVReader {
 	 * @return
 	 */
 	private String findPrimaryKeyValue(String keyColumnName,String[] record){
-		String[] columns = this.getAttrs();
+		String[] columns = this.rowAttrs;
 
 		int keyIndex = this.findArrayIndex(keyColumnName, columns);
 		if(keyIndex == -1){
@@ -320,7 +383,14 @@ public class CSVReader {
 	 */
 	private int findArrayIndex(String needle,String[] haystack){
 		int count = 0;
+		if(needle == null){
+			return -1;
+		}
 		for(String value : haystack){
+			if(value == null){
+				count ++;
+				continue;
+			}
 			if(value.equals(needle)){
 				return count;
 			}
@@ -349,7 +419,7 @@ public class CSVReader {
 	 */
 	private String[] prepareData(Map<String,String> record){
 		//カラム名
-		String[] columns = this.getAttrs();
+		String[] columns = this.rowAttrs;
 		//nullであれば新たに作成する
 		if(columns == null){
 			columns = this.getColumnsByRecordKeys(record);

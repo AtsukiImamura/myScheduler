@@ -6,11 +6,16 @@ import java.util.List;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import scheduler.bean.ProjectBean;
+import scheduler.bean.StatusBean;
 import scheduler.bean.TAttributeBean;
 import scheduler.bean.TaskBean;
 import scheduler.common.constant.Constant;
+import scheduler.common.utils.Util;
+import scheduler.facade.StatusFacade;
+import scheduler.facade.TAttributeBeanFacade;
 import scheduler.view.AbstractView;
 import scheduler.view.calendar.CalenderRow;
+import scheduler.view.workDisplayer.ProjectDetailController;
 
 /**
  * 表示部で一つの案件を表示するクラス
@@ -25,6 +30,8 @@ public class ProjectView extends AbstractView{
 
 	/** 案件の属性リスト */
 	private List<TAttributeBean> attributeList;
+
+	private final TAttributeBeanFacade tAttributeFacade;
 
 	/** 案件のカレンダー */
 	private final CalenderRow calenderRow;
@@ -96,9 +103,10 @@ public class ProjectView extends AbstractView{
 	 * @param project 案件
 	 * @param attributes 案件の属性
 	 */
-	public ProjectView(ProjectBean project,List<TAttributeBean> attributes){
+	public ProjectView(ProjectBean project){
+		tAttributeFacade = new TAttributeBeanFacade();
 		this.project = project;
-		this.attributeList = attributes;
+		this.attributeList = tAttributeFacade.findByProjectCode(project.getProjectCode());
 		this.rateOfCalendarWidth = Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH;
 		selectedIndex = new SimpleIntegerProperty();
 		hoveredIndex = new SimpleIntegerProperty();
@@ -109,17 +117,42 @@ public class ProjectView extends AbstractView{
 		calenderRow.setTranslateX(Constant.APP_PREF_WIDTH*(1-rateOfCalendarWidth));
 
 		//表示に要する高さを登録
-		this.viewHeight.set(calenderRow.viewHeight.doubleValue());
+		double height = Math.max(calenderRow.viewHeight.doubleValue(), Constant.ATTRIBUTE_PRIMITIVE_ROW_DEFAULT_HEIGHT);
+		this.viewHeight.set(height);
 		this.viewWidth.set(Constant.APP_PREF_WIDTH);
 
+
+		TAttributeBean projectNameAttr = new TAttributeBean();
+		projectNameAttr.setAttributeCode(Constant.ATTRIBUTE_CODE_PROJECT_NAME);
+		projectNameAttr.setValue(project.getProjectName());
+		attributeList.add(Constant.ATTRIBUTE_INDEX_PROJECT_NAME, projectNameAttr);
 		//属性部
-		projectAttributesView = new ProjectAttributesView(attributes,calenderRow.viewHeight.doubleValue());
+		projectAttributesView = new ProjectAttributesView(attributeList,calenderRow.viewHeight.doubleValue());
 		projectAttributesView.setSize(Constant.APP_PREF_WIDTH*(1-rateOfCalendarWidth), this.viewHeight.doubleValue());
 
+		StatusFacade statusFacade = new StatusFacade();
+		StatusBean status = statusFacade.one(project.getStatus());
+		projectAttributesView.setStatus(status);
+		projectAttributesView.setOnMouseEntered(event->{
+			projectAttributesView.onMouseEntered();
+		});
+		projectAttributesView.setOnMouseExited(event->{
+			projectAttributesView.onMouseExited();
+		});
+		projectAttributesView.setOnMouseClicked(event->{
+			ProjectsView.currentInstance().clearClicked();
+			projectAttributesView.onMouseClicked();
+			ProjectDetailController projectDetailController = ProjectDetailController.getInstance();
+			projectDetailController.setProject(this.project);
+			projectDetailController.show();
+		});
+
+
 		//カレンダーの高さが変更されたときは属性部の高さも変更する
-		calenderRow.viewHeight.addListener((ov,newValue,oldValue)->{
+		calenderRow.viewHeight.addListener((ov,oldValue,newValue)->{
 			projectAttributesView.setViewHeight(newValue.doubleValue());
 			this.viewHeight.set(newValue.doubleValue());
+			ProjectsView.currentInstance().refreshHeight();
 		});
 
 		calenderRow.selectedIndex.addListener((ov,oldValue,newValue)->{
@@ -152,6 +185,11 @@ public class ProjectView extends AbstractView{
 	}
 
 
+	public void clearClicked(){
+		projectAttributesView.setClicked(false);
+	}
+
+
 	/**
 	 * カレンダーを一日前にする
 	 */
@@ -179,10 +217,11 @@ public class ProjectView extends AbstractView{
 	public void setViewWidth(double width){
 		this.viewWidth.set(width);
 
-		calenderRow.setViewWidth(width*rateOfCalendarWidth);
-		calenderRow.setTranslateX(width*(1-rateOfCalendarWidth));
+		double attributeWidth = Util.getAttributePartWidth(width);
 
-		projectAttributesView.setViewWidth(width*(1-rateOfCalendarWidth));
+		calenderRow.setViewWidth(width - attributeWidth);
+		calenderRow.setTranslateX(attributeWidth);
+		projectAttributesView.setViewWidth(attributeWidth);
 	}
 
 

@@ -3,7 +3,9 @@ package scheduler.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.paint.Color;
 import scheduler.common.constant.NameConstant;
+import scheduler.common.utils.Util;
 
 public class StoneBean  extends DatabaseRelated{
 
@@ -23,7 +25,7 @@ public class StoneBean  extends DatabaseRelated{
 	private String stoneCode;
 
 	/**色*/
-	private String color;
+	private Color color;
 
 	/**タイトル*/
 	private String tytle;
@@ -43,12 +45,16 @@ public class StoneBean  extends DatabaseRelated{
 		this.stoneCode = stoneCode;
 	}
 
-	public String getColor() {
+	public Color getColor() {
 		return color;
 	}
 
-	public void setColor(String color) {
+	public void setColor(Color color) {
 		this.color = color;
+	}
+
+	public void setColor(String color) {
+		this.color = Util.createColorByString(color);
 	}
 
 	public String getTytle() {

@@ -38,8 +38,8 @@ public class CalenderRow extends AbstractView{
 
 
 
-	@Override
-	protected void init(){
+
+	protected void initialize(){
 
 		this.viewWidth.set(Constant.CALENDAR_ROW_VIEW_WIDTH);
 		this.viewHeight.set(Constant.CALENDAR_ROW_VIEW_HEIGHT);
@@ -48,14 +48,7 @@ public class CalenderRow extends AbstractView{
 		//primitiveRowListの初期化
 		initPrimitiveRowList();
 
-		if(primitiveRowList != null){
 
-			for(int index = primitiveRowList.size()-1;index>=0;index--){
-				this.getChildren().add(primitiveRowList.get(index));
-			}
-			//this.getChildren().addAll(primitiveRowList);
-			this.viewHeight.set(CalendarDay.DEFAULT_HEIGHT*(primitiveRowList.size()));
-		}
 	}
 
 
@@ -64,8 +57,15 @@ public class CalenderRow extends AbstractView{
 	 * primitiveRowListの初期化
 	 */
 	private void initPrimitiveRowList(){
-		if(project == null || project.getTaskBeanList() == null){
-			this.viewHeight.set(0);
+
+		this.getChildren().clear();
+		primitiveRowList.clear();
+
+		if(project == null || project.getTaskBeanList() == null ||  project.getTaskBeanList().isEmpty()){
+			CalenderPrimitiveRow newPrimitiveRow = getInitializedPrimitiveRow(0);
+			primitiveRowList.add(newPrimitiveRow);
+			this.viewHeight.set(CalendarDay.DEFAULT_HEIGHT);
+			this.visiblizePrimitiveViews();
 			return;
 		}
 
@@ -76,7 +76,7 @@ public class CalenderRow extends AbstractView{
 		TaskBean primaryTask = null;
 		try{
 			primaryTask = taskBeanList.get(0);
-		}catch(ArrayIndexOutOfBoundsException e){
+		}catch(IndexOutOfBoundsException e){
 			this.resetViewHeight();
 		}
 		int primitiveRowListIndex = 0;
@@ -92,65 +92,32 @@ public class CalenderRow extends AbstractView{
 			}
 
 			//primitiveRowListIndexがprimitiveRowListの容量を超えた場合は新たに作成していれる
-			if(primitiveRowListIndex ==primitiveRowListSize ){
-				CalenderPrimitiveRow newPrimitiveRow = getInitializedPrimitiveRow();
-				newPrimitiveRow.setTranslateY(CalendarDay.DEFAULT_HEIGHT*primitiveRowListIndex);
-
-				//選択されている列に変化があった場合
-				newPrimitiveRow.selectedIndex.addListener((ov,oldValue,newValue)->{
-					System.out.println("newPrimitiveRow clicked :");
-					System.out.println(" oldValue						="+oldValue);
-					System.out.println(" newValue						="+newValue);
-					System.out.println(" selectedIndex					="+selectedIndex.intValue());
-					System.out.println(" hoveredIndex					="+hoveredIndex.intValue());
-					System.out.println(" newPrimitiveRow.selectedIndex	="+newPrimitiveRow.selectedIndex.intValue());
-					System.out.println(" newPrimitiveRow.hoveredIndex	="+newPrimitiveRow.hoveredIndex.intValue());
-					boolean selected;
-					if(this.selectedIndex.intValue() == newValue.intValue()){
-						selected = false;
-						this.selectedIndex.set(-1);
-					}else{
-						selected = true;
-						this.selectedIndex.set(newValue.intValue());
-					}
-					System.out.println("   --> selected						="+selected);
-					System.out.println("   --> selectedIndex				="+selectedIndex.intValue());
-					System.out.println("   --> hoveredIndex					="+hoveredIndex.intValue());
-					System.out.println("   --> newPrimitiveRow.selectedIndex="+newPrimitiveRow.selectedIndex.intValue());
-					System.out.println("   --> newPrimitiveRow.hoveredIndex	="+newPrimitiveRow.hoveredIndex.intValue());
-					for(CalenderPrimitiveRow primitiveRow: primitiveRowList){
-						primitiveRow.setSelected(oldValue.intValue(),!selected);
-					}
-					for(CalenderPrimitiveRow primitiveRow: primitiveRowList){
-						primitiveRow.setSelected(newValue.intValue(),selected);
-					}
-				});
-				//マウスホバーに変化があった場合
-				newPrimitiveRow.hoveredIndex.addListener((ov,oldValue,newValue)->{
-					if(newValue.intValue() == selectedIndex.intValue()){
-						return;
-					}
-/*
-					if(this.hoveredIndex.intValue() == newValue.intValue()){
-						return;
-					}
-					*/
-					hoveredIndex.set(newValue.intValue());
-					for(CalenderPrimitiveRow primitiveRow: primitiveRowList){
-						primitiveRow.setHovered(oldValue.intValue(),false);
-					}
-
-					for(CalenderPrimitiveRow primitiveRow: primitiveRowList){
-						primitiveRow.setHovered(newValue.intValue(),true);
-					}
-				});
-
+			if(primitiveRowListIndex == primitiveRowListSize ){
+				CalenderPrimitiveRow newPrimitiveRow = getInitializedPrimitiveRow(primitiveRowListIndex);
 				primitiveRowList.add(newPrimitiveRow);
 			}
 			primitiveRowList.get(primitiveRowListIndex).setTask(task);
 			primitiveRowListIndex++;
 		}
 		this.resetViewHeight();
+
+		this.visiblizePrimitiveViews();
+	}
+
+
+	private void visiblizePrimitiveViews(){
+		if(primitiveRowList != null){
+
+			for(int index = primitiveRowList.size()-1;index>=0;index--){
+				CalenderPrimitiveRow row = primitiveRowList.get(index);
+				if(this.getChildren().indexOf(row)>0){
+					continue;
+				}
+				this.getChildren().add(row);
+			}
+			//this.getChildren().addAll(primitiveRowList);
+			this.viewHeight.set(CalendarDay.DEFAULT_HEIGHT*(primitiveRowList.size()));
+		}
 	}
 
 
@@ -185,6 +152,64 @@ public class CalenderRow extends AbstractView{
 		return newPrimitiveRow;
 	}
 
+	private CalenderPrimitiveRow getInitializedPrimitiveRow(int index){
+		CalenderPrimitiveRow newPrimitiveRow = new CalenderPrimitiveRow(this.viewWidth.doubleValue());
+		newPrimitiveRow.setViewWidth(this.viewWidth.doubleValue());
+		newPrimitiveRow.setTranslateY(CalendarDay.DEFAULT_HEIGHT*index);
+
+
+		//選択されている列に変化があった場合
+		newPrimitiveRow.selectedIndex.addListener((ov,oldValue,newValue)->{
+			System.out.println("newPrimitiveRow clicked :");
+			System.out.println(" oldValue						="+oldValue);
+			System.out.println(" newValue						="+newValue);
+			System.out.println(" selectedIndex					="+selectedIndex.intValue());
+			System.out.println(" hoveredIndex					="+hoveredIndex.intValue());
+			System.out.println(" newPrimitiveRow.selectedIndex	="+newPrimitiveRow.selectedIndex.intValue());
+			System.out.println(" newPrimitiveRow.hoveredIndex	="+newPrimitiveRow.hoveredIndex.intValue());
+			boolean selected;
+			if(this.selectedIndex.intValue() == newValue.intValue()){
+				selected = false;
+				this.selectedIndex.set(-1);
+			}else{
+				selected = true;
+				this.selectedIndex.set(newValue.intValue());
+			}
+			System.out.println("   --> selected						="+selected);
+			System.out.println("   --> selectedIndex				="+selectedIndex.intValue());
+			System.out.println("   --> hoveredIndex					="+hoveredIndex.intValue());
+			System.out.println("   --> newPrimitiveRow.selectedIndex="+newPrimitiveRow.selectedIndex.intValue());
+			System.out.println("   --> newPrimitiveRow.hoveredIndex	="+newPrimitiveRow.hoveredIndex.intValue());
+			for(CalenderPrimitiveRow primitiveRow: primitiveRowList){
+				primitiveRow.setSelected(oldValue.intValue(),!selected);
+			}
+			for(CalenderPrimitiveRow primitiveRow: primitiveRowList){
+				primitiveRow.setSelected(newValue.intValue(),selected);
+			}
+		});
+		//マウスホバーに変化があった場合
+		newPrimitiveRow.hoveredIndex.addListener((ov,oldValue,newValue)->{
+			if(newValue.intValue() == selectedIndex.intValue()){
+				return;
+			}
+/*
+			if(this.hoveredIndex.intValue() == newValue.intValue()){
+				return;
+			}
+			*/
+			hoveredIndex.set(newValue.intValue());
+			for(CalenderPrimitiveRow primitiveRow: primitiveRowList){
+				primitiveRow.setHovered(oldValue.intValue(),false);
+			}
+
+			for(CalenderPrimitiveRow primitiveRow: primitiveRowList){
+				primitiveRow.setHovered(newValue.intValue(),true);
+			}
+		});
+
+		return newPrimitiveRow;
+	}
+
 
 
 
@@ -195,7 +220,9 @@ public class CalenderRow extends AbstractView{
 	 * @return
 	 */
 	private boolean validateConfrict(TaskBean task1,TaskBean task2){
-		return !(task1.getFinishAt().before(task2.getStartAt()) || task1.getStartAt().after(task2.getFinishAt()));
+
+		return !(Util.compareCalendarDate(task2.getStartAt(), task1.getFinishAt()) > 0
+				||Util.compareCalendarDate( task1.getStartAt(), task2.getFinishAt()) > 0);
 	}
 
 
@@ -215,7 +242,7 @@ public class CalenderRow extends AbstractView{
 		selectedIndex = new SimpleIntegerProperty();
 		hoveredIndex = new SimpleIntegerProperty();
 
-		init();
+		initialize();
 	}
 
 
@@ -281,23 +308,49 @@ public class CalenderRow extends AbstractView{
 	 * @param task
 	 */
 	public void addTask(TaskBean task){
-		for(CalenderPrimitiveRow primitiveRow : primitiveRowList){
-			if(primitiveRow.canAdd(task)){
-				primitiveRow.setTask(task);
-				return;
+
+		for(TaskBean bean : this.project.getTaskBeanList()){
+			if(bean.getProjectCode().equals(task.getProjectCode())
+			&& bean.getTaskCode().equals(task.getTaskCode())){
+				this.project.getTaskBeanList().remove(bean);
+				break;
 			}
 		}
-		CalenderPrimitiveRow newPrimitiveRow = this.getInitializedPrimitiveRow();
-		newPrimitiveRow.setTask(task);
-		primitiveRowList.add(newPrimitiveRow);
+		this.project.getTaskBeanList().add(task);
+		this.initPrimitiveRowList();
 
-		resetViewHeight();
+//		for(CalenderPrimitiveRow primitiveRow : primitiveRowList){
+//			List<CalendarViewTask> filteredList = primitiveRow.getCalendarViewTaskList().stream().filter(view->{
+//				TaskBean listTask = view.getTask();
+//				 return listTask.getProjectCode().equals(task.getProjectCode())
+//							&& listTask.getTaskCode().equals(task.getTaskCode());
+//			}).collect(Collectors.toList());
+//
+//			filteredList.forEach(view->{
+//				view.setTask(task);
+//			});
+//
+//			if(filteredList.size() > 0){
+//				return;
+//			}
+//
+//			if(primitiveRow.canAdd(task)){
+//				primitiveRow.setTask(task);
+//				return;
+//			}
+//		}
+//		CalenderPrimitiveRow newPrimitiveRow = getInitializedPrimitiveRow(primitiveRowList.size());
+//		newPrimitiveRow.setTask(task);
+//		primitiveRowList.add(newPrimitiveRow);
+//		this.getChildren().add(newPrimitiveRow);
+//
+//		resetViewHeight();
 	}
 
 
 
 	private void resetViewHeight(){
-		this.viewHeight.set(primitiveRowList.size()*Constant.PROJECT_CALENDAR_ROW_HEIGHT);
+		this.viewHeight.set(primitiveRowList.size()*CalendarDay.DEFAULT_HEIGHT);
 	}
 
 
@@ -322,6 +375,14 @@ public class CalenderRow extends AbstractView{
 		for(CalenderPrimitiveRow primitiveRow: this.primitiveRowList){
 			primitiveRow.setSelected(index, selected);
 		}
+	}
+
+
+
+	@Override
+	protected void init() {
+		// TODO 自動生成されたメソッド・スタブ
+
 	}
 
 

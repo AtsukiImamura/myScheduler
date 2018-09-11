@@ -8,10 +8,13 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import scheduler.bean.AttributeSelectionBean;
 import scheduler.bean.StatusBean;
 import scheduler.bean.TAttributeBean;
 import scheduler.common.constant.Constant;
 import scheduler.common.constant.NameConstant;
+import scheduler.common.utils.Util;
+import scheduler.facade.AttributeSelectionBeanFacade;
 
 
 /**
@@ -24,6 +27,8 @@ public class AttributePrimitiveView extends AbstractView{
 
 	/** 表示する属性 */
 	private final TAttributeBean attribute;
+
+	private final AttributeSelectionBeanFacade attributeSelectionBeanFacade;
 
 	/** 案件のステータス */
 	private StatusBean status;
@@ -41,7 +46,16 @@ public class AttributePrimitiveView extends AbstractView{
 			return;
 		}
 		//TODO 体裁を整える（大きさ・配置・css)
-		attributeLabel = new Label(attribute.getValue());
+		String dispValue = "";
+		String selectionCode = "";
+		if((dispValue = attribute.getValue()).equals(Constant.DB_VALUE_NULL)
+				&& !(selectionCode = attribute.getSelectionCode()).equals(Constant.DB_VALUE_NULL)){
+			AttributeSelectionBean selection = attributeSelectionBeanFacade.one(attribute.getAttributeCode(), selectionCode);
+			if(selection != null){
+				dispValue = selection.getDispName();
+			}
+		}
+		attributeLabel = new Label(dispValue);
 		attributeLabel.setPrefSize(
 				this.viewWidth == null ? Constant.ATTRIBUTE_PRIMITIVE_ROW_DEFAULT_WIDTH : this.viewWidth.doubleValue(),
 				this.viewHeight == null ? Constant.ATTRIBUTE_PRIMITIVE_ROW_DEFAULT_HEIGHT : this.viewHeight.doubleValue()
@@ -74,12 +88,42 @@ public class AttributePrimitiveView extends AbstractView{
 	 * @param status
 	 */
 	public void setStatus(StatusBean status){
+		if(status == null){
+			return;
+		}
 		this.status = status;
 		Color statusColor = status.getColor();
 		if(statusColor == null){
 			return;
 		}
 		setLabelBackgroundColor(status.getColor());
+	}
+
+
+
+	public void onMouseEntered(){
+		if(status == null){
+			return;
+		}
+		Color statusColor = status.getColor();
+		setLabelBackgroundColor(Util.createHighLightColor(statusColor));
+	}
+
+
+	public void onMouseExited(){
+		if(status == null){
+			return;
+		}
+		setLabelBackgroundColor(status.getColor());
+	}
+
+
+	public void onClicked(){
+		if(status == null){
+			return;
+		}
+		Color statusColor = status.getColor();
+		setLabelBackgroundColor(Util.createClickedColor(statusColor));
 	}
 
 
@@ -126,6 +170,7 @@ public class AttributePrimitiveView extends AbstractView{
 
 		this.viewWidth.set(width);
 		this.viewHeight.set(height);
+		this.attributeSelectionBeanFacade = new AttributeSelectionBeanFacade();
 
 		init();
 	}

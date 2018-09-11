@@ -37,7 +37,7 @@ public class TaskPopup extends AbstractView{
 		detailVBox.getStyleClass().add(NameConstant.TASK_POPUP_DETAIL_VBOX_CSS);
 
 		//タスク名
-		Label projectNameLabel = new Label(task.getTaskCode());
+		Label projectNameLabel = new Label(task.getTaskName());
 		projectNameLabel.setPrefWidth(Constant.TASK_POPUP_DETAIL_LABEL_PREF_WIDTH);
 		projectNameLabel.getStyleClass().add(NameConstant.TASK_POPUP_PROJECT_NAME_LABEL_CSS);
 

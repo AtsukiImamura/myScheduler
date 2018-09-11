@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javafx.scene.paint.Color;
 import scheduler.common.constant.NameConstant;
 import scheduler.common.utils.Util;
 
@@ -47,9 +46,7 @@ public class TaskBean  extends DatabaseRelated{
 	private String detail;
 
 	/** ストーンカラー */
-	private Color stoneColor;
-
-	private boolean delFlag;
+	private String stoneCode;
 
 
 	public String getProjectCode() {
@@ -109,30 +106,14 @@ public class TaskBean  extends DatabaseRelated{
 		this.detail = detail;
 	}
 
-
-	public boolean isDelFlag() {
-		return delFlag;
+	public String getStoneCode() {
+		return stoneCode;
 	}
 
-	public void setDelFlag(boolean delFlag) {
-		this.delFlag = delFlag;
+	public void setStoneCode(String stoneCode) {
+		this.stoneCode = stoneCode;
 	}
 
-	public void setDelFlag(String delFlag) {
-		this.delFlag = Boolean.parseBoolean(delFlag);
-	}
-
-	public Color getStoneColor() {
-		return stoneColor;
-	}
-
-	public void setStoneColor(Color stoneColor) {
-		this.stoneColor = stoneColor;
-	}
-
-	public void setStoneColor(String stoneColor) throws Exception{
-		this.stoneColor = Util.createColorByString(stoneColor);
-	}
 
 
 	/**
@@ -141,7 +122,9 @@ public class TaskBean  extends DatabaseRelated{
 	 * @return
 	 */
 	public boolean isInPeriod(Calendar date){
-		if(date.after(startAt) && date.before(finishAt)){
+
+		if(Util.compareCalendarDate(date, startAt) > 0
+				&& Util.compareCalendarDate(date, finishAt) < 0){
 			return true;
 		}else{
 			return false;

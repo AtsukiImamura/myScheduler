@@ -4,7 +4,13 @@ import java.util.Calendar;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import scheduler.common.constant.Constant;
 import scheduler.view.AbstractView;
 
@@ -46,12 +52,33 @@ public class CalendarDateView extends AbstractView{
 		Calendar date =  (Calendar)viewStartAt.clone();
 		int length = (int)(this.viewWidth.doubleValue()/CalendarDay.DEFAULT_WIDTH);
 
+		Label monthNameLabel = new Label();
+		double monthNameLabelWidth = 0;
+		double monthNameLabelTransX = 0;
+		int currentMonth = -1;
 		for(int index=0;index<length;index++){
+
+			if(date.get(Calendar.MONTH) != currentMonth){
+				currentMonth = date.get(Calendar.MONTH);
+				monthNameLabelTransX += monthNameLabelWidth;
+				monthNameLabel = new Label((currentMonth+1)+Constant.POSTFIX_CALEDAR_MONTH);
+				monthNameLabel.setTranslateX(monthNameLabelTransX);
+				monthNameLabelWidth = 0;
+				int monoColorValue = Constant.MONTH_NAME_LABEL_BACK_BASE + Constant.VAR_OF_BACK_BASE*(1-(currentMonth%2)*2);
+				monthNameLabel.setBackground(new Background(new BackgroundFill(Color.rgb(monoColorValue, monoColorValue, monoColorValue),new CornerRadii(0),new Insets(0))));
+				monthNameLabel.setPrefHeight(Constant.MONTH_NAME_LABEL_HEIGHT);
+				this.getChildren().add(monthNameLabel);
+			}
+
 			//初期化されたCalendarDayを得る
 			CalendarDay calendarDay = getInitializedCalendarDay(date,index);
 			this.getChildren().add(calendarDay);
 
 			date.add(Calendar.DAY_OF_MONTH, 1);
+
+			monthNameLabelWidth += calendarDay.viewWidth.doubleValue();
+			monthNameLabel.setPrefWidth(monthNameLabelWidth);
+			monthNameLabel.setMaxWidth(monthNameLabelWidth);
 		}
 		date.add(Calendar.DAY_OF_MONTH, -1);
 		viewFinishAt =  (Calendar)date.clone();
@@ -104,10 +131,10 @@ public class CalendarDateView extends AbstractView{
 	private CalendarDay getInitializedCalendarDay(Calendar date,int index){
 		CalendarDay calendarDay = new CalendarDay();
 		calendarDay.setTranslateX(CalendarDay.DEFAULT_WIDTH*calendarDay.getScaleX()*index);
-		calendarDay.setDayOfWeek(date.get(Calendar.DAY_OF_WEEK));
-		calendarDay.setDisplayDate(date.get(Calendar.DAY_OF_MONTH));
+		calendarDay.setTranslateY(Constant.MONTH_NAME_LABEL_HEIGHT);
+		calendarDay.setDisplayDate(date,true);
 		//曜日で色を分ける
-		setDateColor(calendarDay);
+		//setDateColor(calendarDay);
 
 		//選択フラグが立った時の処理
 		calendarDay.selectedProperty.addListener((ov,oldValue,newValue)->{
@@ -129,33 +156,6 @@ public class CalendarDateView extends AbstractView{
 			}
 		});
 		return calendarDay;
-	}
-
-
-
-
-	/**
-	 * 曜日に基づいて色をセットする
-	 * @param calendarDay
-	 */
-	private void setDateColor(CalendarDay calendarDay){
-		switch(calendarDay.getDayOfWeek()){
-		case Calendar.SUNDAY:
-			calendarDay.setStoneColor(Constant.CALENDAR_DATE_VIEW_SUNDAY);
-			calendarDay.setMouseClickedColor(Constant.CALENDAR_DATE_VIEW_SUNDAY_CLICKED);
-			calendarDay.setMouseHoveredColor(Constant.CALENDAR_DATE_VIEW_SUNDAY_HOVERED);
-			break;
-		case Calendar.SATURDAY:
-			calendarDay.setStoneColor(Constant.CALENDAR_DATE_VIEW_SATURDAY);
-			calendarDay.setMouseClickedColor(Constant.CALENDAR_DATE_VIEW_SATURDAY_CLICKED);
-			calendarDay.setMouseHoveredColor(Constant.CALENDAR_DATE_VIEW_SATURDAY_HOVERED);
-			break;
-		default:
-			calendarDay.setStoneColor(Constant.CALENDAR_DATE_VIEW_NOMAL);
-			calendarDay.setMouseClickedColor(Constant.CALENDAR_DATE_VIEW_NOMAL_CLICKED);
-			calendarDay.setMouseHoveredColor(Constant.CALENDAR_DATE_VIEW_NOMAL_HOVERED);
-			break;
-		}
 	}
 
 
@@ -191,6 +191,13 @@ public class CalendarDateView extends AbstractView{
 		init();
 	}
 
+
+
+	public void setWidth(double width){
+		this.viewWidth.set(width);
+		initCalendarDays();
+
+	}
 
 
 }

@@ -3,6 +3,7 @@ package scheduler.view.calendar;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -23,12 +24,21 @@ public class CalenderPrimitiveRow extends AbstractView {
 
 
 	/**デフォルトの表示幅*/
-	protected static final double DEFAULT_VIEW_WIDTH = 400;
+	public static final double DEFAULT_VIEW_WIDTH = 400;
 	/**デフォルトの表示高さ*/
-	protected static final double DEFAULT_VIEW_HEIGHT = 33;
+	public static final double DEFAULT_VIEW_HEIGHT = 33;
 
 	/**タスク*/
 	private List<TaskBean> taskList;
+
+	private final List<CalendarDay> dayList;
+
+	private final List<CalendarViewTask> calendarViewTaskList;
+
+
+	public List<CalendarViewTask> getCalendarViewTaskList(){
+		return calendarViewTaskList;
+	}
 
 	/**表示する最初の日*/
 	private Calendar viewStartAt;
@@ -53,10 +63,15 @@ public class CalenderPrimitiveRow extends AbstractView {
 	 * @param viewStartAt
 	 */
 	public void setViewStartAt(Calendar viewStartAt) {
+
+		long start = System.currentTimeMillis();
 		this.viewStartAt = viewStartAt;
 
 		//変更した開始日で再描画する
 		reset();
+
+		System.out.printf("CalenderPrimitiveRow#setViewStartAt task=%d time=%.3f\n",
+				this.taskList.size(),(double)(System.currentTimeMillis() - start));
 	}
 
 
@@ -118,7 +133,8 @@ public class CalenderPrimitiveRow extends AbstractView {
 		try{
 			//calendarViewTask.setViewStartAt(viewStartAt);
 			//calendarViewTask.setViewFinishAt(viewFinishAt);
-
+			calendarViewTask.toFront();
+			this.calendarViewTaskList.add(calendarViewTask);
 			this.getChildren().add(calendarViewTask);
 
 			int offset = Util.getAbsOffsetOfDate(calendarViewTask.getTaskViewStartAt(), viewStartAt);
@@ -168,7 +184,8 @@ public class CalenderPrimitiveRow extends AbstractView {
 	 * @param date ハイライトをかける日
 	 */
 	public void highlightDate(Calendar date){
-		if(date.before(viewStartAt) || date.after(viewFinishAt)){
+		if(Util.compareCalendarDate(date, viewStartAt) < 0
+				|| Util.compareCalendarDate(date, viewFinishAt) > 0){
 			return;
 		}
 
@@ -220,7 +237,7 @@ public class CalenderPrimitiveRow extends AbstractView {
 		viewStartAt  = Calendar.getInstance();
 		viewFinishAt = Calendar.getInstance();
 
-		reset();
+		//reset();
 	}
 
 
@@ -233,7 +250,8 @@ public class CalenderPrimitiveRow extends AbstractView {
 		selectedIndex = new SimpleIntegerProperty();
 		hoveredIndex =  new SimpleIntegerProperty();
 		this.viewWidth.set(width);
-
+		dayList = new ArrayList<CalendarDay>();
+		calendarViewTaskList = new ArrayList<CalendarViewTask>();
 		init();
 
 	}
@@ -258,43 +276,68 @@ public class CalenderPrimitiveRow extends AbstractView {
 			viewStartAt  = Calendar.getInstance();
 		}
 
-		Calendar tmpDate = (Calendar)viewStartAt.clone();
-
-		this.getChildren().clear();
-		for(int index=0;index<length;index++){
-			CalendarDay calendarDay = getInitializedCalendarDay(tmpDate,index);
-			this.getChildren().add(calendarDay);
-
-			tmpDate.add(Calendar.DAY_OF_MONTH, 1);
-		}
-
-
 		//表示の開始日に表示長を足したものを表示の終了日とする
 		viewFinishAt = (Calendar)viewStartAt.clone();
 		viewFinishAt.add(Calendar.DAY_OF_MONTH, length);
 
+		Calendar tmpDate = (Calendar)viewStartAt.clone();
 
+		this.getChildren().clear();
+
+		int dayIndex = 0;
+
+		for(CalendarDay calendarDay: dayList){
+			dayIndex++;
+			if(dayIndex > length){
+				this.getChildren().remove(calendarDay);
+				dayList.remove(calendarDay);
+				continue;
+			}
+			calendarDay.setDisplayDate(tmpDate,false);
+			tmpDate.add(Calendar.DAY_OF_MONTH, 1);
+		}
+
+		for(int index=dayIndex;index<length;index++){
+			CalendarDay calendarDay = getInitializedCalendarDay(tmpDate,index);
+			dayList.add(calendarDay);
+			tmpDate.add(Calendar.DAY_OF_MONTH, 1);
+		}
+
+		this.getChildren().addAll(dayList);
 		taskList.forEach(task->{
+			List<CalendarViewTask> viewTaskList = calendarViewTaskList.stream().filter(view->{
+				if(view.getTask().equals(task)){
+					return true;
+				}
+				return false;
+			}).collect(Collectors.toList());
+
+			for(CalendarViewTask viewTask : viewTaskList){
+				int offset = Util.getAbsOffsetOfDate(viewTask.getTaskViewStartAt(), viewStartAt);
+				viewTask.setViewPeriod(viewStartAt,viewFinishAt);
+				viewTask.setTranslateX(offset*CalendarDay.DEFAULT_WIDTH);
+			}
+
+			if(viewTaskList.size() > 0){
+				return;
+			}
+
+
 			CalendarViewTask calendarViewTask = new CalendarViewTask(task,this.viewStartAt,this.viewFinishAt);
 
 			//カレンダーの表示の開始日・終了日を登録
 			try{
-				//calendarViewTask.setViewStartAt(viewStartAt);
-				//calendarViewTask.setViewFinishAt(viewFinishAt);
-
 				int offset = Util.getAbsOffsetOfDate(calendarViewTask.getTaskViewStartAt(), viewStartAt);
 				calendarViewTask.setTranslateX(offset*CalendarDay.DEFAULT_WIDTH);
 				this.getChildren().add(calendarViewTask);
+				this.calendarViewTaskList.add(calendarViewTask);
 			}catch(Exception e){
 				e.printStackTrace();
 			}
 		});
 
-		//initViewTaskStartAndFinish();
+		this.getChildren().addAll(calendarViewTaskList);
 	}
-
-
-
 
 	private CalendarDay getInitializedCalendarDay(Calendar date,int index){
 		CalendarDay calendarDay = new CalendarDay();
@@ -430,7 +473,8 @@ public class CalenderPrimitiveRow extends AbstractView {
 		Calendar finishAt = checkTask.getFinishAt();
 
 		for(TaskBean task : taskList){
-			if(!(task.getStartAt().after(finishAt) || task.getFinishAt().before(startAt))){
+
+			if(!(Util.compareCalendarDate(task.getStartAt(), finishAt) > 0 || Util.compareCalendarDate(task.getFinishAt(), startAt) < 0)){
 				return false;
 			}
 		}

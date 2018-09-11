@@ -36,8 +36,14 @@
 
 		</VBox>
 		<HBox>
+			<Button styleClass="project_detail_button_edit,project_edit_button_base" onAction="#onDeleteButtonClicked">
+				<text>削除</text>
+			</Button>
 			<Button styleClass="project_detail_button_edit,project_edit_button_base" onAction="#onEditButtonClicked">
 				<text>編集</text>
+			</Button>
+			<Button styleClass="project_detail_button_edit,project_edit_button_base" onAction="#onAddTaskButtonClicked">
+				<text>タスク追加</text>
 			</Button>
 		</HBox>
 	</children>

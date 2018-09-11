@@ -12,6 +12,17 @@ import scheduler.common.constant.NameConstant;
  */
 public class TAttributeBean  extends DatabaseRelated{
 
+
+	public TAttributeBean(String projectCode,String attrCode){
+		this.projectCode = projectCode;
+		this.attributeCode = attrCode;
+	}
+
+	public TAttributeBean(){
+
+	}
+
+
 	public String getTableName(){
 		return NameConstant.TABLE_NAME_T_ATTRIBUTES;
 	}

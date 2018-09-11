@@ -132,6 +132,18 @@
 // --------------------------------
 // 案件登録用
 // --------------------------------
+
+.back_white{
+	-fx-background-color: #ffffff;
+}
+
+.date_output_label{
+	-fx-pref-width: 180;
+	-fx-min-width: 180;
+	-fx-pref-height: 42;
+}
+
+
 .project_edit_output_label{
 	-fx-alignment: center-left;
 	-fx-pref-height: 35;
@@ -165,7 +177,7 @@
 }
 
 .project_edit_input_textarea{
-	-fx-pref-height: 220;
+	-fx-pref-height: 150;
 	-fx-pref-width: 820;
 }
 
@@ -177,7 +189,9 @@
 
 .project_edit_button_base{
 	-fx-pref-height: 40;
-	-fx-pref-width: 85;
+	-fx-min-width: 95;
+	-fx-border-insets: 0 5 0 5;
+	-fx-background-insets: 0 5 0 5;
 	-fx-font-size: 20px;
 }
 
@@ -245,6 +259,11 @@
 
 }
 
+.code_label{
+	-fx-min-width: 180;
+	-fx-pref-width: 180;
+}
+
 
 .project_detail_output_label{
 	-fx-alignment: center-left;
@@ -255,7 +274,7 @@
 .project_detail_output_area{
 	-fx-alignment: top-left;
 	-fx-pref-width: 820;
-	-fx-pref-height: 200;
+	-fx-pref-height: 150;
 }
 }
 
@@ -267,6 +286,7 @@
 
 .project_detail_title{
 	-fx-pref-width: 100;
+	-fx-min-width: 100;
 	-fx-pref-height: 45;
 	-fx-padding: 5 5 5 12;
 	-fx-alignment: center-left;

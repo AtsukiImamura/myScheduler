@@ -37,14 +37,10 @@ public class ProjectBean extends DatabaseRelated{
 	private String detail;
 
 	/** ステータス */
-	private int status;
-
-	/** 削除フラグ */
-	private boolean delFlag;
+	private String status;
 
 	/** このタスクに紐づいたプロジェクトのリスト */
 	private List<TaskBean> taskBeanList;
-
 
 
 
@@ -73,29 +69,14 @@ public class ProjectBean extends DatabaseRelated{
 		this.detail = detail;
 	}
 
-	public int getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
-	public void setStatus(String status) throws Exception{
-		this.status = Integer.parseInt(status);
-	}
-
-	public boolean isDelFlag() {
-		return delFlag;
-	}
-
-	public void setDelFlag(boolean delFlag) {
-		this.delFlag = delFlag;
-	}
-
-	public void setDelFlag(String delFlag) {
-		this.delFlag = Boolean.parseBoolean(delFlag);
-	}
 
 	public List<TaskBean> getTaskBeanList() {
 		return taskBeanList;

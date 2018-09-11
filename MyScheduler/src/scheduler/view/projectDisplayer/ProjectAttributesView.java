@@ -6,7 +6,6 @@ import java.util.List;
 import scheduler.bean.StatusBean;
 import scheduler.bean.TAttributeBean;
 import scheduler.common.constant.Constant;
-import scheduler.facade.StatusFacade;
 import scheduler.view.AbstractView;
 import scheduler.view.AttributePrimitiveView;
 
@@ -25,9 +24,29 @@ public class ProjectAttributesView extends AbstractView{
 	private final List<TAttributeBean>  attributeList;
 
 
-	private final StatusBean status;
+	private StatusBean status;
 
-	private final StatusFacade statusFacade;
+	private boolean clicked = false;
+
+	public void setClicked(boolean clicked){
+		this.clicked = clicked;
+		if(clicked){
+			this.onMouseClicked();
+		}else{
+			this.onMouseExited();
+		}
+	}
+
+
+	public void setStatus(StatusBean status){
+		if(status == null){
+			return;
+		}
+		this.status = status;
+		primitiveViewList.forEach(view->{
+			view.setStatus(status);
+		});
+	}
 
 	@Override
 	protected void init() {
@@ -48,7 +67,7 @@ public class ProjectAttributesView extends AbstractView{
 			AttributePrimitiveView primitiveView;
 
 			//位置・高さ・幅決め
-			if(attribute.getAttributeCode() == Constant.ATTRIBUTE_CODE_PROJECT_NAME){
+			if(attribute.getAttributeCode().equals(Constant.ATTRIBUTE_CODE_PROJECT_NAME)){
 				primitiveView  = new AttributePrimitiveView(attribute,defaultPrimitiveViewWidth*incrementaRate, this.viewHeight.doubleValue());
 				primitiveView.setTranslateX(0);
 			}else{
@@ -61,7 +80,35 @@ public class ProjectAttributesView extends AbstractView{
 
 			index++;
 		}
+	}
 
+
+
+	public void onMouseEntered(){
+		if(clicked){
+			return;
+		}
+		for(AttributePrimitiveView primitiveView: primitiveViewList){
+			primitiveView.onMouseEntered();
+		}
+	}
+
+
+	public void onMouseExited(){
+		if(clicked){
+			return;
+		}
+		for(AttributePrimitiveView primitiveView: primitiveViewList){
+			primitiveView.onMouseExited();
+		}
+	}
+
+
+	public void onMouseClicked(){
+		for(AttributePrimitiveView primitiveView: primitiveViewList){
+			primitiveView.onClicked();
+		}
+		clicked = true;
 	}
 
 
@@ -74,8 +121,6 @@ public class ProjectAttributesView extends AbstractView{
 	public ProjectAttributesView(List<TAttributeBean> attributes,double height){
 		primitiveViewList = new ArrayList<AttributePrimitiveView>();
 		attributeList = attributes;
-		statusFacade = new StatusFacade();
-		status = statusFacade.findByProjectCode(attributes.get(0).getProjectCode());
 
 		this.viewHeight.set(height);
 		this.setViewWidth((1-Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH)*Constant.APP_PREF_WIDTH);

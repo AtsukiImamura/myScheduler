@@ -1,6 +1,8 @@
 package scheduler.facade;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import scheduler.bean.StoneBean;
 
@@ -16,6 +18,14 @@ public class StoneFacade extends CSVAbstractFacade<StoneBean>{
 	@Override
 	public void createNewDatabase(){
 		this.createNewDatabase(StoneBean.class);
+	}
+
+
+
+	public StoneBean one(String stoneCode){
+		Map<String,String> primaryKeys = new HashMap<String,String>();
+		primaryKeys.put("STONE_CODE", stoneCode);
+		return this.one(StoneBean.class,primaryKeys);
 	}
 
 	/*

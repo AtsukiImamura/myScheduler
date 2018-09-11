@@ -1,13 +1,9 @@
 package scheduler.facade;
 
-import java.beans.PropertyDescriptor;
 import java.io.File;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,17 +40,14 @@ public abstract class CSVAbstractFacade<T extends DatabaseRelated> {
 
 
 
-
 	private CSVReader createCSVReaderByClass(Class<T> c){
-		String tableName = "";
-		try {
-			tableName = c.newInstance().getTableName();
+		String filePath = "";
+		try{
+			filePath = this.createFilePath(c);
 		} catch (Exception e3) {
 			e3.printStackTrace();
 			return null;
 		}
-		File file = new File("");
-		String filePath = file.getAbsoluteFile().getParentFile().getAbsolutePath()+"/"+tableName+".csv";
 		CSVReader reader = new CSVReader(filePath);
 
 		return reader;
@@ -67,6 +60,7 @@ public abstract class CSVAbstractFacade<T extends DatabaseRelated> {
 	 */
 	protected  List<T> findAll(Class<T> c){
 		CSVReader reader = createCSVReaderByClass(c);
+		System.out.println("findAll "+c.getName());
 		return this.toBean(c, reader.all());
 	}
 
@@ -98,26 +92,43 @@ public abstract class CSVAbstractFacade<T extends DatabaseRelated> {
 
 	public void insert(T bean) {
 		bean.setChangedAt(Calendar.getInstance());
-		Map<String,String> record = this.getDataMap(bean);
+		Map<String,String> record = bean.toDataMap();
 		List<String> primaryKeys = bean.getPrimaryKeyList();
 
-		String filePath = bean.getTableName()+".csv";
+		String filePath =  this.createFilePath(bean);
 		CSVReader reader = new CSVReader(filePath);
 
 		reader.insert(primaryKeys, record);
+	}
 
+
+	public void save(T bean){
+		bean.setChangedAt(Calendar.getInstance());
+		Map<String,String> record = bean.toDataMap();
+		List<String> primaryKeys = bean.getPrimaryKeyList();
+
+		String filePath = this.createFilePath(bean);
+		CSVReader reader = new CSVReader(filePath);
+
+		reader.save(primaryKeys, record);
 	}
 
 
 	public void update(T bean){
 		bean.setChangedAt(Calendar.getInstance());
-		Map<String,String> record = this.getDataMap(bean);
+		Map<String,String> record = bean.toDataMap();
 		List<String> primaryKeys = bean.getPrimaryKeyList();
 
-		String filePath = bean.getTableName()+".csv";
+		String filePath = this.createFilePath(bean);
 		CSVReader reader = new CSVReader(filePath);
 
 		reader.update(primaryKeys, record);
+	}
+
+
+	public void logicalDelete(T bean){
+		bean.setDeleted(true);
+		this.save(bean);
 	}
 
 
@@ -190,7 +201,9 @@ public abstract class CSVAbstractFacade<T extends DatabaseRelated> {
 				e.printStackTrace();
 			}
 			result.add(bean);
+			System.out.println("     "+bean.toString());
 		}
+
 		return result;
 	}
 
@@ -210,79 +223,33 @@ public abstract class CSVAbstractFacade<T extends DatabaseRelated> {
 		return result;
 	}
 
-	/**
-	 * insert,updateで送信するためのbeanのデータマップを作成する
-	 * @param bean
-	 * @return bean情報を詰めたマップ (key: データベースのカラム名 value: 送信する値 )
-	 */
-	private Map<String,String> getDataMap(T bean){
-		Field[] superClassFields = bean.getClass().getSuperclass().getDeclaredFields();
-		Field[] beanFields = bean.getClass().getDeclaredFields();
-
-		Field[] fields = new Field[superClassFields.length + beanFields.length];
-		int count = 0;
-		while(count < superClassFields.length){
-			fields[count] = superClassFields[count];
-			count++;
-		}
-		while(count < fields.length){
-			fields[count] = beanFields[count-superClassFields.length];
-			count++;
-		}
-
-		Map<String,String> dataMap = new HashMap<String,String>();
-		for(Field field : fields){
-			String keyArg = field.getName();
-			String key = "";
-			for(char ch : keyArg.toCharArray()){
-				if((int)ch >= 65 && (int)ch <=90){
-					//大文字だった場合はアンダーバーを前につける
-					key += "_"+String.valueOf(ch);
-				}else{
-					//小文字だった場合は大文字に変換
-					int chv = (int)ch;
-					char nch = (char)(chv-32);
-					key += String.valueOf(nch);
-				}
-			}
-
-			Object value = "";
-			try {
-				PropertyDescriptor prop = new PropertyDescriptor(keyArg, bean.getClass());
-				Method propGetter = prop.getReadMethod();
-				value = propGetter.invoke(bean, (Object[]) null);
-				String stValue = "null";
-				if(value instanceof Calendar){
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-					stValue = sdf.format(((Calendar)value).getTime());
-
-				}else{
-					if(value != null){
-						stValue = value.toString();
-					}
-				}
-
-				dataMap.put(key, stValue);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return dataMap;
-	}
-
 
 	protected void createNewDatabase(Class<T> c){
 
 		String filePath;
 		try {
 			T bean = c.newInstance();
-			filePath = c.newInstance().getTableName()+".csv";
+			filePath = this.createFilePath(c);
 			CSVReader reader = new CSVReader(filePath);
-			reader.createNewDatabase(this.getDataMap(bean));
+			reader.createNewDatabase(bean.toDataMap());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+	}
+
+
+
+	private String createFilePath(Class<T> c) throws InstantiationException, IllegalAccessException{
+		T bean = c.newInstance();
+		return createFilePath(bean);
+	}
+
+	private String createFilePath(T bean) {
+		File file = new File("");
+		String filePath = file.getAbsoluteFile().getParentFile().getAbsolutePath()+"/"+bean.getTableName()+".csv";
+
+		return filePath;
 	}
 
 
