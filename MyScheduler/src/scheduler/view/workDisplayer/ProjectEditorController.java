@@ -5,26 +5,28 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import scheduler.App;
 import scheduler.bean.AttributeSelectionBean;
 import scheduler.bean.MAttributeBean;
 import scheduler.bean.ProjectBean;
 import scheduler.bean.StatusBean;
 import scheduler.bean.TAttributeBean;
+import scheduler.cellFactory.AttributesCellFactory;
 import scheduler.cellFactory.ColorCellFactory;
 import scheduler.cellFactory.StatusShapeCell;
 import scheduler.common.constant.Constant;
@@ -42,8 +44,6 @@ public class ProjectEditorController implements Initializable{
 
 	private final int INDEX_ATTRIBUTE_INPUT = 1;
 
-
-
 	@FXML
 	private VBox attributesVBox;
 
@@ -59,25 +59,23 @@ public class ProjectEditorController implements Initializable{
 	@FXML
 	private ComboBox<String> statusCombo;
 
-	private ProjectBeanFacade projectBeanFacade;
+	@FXML
+	private Button clearButton;
+
+	@FXML
+	private Button registButton;
+
+	private BooleanProperty disableRegistProperty;
 
 	private ProjectBean projectBean;
-
-	private MAttributeBeanFacade mAttributeBeanFacade;
-
-	private TAttributeBeanFacade tAttributeBeanFacade;
-
-	private AttributeSelectionBeanFacade attributeSelectionBeanFacade;
 
 	private List<MAttributeBean> mAttributeBeanList;
 
 	protected static ProjectEditorController instance;
 
-	protected static Scene SCENE;
-
 	protected static Parent view;
 
-	public final StringProperty projectCodeProperty = new SimpleStringProperty();
+	private static  ScrollPane root;
 
     /**
      * singletonのインスタンスを返す
@@ -93,7 +91,7 @@ public class ProjectEditorController implements Initializable{
      * 表示する
      */
     public void show() {
-    	App.setEditorHBoxField(view,true);
+    	WorkDispTabsController.getInstance().setTab(Constant.TAB_KIND.PROJECT,view);
     }
 
 
@@ -102,13 +100,21 @@ public class ProjectEditorController implements Initializable{
     }
 
 
+    public void setWidth(double width){
+    	root.setPrefWidth(width);
+    }
+
+
 	static {
         FXMLLoader fxmlLoader = Util.createProjectFxmlLoader("scheduler/view/workDisplayer/workDisplayer.fxml");
-		//FXMLLoader fxmlLoader = Util.createProjectFxmlLoader("./workDisplayer.fxml");
+        root = new ScrollPane();
+		root.setMinHeight(Constant.WORK_DISP_TAB_MAX_HEIGHT);
+		root.setMaxHeight(Constant.WORK_DISP_TAB_MAX_HEIGHT);
+		root.setVmax(Constant.WORK_DISP_SCROLL_VMAX);
+		root.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+        fxmlLoader.setRoot(root);
         try {
         	view = fxmlLoader.load();
-        	SCENE = new Scene(view);
-            SCENE.getStylesheets().add("main.css");
             instance = fxmlLoader.getController();
         } catch (IOException e) {
             e.printStackTrace();
@@ -121,20 +127,42 @@ public class ProjectEditorController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		projectBeanFacade = new ProjectBeanFacade();
 		projectBean = new ProjectBean();
+		disableRegistProperty = new SimpleBooleanProperty(true);
 
-		String newProjectCode = projectBeanFacade.createNewProjectCode();
+		//registButton.setDisable(true);
+		registButton.disableProperty().bind(disableRegistProperty);
+		textfieldProjectName.setOnKeyTyped(event->{
+			disableRegistProperty.set(!validateInput());
+		});
+		textfieldProjectName.setOnInputMethodTextChanged(event->{
+			disableRegistProperty.set(!validateInput());
+		});
+		statusCombo.setOnHidden(event->{
+			disableRegistProperty.set(!validateInput());
+		});
+
+		String newProjectCode = ProjectBeanFacade.getInstance().createNewProjectCode();
 		this.projectBean.setProjectCode(newProjectCode);
 
-		mAttributeBeanFacade = new MAttributeBeanFacade();
-		attributeSelectionBeanFacade = new AttributeSelectionBeanFacade();
-		tAttributeBeanFacade = new TAttributeBeanFacade();
+
 
 		initScreen();
 	}
 
 
+	private boolean validateInput(){
+		String text = textfieldProjectName.getText();
+		if(text == null || text.equals("")){
+			return false;
+		}
+		String status = statusCombo.getValue();
+		if(status == null || status.equals("")){
+			return false;
+		}
+		return true;
+
+	}
 	/**
 	 * 登録ボタンが押されたとき
 	 * @param e
@@ -142,20 +170,22 @@ public class ProjectEditorController implements Initializable{
 	@FXML
 	public void onRegistButtonClicked(ActionEvent ev){
 
-		System.out.println("onRegistButtonClicked");
+		if(!validateInput()){
+			return;
+		}
 
 		this.projectBean.setProjectName(this.textfieldProjectName.getText());
 		this.projectBean.setDetail(this.detailTextArea.getText());
 		this.projectBean.setStatus(statusCombo.getValue());
 
-		projectBeanFacade.save(projectBean);
+		ProjectBeanFacade.getInstance().save(projectBean);
 
 		String projectCode = projectBean.getProjectCode();
 
 		int index = 0;
 		for(MAttributeBean mAttr : mAttributeBeanList){
 			String mAttrCode = mAttr.getAttrCode();
-			TAttributeBean tAttr = tAttributeBeanFacade.one(this.projectBean.getProjectCode(), mAttrCode);
+			TAttributeBean tAttr = TAttributeBeanFacade.getInstance().one(this.projectBean.getProjectCode(), mAttrCode);
 			if(tAttr == null){
 				tAttr = new TAttributeBean(projectCode,mAttrCode);
 			}
@@ -163,20 +193,23 @@ public class ProjectEditorController implements Initializable{
 			//属性の入力タイプで分ける
 			switch(mAttr.getCostamaizeType()){
 			//タイプ：選択
-			case Constant.ATTRIBUTE_COSTAMIZE_TYPE_SELECT:
+			case SELECTION:
 				try{
 					@SuppressWarnings("unchecked")
-					ComboBox<String> attributeSelectBox = (ComboBox<String>)(((HBox)attributesVBox.getChildren().get(index)).getChildren().get(INDEX_ATTRIBUTE_INPUT));
+					ComboBox<AttributeSelectionBean> attributeSelectBox = (ComboBox<AttributeSelectionBean>)(((HBox)attributesVBox.getChildren().get(index)).getChildren().get(INDEX_ATTRIBUTE_INPUT));
 
-					String selectedValue = (String)attributeSelectBox.getValue();
-					String selectionCode = Util.decodeSelectionCodeFromSelection(selectedValue,Constant.LENGTH_OF_SELECTION_CODE);
+					AttributeSelectionBean selectedValue = (AttributeSelectionBean)attributeSelectBox.getValue();
+					if(selectedValue == null){
+						break;
+					}
+					String selectionCode = selectedValue.getSelectionCode();
 					tAttr.setSelectionCode(selectionCode);
 				}catch(Exception e){
 					e.printStackTrace();
 				}
 				break;
 			//タイプ：自由入力
-			case Constant.ATTRIBUTE_COSTAMIZE_TYPE_FREE:
+			case FREE:
 				try{
 					TextField attributeInput = (TextField)(((HBox)attributesVBox.getChildren().get(index)).getChildren().get(INDEX_ATTRIBUTE_INPUT));
 					tAttr.setValue(attributeInput.getText());
@@ -185,7 +218,7 @@ public class ProjectEditorController implements Initializable{
 				}
 				break;
 			}
-			tAttributeBeanFacade.save(tAttr);
+			TAttributeBeanFacade.getInstance().save(tAttr);
 			index++;
 		}
 
@@ -208,6 +241,16 @@ public class ProjectEditorController implements Initializable{
 
 
 	/**
+	 * 新しいプロジェクトをセットする
+	 */
+	public void createNewProject(){
+		ProjectBean project = new ProjectBean();
+		project.setProjectCode(ProjectBeanFacade.getInstance().createNewProjectCode());
+		this.setProject(project);
+	}
+
+
+	/**
 	 * プロジェクトの内容をセットする（編集用）
 	 * @param project
 	 */
@@ -220,6 +263,9 @@ public class ProjectEditorController implements Initializable{
 		textfieldProjectName.setText(project.getProjectName());
 		detailTextArea.setText(project.getDetail());
 
+		statusCombo.setValue(project.getStatus());
+
+		this.disableRegistProperty.set(!this.validateInput());
 
 
 		AttributeSelectionBeanFacade attributeSelectionBeanFacade = new  AttributeSelectionBeanFacade();
@@ -229,7 +275,7 @@ public class ProjectEditorController implements Initializable{
 		for(MAttributeBean aAttr : mAttributeBeanList){
 			//案件のもつ属性の値を引き当て
 			String attrCode = aAttr.getAttrCode();
-			TAttributeBean prjAttr = tAttributeBeanFacade.one(projectCode,attrCode);
+			TAttributeBean prjAttr = TAttributeBeanFacade.getInstance().one(projectCode,attrCode);
 			if(prjAttr == null){
 				continue;
 			}
@@ -237,7 +283,7 @@ public class ProjectEditorController implements Initializable{
 			//属性の入力タイプで分ける
 			switch(aAttr.getCostamaizeType()){
 			//選択
-			case Constant.ATTRIBUTE_COSTAMIZE_TYPE_SELECT:
+			case SELECTION:
 				//案件の選択値番号
 				String selectionCode =  prjAttr.getSelectionCode();
 				if(selectionCode == null){
@@ -246,18 +292,27 @@ public class ProjectEditorController implements Initializable{
 
 				//案件の選択コードから選択された値を引き当て
 				AttributeSelectionBean selectedValue = attributeSelectionBeanFacade.one(aAttr.getAttrCode(),selectionCode);
+				if(selectedValue == null){
+					break;
+				}
 				try{
 					//コンボボックスにセット
 					@SuppressWarnings("unchecked")
-					ComboBox<String> attributeSelectBox = (ComboBox<String>)(((HBox)attributesVBox.getChildren().get(count)).getChildren().get(INDEX_ATTRIBUTE_INPUT));
-					attributeSelectBox.setValue(Util.createSelection(selectedValue));
+					ComboBox<AttributeSelectionBean> attributeSelectBox = (ComboBox<AttributeSelectionBean>)(((HBox)attributesVBox.getChildren().get(count)).getChildren().get(INDEX_ATTRIBUTE_INPUT));
 
+					//Pair<String,String> codes = new Pair<String,String>(aAttr.getAttrCode(),selectedValue.getSelectionCode());
+					int index = attributeSelectBox.getItems().indexOf(selectedValue);
+					if(index < 0){
+						break;
+					}
+					attributeSelectBox.setValue(attributeSelectBox.getItems().get(index));
+					//attributeSelectBox.value
 				}catch(Exception e){
 					e.printStackTrace();
 				}
 				break;
 			//自由入力
-			case Constant.ATTRIBUTE_COSTAMIZE_TYPE_FREE:
+			case FREE:
 				try{
 					TextField attributeInput = (TextField)(((HBox)attributesVBox.getChildren().get(count)).getChildren().get(INDEX_ATTRIBUTE_INPUT));
 					attributeInput.setText(prjAttr.getValue());
@@ -285,33 +340,36 @@ public class ProjectEditorController implements Initializable{
 			 * この部分は https://examples.javacodegeeks.com/desktop-java/javafx/combobox/javafx-combobox-example/
 			 * を参照せよ
 			 */
-			statusCombo.getItems().add(status.getStatusCode());
-			statusCombo.setButtonCell(new StatusShapeCell());
-			statusCombo.setCellFactory(new ColorCellFactory());
-			statusCombo.getStyleClass().add("project_edit_attribute_selection");
+			statusCombo.getItems().add(status.getCode());
 		}
 
+		statusCombo.setButtonCell(new StatusShapeCell());
+		statusCombo.setCellFactory(new ColorCellFactory());
+		statusCombo.getStyleClass().add("project_edit_attribute_selection");
+
 		//属性リスト
-		mAttributeBeanList = mAttributeBeanFacade.findAll();
+		mAttributeBeanList = MAttributeBeanFacade.getInstance().findAll();
 
 		for(MAttributeBean mAttribute : mAttributeBeanList){
 			HBox attributeHBox = new HBox();
 			//属性名
 			Label attributeTitleLabel = new Label(mAttribute.getAttrName());
-			attributeTitleLabel.getStyleClass().add("project_edit_title");
+			attributeTitleLabel.getStyleClass().add("title_label");
 			attributeHBox.getChildren().add(attributeTitleLabel);
 
 			//タイプごとに処理
 			switch(mAttribute.getCostamaizeType()){
 			//選択
-			case Constant.ATTRIBUTE_COSTAMIZE_TYPE_SELECT:
+			case SELECTION:
 				String attributeCode = mAttribute.getAttrCode();
 				//属性に対する選択肢
-				List<AttributeSelectionBean> selectionList = attributeSelectionBeanFacade.findByAttributeCode(attributeCode);
+				List<AttributeSelectionBean> selectionList = AttributeSelectionBeanFacade.getInstance().findByAttributeCode(attributeCode);
 
-				ComboBox<String> attributeSelectBox = new ComboBox<String>();
+				ComboBox<AttributeSelectionBean> attributeSelectBox = new ComboBox<AttributeSelectionBean>();
+				attributeSelectBox.setButtonCell(AttributesCellFactory.getAttributeCell());
+				attributeSelectBox.setCellFactory(new AttributesCellFactory());
 				for(AttributeSelectionBean selectBean : selectionList){
-					attributeSelectBox.getItems().add(Util.createSelection(selectBean));
+					attributeSelectBox.getItems().add(selectBean);
 				}
 				//attributeSelectBox.setValue(attributeSelectBox.getItems().get(0));
 				attributeSelectBox.getStyleClass().add("project_edit_attribute_selection");
@@ -319,10 +377,9 @@ public class ProjectEditorController implements Initializable{
 
 				break;
 			//自由入力
-			case Constant.ATTRIBUTE_COSTAMIZE_TYPE_FREE:
+			case FREE:
 				TextField attributeInput = new TextField();
-				attributeInput.getStyleClass().add("project_edit_input_basic");
-				attributeInput.getStyleClass().add("project_edit_input_textfield");
+				attributeInput.getStyleClass().addAll("project_editor_color","input_textfield","input_basic","displayer_font");
 				attributeHBox.getChildren().add(attributeInput);
 				break;
 			}

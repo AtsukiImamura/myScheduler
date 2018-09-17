@@ -1,16 +1,16 @@
 package scheduler;
 
-import scheduler.facade.ProjectBeanFacade;
+import scheduler.bean.MAttributeBean;
+import scheduler.common.constant.Constant;
 
 public class FuncTest2 {
 
 
 
 	public static void main(String[] args) throws Exception{
-		ProjectBeanFacade projectBeanFacade = new ProjectBeanFacade();
-		projectBeanFacade.createNewDatabase();
-//		ProjectBean project = projectBeanFacade.findAll().get(0);
-//		System.out.println(project.toString());
+		MAttributeBean bean = new MAttributeBean();
+		bean.setCostamaizeType(Constant.ATTRIBUTE_TYPE.FREE);
+		System.out.println(Constant.ATTRIBUTE_TYPE.FREE.toString());
+		System.out.println(Constant.ATTRIBUTE_TYPE.findByCode("FREE").CODE);
 	}
-
 }

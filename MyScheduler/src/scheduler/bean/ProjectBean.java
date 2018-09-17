@@ -39,11 +39,6 @@ public class ProjectBean extends DatabaseRelated{
 	/** ステータス */
 	private String status;
 
-	/** このタスクに紐づいたプロジェクトのリスト */
-	private List<TaskBean> taskBeanList;
-
-
-
 
 	public String getProjectCode() {
 		return projectCode;
@@ -76,16 +71,6 @@ public class ProjectBean extends DatabaseRelated{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
-
-	public List<TaskBean> getTaskBeanList() {
-		return taskBeanList;
-	}
-
-	public void setTaskBeanList(List<TaskBean> taskBeanList) {
-		this.taskBeanList = taskBeanList;
-	}
-
 
 
 }

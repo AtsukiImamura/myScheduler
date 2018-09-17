@@ -15,6 +15,7 @@ import scheduler.bean.ProjectBean;
 import scheduler.bean.StatusBean;
 import scheduler.bean.TaskBean;
 import scheduler.common.constant.Constant;
+import scheduler.facade.TaskFacade;
 
 public class Util {
 
@@ -56,7 +57,7 @@ public class Util {
      * @return 案件を表示するのに必要な行数
      */
     public static int getNumOfNecessaryColumns(ProjectBean project){
-    	List<TaskBean> taskBeanList = project.getTaskBeanList();
+    	List<TaskBean> taskBeanList = TaskFacade.getInstance().findByProjectCode(project.getProjectCode());
 
     	int numOfNecessaryColumns = 1;
     	for(TaskBean task : taskBeanList){
@@ -360,7 +361,7 @@ public class Util {
 
 
 	public static  String createSelection(StatusBean status){
-		return createSelection(status.getStatusCode(), status.getTytle());
+		return createSelection(status.getCode(), status.getTitle());
 	}
 
 

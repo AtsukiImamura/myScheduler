@@ -26,7 +26,7 @@ public class StoneShapeCell extends ListCell<String>{
 	    	if(stone == null){
 	    		return;
 	    	}
-	        setText(stone.getTytle());
+	        setText(stone.getTitle());
 
 	        Shape shape = new Rectangle(0, 0, 120, 24);
 	        shape.setFill(stone.getColor());

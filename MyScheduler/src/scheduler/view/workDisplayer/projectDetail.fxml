@@ -1,50 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
-<!--
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
--->
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.control.*?>
+<?import scheduler.common.constant.Constant?>
 
 
-<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.ProjectDetailController">
-	<children>
-		<HBox>
-			<Label styleClass="project_detail_title">
-				<text>案件番号</text>
-			</Label>
-			<Label fx:id="labelProjectCode" styleClass="project_detail_output_label,project_detail_output_basic,project_detail_font">
-				<text></text>
-			</Label>
-		</HBox>
-		<HBox>
-			<Label styleClass="project_detail_title">
-				<text>案件名</text>
-			</Label>
-			<Label fx:id="labelProjectName" styleClass="project_detail_output_label,project_detail_output_basic,project_detail_font"/>
-		</HBox>
-		<HBox>
-			<Label styleClass="project_detail_title">
-				<text>詳細</text>
-			</Label>
-			<Label fx:id="labelDetail" styleClass="project_detail_output_area,project_detail_output_basic,project_detail_font"/>
-		</HBox>
-		<VBox fx:id="attributesVBox">
-
+<fx:root type="javafx.scene.control.ScrollPane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.ProjectDetailController">
+	<HBox styleClass="tab_content_back">
+		<minHeight><Constant fx:constant="WORK_DISP_TAB_PREF_HEIGHT"/></minHeight>
+		<prefWidth><Constant fx:constant="APP_PREF_WIDTH"/></prefWidth>
+		<VBox>
+			<HBox>
+				<Label styleClass="title_label">
+					<text>案件番号</text>
+				</Label>
+				<Label fx:id="labelProjectCode" styleClass="project_detail_color,output_label,output_basic,displayer_font">
+					<text></text>
+				</Label>
+			</HBox>
+			<HBox>
+				<Label styleClass="title_label">
+					<text>案件名</text>
+				</Label>
+				<Label fx:id="labelProjectName" styleClass="project_detail_color,proejct_detail_color,output_label,output_basic,displayer_font"/>
+			</HBox>
+			<HBox>
+				<Label styleClass="title_label">
+					<text>詳細</text>
+				</Label>
+				<Label fx:id="labelDetail" styleClass="project_detail_color,output_area,output_basic,displayer_font" prefHeight="150"/>
+			</HBox>
 		</VBox>
-		<HBox>
-			<Button styleClass="project_detail_button_edit,project_edit_button_base" onAction="#onDeleteButtonClicked">
-				<text>削除</text>
-			</Button>
-			<Button styleClass="project_detail_button_edit,project_edit_button_base" onAction="#onEditButtonClicked">
-				<text>編集</text>
-			</Button>
-			<Button styleClass="project_detail_button_edit,project_edit_button_base" onAction="#onAddTaskButtonClicked">
-				<text>タスク追加</text>
-			</Button>
-		</HBox>
-	</children>
+		<VBox>
+			<VBox fx:id="attributesVBox">
+
+			</VBox>
+			<HBox styleClass="buttons_component">
+				<Button fx:id="deleteButton" styleClass="delete_button,work_disp_button_base" onAction="#onDeleteButtonClicked">
+					<text>削除</text>
+				</Button>
+				<Button fx:id="editProjectButton" styleClass="edit_button,work_disp_button_base" onAction="#onEditButtonClicked">
+					<text>編集</text>
+				</Button>
+				<Button fx:id="addTaskButton" styleClass="edit_button,work_disp_button_base" onAction="#onAddTaskButtonClicked">
+					<text>タスク追加</text>
+				</Button>
+				<Button styleClass="edit_button,work_disp_button_base" onAction="#onCreateProjectButtonClicked">
+					<text>新規プロジェクト</text>
+				</Button>
+			</HBox>
+		</VBox>
+	</HBox>
 </fx:root>

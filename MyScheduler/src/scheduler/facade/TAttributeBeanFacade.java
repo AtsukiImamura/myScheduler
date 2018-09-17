@@ -8,6 +8,19 @@ import scheduler.bean.TAttributeBean;
 
 public class TAttributeBeanFacade  extends CSVAbstractFacade<TAttributeBean>{
 
+
+	private static TAttributeBeanFacade instance;
+
+	static{
+		instance = new TAttributeBeanFacade();
+	}
+
+
+	public static TAttributeBeanFacade getInstance(){
+		return instance;
+	}
+
+
 	@Override
 	public List< TAttributeBean> findAll(){
 		return this.findAll( TAttributeBean.class);

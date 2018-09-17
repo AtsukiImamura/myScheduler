@@ -338,7 +338,7 @@ public class CalendarViewTask  extends AbstractView{
 
 
 	private Color findStoneColor(TaskBean task){
-		String stoneCode = task.getStoneCode();
+		String stoneCode = task.getCode();
 		StoneBean stoneBean = stoneFacade.one(stoneCode);
 		stoneColor = stoneBean == null ? Color.RED : stoneBean.getColor();
 

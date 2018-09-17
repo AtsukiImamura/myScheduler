@@ -5,24 +5,29 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import scheduler.App;
+import javafx.scene.layout.FlowPane;
 import scheduler.bean.StoneBean;
 import scheduler.bean.TaskBean;
 import scheduler.cellFactory.StoneColorCellFactory;
 import scheduler.cellFactory.StoneShapeCell;
+import scheduler.common.constant.Constant;
 import scheduler.common.utils.Util;
 import scheduler.controller.ProjectsController;
 import scheduler.facade.StoneFacade;
@@ -57,9 +62,20 @@ public class TaskEditorController implements Initializable{
 	@FXML
 	private ComboBox<String> stoneCombo;
 
+	@FXML
+	private Button registButton;
+
+	@FXML
+	private FlowPane flowPane;
+
+
+	private BooleanProperty disableRegistProperty;
+
 	private TaskFacade taskBeanFacade;
 
 	private TaskBean taskBean = null;
+
+	private static  ScrollPane root;
 
 	protected static TaskEditorController instance;
 
@@ -83,7 +99,7 @@ public class TaskEditorController implements Initializable{
      * 表示する
      */
     public void show() {
-    	App.setEditorHBoxField(view,true);
+    	WorkDispTabsController.getInstance().setTab(Constant.TAB_KIND.TASK,view);
     }
 
 
@@ -94,8 +110,11 @@ public class TaskEditorController implements Initializable{
 
 	static {
         FXMLLoader fxmlLoader = Util.createProjectFxmlLoader("scheduler/view/workDisplayer/taskEdit.fxml");
-        fxmlLoader.setRoot(new Group());
-		//FXMLLoader fxmlLoader = Util.createProjectFxmlLoader("./workDisplayer.fxml");
+        root = new ScrollPane();
+		root.setMinHeight(Constant.WORK_DISP_TAB_MAX_HEIGHT);
+		root.setVmax(Constant.WORK_DISP_SCROLL_VMAX);
+		root.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+        fxmlLoader.setRoot(root);
         try {
         	view = fxmlLoader.load();
         	SCENE = new Scene(view);
@@ -128,7 +147,33 @@ public class TaskEditorController implements Initializable{
 			startDateInput.setDisableAfter(finishDateInput.getSelectedDate());
 		});
 
+		disableRegistProperty = new SimpleBooleanProperty(true);
+		registButton.disableProperty().bind(disableRegistProperty);
+		textfieldTaskName.setOnKeyTyped(event->{
+			disableRegistProperty.set(!validateInput());
+		});
+		textfieldTaskName.setOnInputMethodTextChanged(event->{
+			disableRegistProperty.set(!validateInput());
+		});
+		stoneCombo.setOnHidden(event->{
+			disableRegistProperty.set(!validateInput());
+		});
+
 		initScreen();
+	}
+
+
+
+	private boolean validateInput(){
+		String text = textfieldTaskName.getText();
+		if(text == null || text.equals("")){
+			return false;
+		}
+		String status = stoneCombo.getValue();
+		if(status == null || status.equals("")){
+			return false;
+		}
+		return true;
 	}
 
 
@@ -173,7 +218,9 @@ public class TaskEditorController implements Initializable{
 		detailTextArea.setText(task.getDetail());
 		startDateInput.setDate(task.getStartAt());
 		finishDateInput.setDate(task.getFinishAt());
-		stoneCombo.setValue(task.getStoneCode());
+		stoneCombo.setValue(task.getCode());
+
+		disableRegistProperty.set(!this.validateInput());
 	}
 
 
@@ -199,7 +246,7 @@ public class TaskEditorController implements Initializable{
 			 * この部分は https://examples.javacodegeeks.com/desktop-java/javafx/combobox/javafx-combobox-example/
 			 * を参照せよ
 			 */
-			stoneCombo.getItems().add(stone.getStoneCode());
+			stoneCombo.getItems().add(stone.getCode());
 			stoneCombo.setCellFactory(new StoneColorCellFactory());
 			stoneCombo.setButtonCell(new StoneShapeCell());
 			//stoneCombo.getStyleClass().add("project_edit_attribute_selection");

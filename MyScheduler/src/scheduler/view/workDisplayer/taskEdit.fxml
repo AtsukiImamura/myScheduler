@@ -1,64 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.layout.HBox?>
 <?import scheduler.view.dateSelector.DateSelectInput?>
 <?import javafx.scene.control.*?>
+<?import scheduler.common.constant.Constant?>
 
 
-<fx:root type="javafx.scene.Group" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.TaskEditorController">
-	<children>
-		<HBox translateY="0">
-			<Label styleClass="project_detail_title">
-				<text>案件番号</text>
-			</Label>
-			<Label fx:id="labelProjectCode" styleClass="project_detail_output_basic,project_detail_font"/>
-			<Label styleClass="project_detail_title">
-				<text>タスク番号</text>
-			</Label>
-			<Label fx:id="labelTaskCode" styleClass="project_detail_output_basic,project_detail_font">
-				<text></text>
-			</Label>
-		</HBox>
-		<HBox translateY="40">
-			<Label styleClass="project_detail_title">
-				<text>タスク名</text>
-			</Label>
-			<TextField 	fx:id="textfieldTaskName" styleClass="project_edit_input_basic ,project_edit_input_textfield ,project_edit_font"/>
-		</HBox>
-		<HBox translateY="95" >
-			<Label styleClass="project_detail_title">
-				<text>詳細</text>
-			</Label>
-			<TextArea fx:id="detailTextArea" styleClass="project_edit_input_basic ,project_edit_input_textarea ,project_edit_font"/>
-		</HBox>
-		<HBox translateX="0" translateY="320">
-			<Label styleClass="project_detail_title">
-				<text>ストーンカラー</text>
-			</Label>
-			<ComboBox fx:id="stoneCombo" prefWidth="180.0" prefHeight="35.0" promptText="--選択--">
-			</ComboBox>
-		</HBox>
-		<HBox translateY="390">
-			<Button styleClass="project_edit_button_clear,project_edit_button_base" onAction="#onClearButtonClicked">
-				<text>クリア</text>
-			</Button>
-			<Button styleClass="project_edit_button_regist,project_edit_button_base" onAction="#onRegistButtonClicked">
-				<text>登録</text>
-			</Button>
-		</HBox>
-		<HBox translateX="0" translateY="270" >
-			<Label styleClass="project_detail_title">
-				<text>開始日</text>
-			</Label>
-			<DateSelectInput fx:id="startDateInput" styleClass="project_detail_output_label,project_detail_output_basic,project_detail_font"/>
-		</HBox>
-		<HBox translateX="380" translateY="270">
-			<Label styleClass="project_detail_title">
-				<text>終了日</text>
-			</Label>
-			<DateSelectInput fx:id="finishDateInput" styleClass="project_detail_output_label,project_detail_output_basic,project_detail_font"/>
-		</HBox>
-	</children>
+<fx:root type="javafx.scene.control.ScrollPane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.TaskEditorController">
+	<FlowPane fx:id="flowPane" styleClass="tab_content_back">
+		<minHeight><Constant fx:constant="WORK_DISP_TAB_PREF_HEIGHT"/></minHeight>
+		<prefWidth><Constant fx:constant="APP_PREF_WIDTH"/></prefWidth>
+		<VBox>
+			<HBox >
+				<Label styleClass="title_label">
+					<text>案件番号</text>
+				</Label>
+				<Label fx:id="labelProjectCode" styleClass="code_label,output_basic,displayer_font"/>
+				<Label styleClass="title_label">
+					<text>タスク番号</text>
+				</Label>
+				<Label fx:id="labelTaskCode" styleClass="code_label,output_basic,displayer_font">
+					<text></text>
+				</Label>
+			</HBox>
+			<HBox>
+				<Label styleClass="title_label">
+					<text>タスク名</text>
+				</Label>
+				<TextField 	fx:id="textfieldTaskName" styleClass="input_basic ,input_textfield ,editor_font"/>
+			</HBox>
+			<HBox  >
+				<Label styleClass="title_label">
+					<text>詳細</text>
+				</Label>
+				<TextArea fx:id="detailTextArea" styleClass="input_basic ,input_textarea ,editor_font" prefHeight="150"/>
+			</HBox>
+		</VBox>
+		<Group>
+			<HBox translateX="0" translateY="50">
+				<Label styleClass="title_label">
+					<text>ストーンカラー</text>
+				</Label>
+				<ComboBox fx:id="stoneCombo" styleClass="color_select_combo" prefWidth="180.0" prefHeight="35.0" promptText="--選択--">
+				</ComboBox>
+			</HBox>
+			<HBox styleClass="buttons_component" translateY="100">
+				<Button fx:id="clearButton" styleClass="clear_button,work_disp_button_base" onAction="#onClearButtonClicked">
+					<text>クリア</text>
+				</Button>
+				<Button fx:id="registButton" styleClass="regist_button,work_disp_button_base" onAction="#onRegistButtonClicked">
+					<text>登録</text>
+				</Button>
+			</HBox>
+			<HBox translateX="0" translateY="0" >
+				<Label styleClass="title_label">
+					<text>開始日</text>
+				</Label>
+				<DateSelectInput fx:id="startDateInput" styleClass="output_label,output_basic,editor_font"/>
+			</HBox>
+			<HBox translateX="360" translateY="0">
+				<Label styleClass="title_label">
+					<text>終了日</text>
+				</Label>
+				<DateSelectInput fx:id="finishDateInput" styleClass="output_label,output_basic,editor_font"/>
+			</HBox>
+		</Group>
+	</FlowPane>
 </fx:root>

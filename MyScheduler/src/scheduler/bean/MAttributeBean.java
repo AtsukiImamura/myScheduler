@@ -3,6 +3,7 @@ package scheduler.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+import scheduler.common.constant.Constant.ATTRIBUTE_TYPE;
 import scheduler.common.constant.NameConstant;
 
 
@@ -37,7 +38,7 @@ public class MAttributeBean extends DatabaseRelated{
 	private String detail;
 
 	/**カスタマイズタイプ*/
-	private int costamaizeType;
+	private ATTRIBUTE_TYPE costamaizeType;
 
 
 
@@ -65,16 +66,16 @@ public class MAttributeBean extends DatabaseRelated{
 		this.detail = detail;
 	}
 
-	public int getCostamaizeType() {
+	public ATTRIBUTE_TYPE getCostamaizeType() {
 		return costamaizeType;
 	}
 
-	public void setCostamaizeType(int costamaizeType) {
+	public void setCostamaizeType(ATTRIBUTE_TYPE costamaizeType) {
 		this.costamaizeType = costamaizeType;
 	}
 
-	public void setCostamaizeType(String costamaizeType) {
-		this.costamaizeType = Integer.parseInt(costamaizeType);
+	public void setCostamaizeType(String costamaizeTypeName) {
+		this.costamaizeType = ATTRIBUTE_TYPE.findByCode(costamaizeTypeName);
 	}
 
 }

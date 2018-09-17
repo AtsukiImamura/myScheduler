@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+
+
+<fx:root type="javafx.scene.layout.HBox" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.WorkDispTabsController">
+	<children>
+		<TabPane fx:id="workDispTabs" styleClass="work_disp_tabs">
+			<Tab>
+
+			</Tab>
+			<Tab>
+
+			</Tab>
+			<Tab>
+
+			</Tab>
+		</TabPane>
+	</children>
+</fx:root>

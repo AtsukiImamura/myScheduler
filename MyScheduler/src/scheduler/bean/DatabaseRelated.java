@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -53,9 +54,6 @@ public abstract class DatabaseRelated extends Object{
 	public void setCreatedAt(String createdAt) throws ParseException {
 		this.createdAt = Util.createCalendarByStringValue(createdAt);
 	}
-
-
-
 
 	public Calendar getCreatedAt() {
 		return createdAt;
@@ -137,23 +135,38 @@ public abstract class DatabaseRelated extends Object{
 
 
 
-	private Map<String,String> toDataMap(boolean snakeCase){
-		Field[] superClassFields = this.getClass().getSuperclass().getDeclaredFields();
-		Field[] beanFields = this.getClass().getDeclaredFields();
-		Field[] fields = new Field[superClassFields.length + beanFields.length];
+	protected Map<String,String> toDataMap(boolean snakeCase){
 
-		int count = 0;
-		while(count < beanFields.length){
-			fields[count] = beanFields[count];
-			count++;
+		if(this.getClass().getSuperclass() != DatabaseRelated.class){
+
 		}
-		while(count < fields.length){
-			fields[count] = superClassFields[count-beanFields.length];
-			count++;
+
+		List<Field[]> fieldsList = new ArrayList<Field[]>();
+		Class<? extends DatabaseRelated> clazz = this.getClass();
+		int count = 0;
+		for(int index = 0;index<3;index ++){
+			try{
+				Field[] decFields = clazz.getDeclaredFields();
+				count += decFields.length;
+				fieldsList.add(decFields);
+				clazz = (Class<? extends DatabaseRelated>) clazz.getSuperclass();
+			}catch(Exception e){
+				break;
+			}
+		}
+
+		Field[] fields = new Field[count];
+		int index = 0;
+		for(Field[] decFields: fieldsList){
+			for(Field decField : decFields){
+				fields[index] = decField;
+				index++;
+			}
 		}
 
 		Map<String,String> dataMap = new HashMap<String,String>();
 		for(Field field : fields){
+			field.setAccessible(true);
 			String keyArg = field.getName();
 			String key = this.getColumnKey(keyArg);
 			dataMap.put(snakeCase ? key:keyArg, this.getFieldValue(keyArg));

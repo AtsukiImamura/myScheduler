@@ -2,8 +2,9 @@ package scheduler.view.calendar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -32,13 +33,11 @@ public class CalenderPrimitiveRow extends AbstractView {
 	private List<TaskBean> taskList;
 
 	private final List<CalendarDay> dayList;
+//
+//	private final List<CalendarViewTask> calendarViewTaskList;
 
-	private final List<CalendarViewTask> calendarViewTaskList;
+	private final Map<String,CalendarViewTask> calendarViewTaskList;
 
-
-	public List<CalendarViewTask> getCalendarViewTaskList(){
-		return calendarViewTaskList;
-	}
 
 	/**表示する最初の日*/
 	private Calendar viewStartAt;
@@ -134,7 +133,7 @@ public class CalenderPrimitiveRow extends AbstractView {
 			//calendarViewTask.setViewStartAt(viewStartAt);
 			//calendarViewTask.setViewFinishAt(viewFinishAt);
 			calendarViewTask.toFront();
-			this.calendarViewTaskList.add(calendarViewTask);
+			this.calendarViewTaskList.put(task.getTaskCode(),calendarViewTask);
 			this.getChildren().add(calendarViewTask);
 
 			int offset = Util.getAbsOffsetOfDate(calendarViewTask.getTaskViewStartAt(), viewStartAt);
@@ -251,7 +250,7 @@ public class CalenderPrimitiveRow extends AbstractView {
 		hoveredIndex =  new SimpleIntegerProperty();
 		this.viewWidth.set(width);
 		dayList = new ArrayList<CalendarDay>();
-		calendarViewTaskList = new ArrayList<CalendarViewTask>();
+		calendarViewTaskList = new HashMap<String,CalendarViewTask>();
 		init();
 
 	}
@@ -286,16 +285,18 @@ public class CalenderPrimitiveRow extends AbstractView {
 
 		int dayIndex = 0;
 
+		List<CalendarDay> removeList = new ArrayList<CalendarDay>();
 		for(CalendarDay calendarDay: dayList){
 			dayIndex++;
 			if(dayIndex > length){
-				this.getChildren().remove(calendarDay);
-				dayList.remove(calendarDay);
+				removeList.add(calendarDay);
 				continue;
 			}
 			calendarDay.setDisplayDate(tmpDate,false);
 			tmpDate.add(Calendar.DAY_OF_MONTH, 1);
 		}
+		this.getChildren().removeAll(removeList);
+		dayList.removeAll(removeList);
 
 		for(int index=dayIndex;index<length;index++){
 			CalendarDay calendarDay = getInitializedCalendarDay(tmpDate,index);
@@ -305,23 +306,17 @@ public class CalenderPrimitiveRow extends AbstractView {
 
 		this.getChildren().addAll(dayList);
 		taskList.forEach(task->{
-			List<CalendarViewTask> viewTaskList = calendarViewTaskList.stream().filter(view->{
-				if(view.getTask().equals(task)){
-					return true;
-				}
-				return false;
-			}).collect(Collectors.toList());
 
-			for(CalendarViewTask viewTask : viewTaskList){
+			String taskCode = task.getTaskCode();
+
+			if(calendarViewTaskList.containsKey(taskCode)){
+				CalendarViewTask viewTask = calendarViewTaskList.get(taskCode);
+
 				int offset = Util.getAbsOffsetOfDate(viewTask.getTaskViewStartAt(), viewStartAt);
 				viewTask.setViewPeriod(viewStartAt,viewFinishAt);
 				viewTask.setTranslateX(offset*CalendarDay.DEFAULT_WIDTH);
-			}
-
-			if(viewTaskList.size() > 0){
 				return;
 			}
-
 
 			CalendarViewTask calendarViewTask = new CalendarViewTask(task,this.viewStartAt,this.viewFinishAt);
 
@@ -330,13 +325,13 @@ public class CalenderPrimitiveRow extends AbstractView {
 				int offset = Util.getAbsOffsetOfDate(calendarViewTask.getTaskViewStartAt(), viewStartAt);
 				calendarViewTask.setTranslateX(offset*CalendarDay.DEFAULT_WIDTH);
 				this.getChildren().add(calendarViewTask);
-				this.calendarViewTaskList.add(calendarViewTask);
+				this.calendarViewTaskList.put(taskCode,calendarViewTask);
 			}catch(Exception e){
 				e.printStackTrace();
 			}
 		});
 
-		this.getChildren().addAll(calendarViewTaskList);
+		this.getChildren().addAll(calendarViewTaskList.values());
 	}
 
 	private CalendarDay getInitializedCalendarDay(Calendar date,int index){

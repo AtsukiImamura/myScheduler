@@ -1,55 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
-<!--
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
--->
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.control.*?>
+<?import scheduler.common.constant.Constant?>
 
 
-<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml/1"  styleClass="back_white" fx:controller="scheduler.view.workDisplayer.ProjectEditorController">
-	<children>
-		<HBox>
-			<Label styleClass="project_edit_title">
-				<text>案件番号</text>
-			</Label>
-			<Label fx:id="labelProjectCode" styleClass="project_edit_output_label,project_edit_font">
-				<text></text>
-			</Label>
-		</HBox>
-		<HBox>
-			<Label styleClass="project_edit_title">
-				<text>案件名</text>
-			</Label>
-			<TextField 	fx:id="textfieldProjectName" styleClass="project_edit_input_basic ,project_edit_input_textfield ,project_edit_font"/>
-		</HBox>
-		<HBox>
-			<Label styleClass="project_edit_title">
-				<text>詳細</text>
-			</Label>
-			<TextArea fx:id="detailTextArea" styleClass="project_edit_input_basic ,project_edit_input_textarea ,project_edit_font"/>
-		</HBox>
-		<HBox>
-			<Label styleClass="project_edit_title">
-				<text>ステータス</text>
-			</Label>
-			<ComboBox fx:id="statusCombo" prefWidth="120.0" prefHeight="35.0" promptText="--選択--">
-
-			</ComboBox>
-		</HBox>
-		<VBox fx:id="attributesVBox">
-
+<fx:root type="javafx.scene.control.ScrollPane" xmlns:fx="http://javafx.com/fxml/1"  styleClass="back_white" fx:controller="scheduler.view.workDisplayer.ProjectEditorController">
+	<HBox styleClass="tab_content_back">
+		<minHeight><Constant fx:constant="WORK_DISP_TAB_PREF_HEIGHT"/></minHeight>
+		<prefWidth><Constant fx:constant="APP_PREF_WIDTH"/></prefWidth>
+		<VBox>
+			<HBox>
+				<Label styleClass="title_label">
+					<text>案件番号</text>
+				</Label>
+				<Label fx:id="labelProjectCode" styleClass="proejct_editor_color,output_label,output_basic,editor_font">
+					<text></text>
+				</Label>
+			</HBox>
+			<HBox>
+				<Label styleClass="title_label">
+					<text>案件名</text>
+				</Label>
+				<TextField 	fx:id="textfieldProjectName" styleClass="input_basic ,input_textfield ,editor_font"/>
+			</HBox>
+			<HBox>
+				<Label styleClass="title_label">
+					<text>詳細</text>
+				</Label>
+				<TextArea fx:id="detailTextArea" styleClass="input_basic ,input_textarea ,editor_font" prefHeight="150"/>
+			</HBox>
+			
 		</VBox>
-		<HBox>
-			<Button styleClass="project_edit_button_clear,project_edit_button_base" onAction="#onClearButtonClicked">
-				<text>クリア</text>
-			</Button>
-			<Button styleClass="project_edit_button_regist,project_edit_button_base" onAction="#onRegistButtonClicked">
-				<text>登録</text>
-			</Button>
-		</HBox>
-	</children>
+		<VBox>
+			<HBox>
+				<Label styleClass="title_label">
+					<text>ステータス</text>
+				</Label>
+				<ComboBox fx:id="statusCombo" prefWidth="120.0" prefHeight="35.0" promptText="--選択--">
+
+				</ComboBox>
+			</HBox>
+			<VBox fx:id="attributesVBox">
+
+			</VBox>
+			<HBox styleClass="buttons_component">
+				<Button fx:id="clearButton" styleClass="clear_button,work_disp_button_base" onAction="#onClearButtonClicked">
+					<text>クリア</text>
+				</Button>
+				<Button fx:id="registButton" styleClass="regist_button,work_disp_button_base" onAction="#onRegistButtonClicked">
+					<text>登録</text>
+				</Button>
+			</HBox>
+		</VBox>
+	</HBox>
 </fx:root>

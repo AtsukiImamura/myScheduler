@@ -10,6 +10,7 @@ import scheduler.bean.ProjectBean;
 import scheduler.bean.TaskBean;
 import scheduler.common.constant.Constant;
 import scheduler.common.utils.Util;
+import scheduler.facade.TaskFacade;
 import scheduler.view.AbstractView;
 
 
@@ -22,7 +23,7 @@ public class CalenderRow extends AbstractView{
 
 
 	/** このビューが持つ案件 */
-	private final ProjectBean project;
+	private ProjectBean project;
 
 	/** タスク表示用のカレンダー行のリスト */
 	private final List<CalenderPrimitiveRow> primitiveRowList;
@@ -34,12 +35,15 @@ public class CalenderRow extends AbstractView{
 	public final IntegerProperty hoveredIndex;
 
 
-
+	private List<TaskBean> taskList = null;
 
 
 
 
 	protected void initialize(){
+
+		selectedIndex.set(-1);
+		hoveredIndex.set(-1);
 
 		this.viewWidth.set(Constant.CALENDAR_ROW_VIEW_WIDTH);
 		this.viewHeight.set(Constant.CALENDAR_ROW_VIEW_HEIGHT);
@@ -47,8 +51,6 @@ public class CalenderRow extends AbstractView{
 
 		//primitiveRowListの初期化
 		initPrimitiveRowList();
-
-
 	}
 
 
@@ -61,7 +63,8 @@ public class CalenderRow extends AbstractView{
 		this.getChildren().clear();
 		primitiveRowList.clear();
 
-		if(project == null || project.getTaskBeanList() == null ||  project.getTaskBeanList().isEmpty()){
+		taskList = TaskFacade.getInstance().findByProjectCode(project.getProjectCode());
+		if(project == null || taskList == null || taskList.isEmpty()){
 			CalenderPrimitiveRow newPrimitiveRow = getInitializedPrimitiveRow(0);
 			primitiveRowList.add(newPrimitiveRow);
 			this.viewHeight.set(CalendarDay.DEFAULT_HEIGHT);
@@ -70,7 +73,7 @@ public class CalenderRow extends AbstractView{
 		}
 
 		//projectの中のタスクリストを開始日順で並び替えたもの
-		List<TaskBean> taskBeanList = Util.sortTasksByStartAt(project.getTaskBeanList());
+		List<TaskBean> taskBeanList = Util.sortTasksByStartAt(taskList);
 
 		//primitiveRowList[0]に直前に入れたタスク
 		TaskBean primaryTask = null;
@@ -245,6 +248,12 @@ public class CalenderRow extends AbstractView{
 		initialize();
 	}
 
+	public void setProject(ProjectBean project){
+		this.project = project;
+
+		initialize();
+	}
+
 
 
 
@@ -309,14 +318,14 @@ public class CalenderRow extends AbstractView{
 	 */
 	public void addTask(TaskBean task){
 
-		for(TaskBean bean : this.project.getTaskBeanList()){
+		for(TaskBean bean :taskList){
 			if(bean.getProjectCode().equals(task.getProjectCode())
 			&& bean.getTaskCode().equals(task.getTaskCode())){
-				this.project.getTaskBeanList().remove(bean);
+				taskList.remove(bean);
 				break;
 			}
 		}
-		this.project.getTaskBeanList().add(task);
+		taskList.add(task);
 		this.initPrimitiveRowList();
 
 //		for(CalenderPrimitiveRow primitiveRow : primitiveRowList){

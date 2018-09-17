@@ -94,11 +94,11 @@ public class NameConstant {
 
 	public static final String CALENDAR_DATE_CTRL_FORWARD_DAY_CSS = "forward_day_button";
 
-	public static final String CALENDAR_DATE_CTRL_SELECT_YEAR_CSS = "select_year_box";
+	public static final String CALENDAR_DATE_CTRL_SELECT_YEAR_CSS = "select_date_box";
 
-	public static final String CALENDAR_DATE_CTRL_SELECT_MONTH_CSS = "select_month_box";
+	public static final String CALENDAR_DATE_CTRL_SELECT_MONTH_CSS = "select_date_box";
 
-	public static final String CALENDAR_DATE_CTRL_SELECT_DAY_CSS = "select_day_box";
+	public static final String CALENDAR_DATE_CTRL_SELECT_DAY_CSS = "select_date_box";
 
 
 
@@ -151,6 +151,29 @@ public class NameConstant {
 	public static final String PROJECT_CODE_PREFIX = "PJ_";
 
 	public static final String TASK_CODE_PREFIX = "TK_";
+
+	public static final String STONE_CODE_PREFIX = "SN_";
+
+	public static final String STATUS_CODE_PREFIX = "ST_";
+
+
+	//TODO: enumに変更中
+	public static enum CODE_PREFIX{
+		PROJECT("PJ_"),
+		STONE("SN_"),
+		STATUS("ST_"),
+		TASK("TK_"),
+		ATTR_SELECTION("SL_"),
+		ATTRIBUTE("AT_");
+
+		public final String PREFIX;
+
+		CODE_PREFIX(String prefix){
+			this.PREFIX = prefix;
+		}
+	}
+
+
 
 
 	public static final String FXML_PATH_PROJECT_EDITOR = "view/workDisplayer/workDisplayer.fxml";

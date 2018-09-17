@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import scheduler.bean.DatabaseRelated;
 
@@ -31,7 +32,6 @@ public abstract class CSVAbstractFacade<T extends DatabaseRelated> {
 	 * @return
 	 */
 	abstract public List<T> findAll();
-
 
 	/**
 	 * 各継承クラスでcreateNewDatabase(Class<T> c)を呼び出すことで実装する
@@ -61,7 +61,7 @@ public abstract class CSVAbstractFacade<T extends DatabaseRelated> {
 	protected  List<T> findAll(Class<T> c){
 		CSVReader reader = createCSVReaderByClass(c);
 		System.out.println("findAll "+c.getName());
-		return this.toBean(c, reader.all());
+		return this.toBean(c, reader.all()).stream().filter(bean->!bean.isDeleted()).collect(Collectors.toList());
 	}
 
 
@@ -73,7 +73,7 @@ public abstract class CSVAbstractFacade<T extends DatabaseRelated> {
 	 */
 	protected List<T> find(Class<T> c,Map<String,String> keys){
 		CSVReader reader = createCSVReaderByClass(c);
-		return this.toBean(c, reader.findAll(keys));
+		return this.toBean(c, reader.findAll(keys)).stream().filter(bean->!bean.isDeleted()).collect(Collectors.toList());
 	}
 
 
@@ -85,7 +85,11 @@ public abstract class CSVAbstractFacade<T extends DatabaseRelated> {
 	 */
 	protected T one(Class<T> c,Map<String,String> primaryKeys){
 		CSVReader reader = createCSVReaderByClass(c);
-		return this.toBean(c, reader.one(primaryKeys));
+		T bean = this.toBean(c, reader.one(primaryKeys));
+		if(bean == null || bean.isDeleted()){
+			return null;
+		}
+		return bean;
 	}
 
 

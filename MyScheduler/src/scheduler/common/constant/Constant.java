@@ -100,6 +100,23 @@ public class Constant {
 	public static final Color CALENDAR_DATE_VIEW_NOMAL_CLICKED = Color.rgb(210,210, 210);
 
 
+	public static enum DATE_VIEW_COLOR {
+		SUNDAY(Color.rgb(255, 195, 175),Color.rgb(255, 200, 185),Color.rgb(255, 120, 105));
+
+		public final Color NOMAL;
+
+		public final Color HOVERED;
+
+		public final Color CLICKED;
+
+		DATE_VIEW_COLOR(Color nomalColor,Color hoveredColor, Color clickedColor){
+			this.NOMAL = nomalColor;
+			this.HOVERED = hoveredColor;
+			this.CLICKED = clickedColor;
+		}
+	}
+
+
 	/** 各タスクのホバー時に表示するポップアップのタスクに対するx座標位置 */
 	public static final double POPUP_TRANSLATE_X = 30;
 
@@ -108,12 +125,6 @@ public class Constant {
 
 	/** カレンダー操作部の高さ */
 	public static final double CALENDAR_DATE_CTRL_HEIGHT = 40;
-
-	/** 属性カスタマイズタイプ: 自由入力 */
-	public static final int ATTRIBUTE_COSTAMIZE_TYPE_FREE = 10;
-
-	/** 属性カスタマイズタイプ: 選択 */
-	public static final int ATTRIBUTE_COSTAMIZE_TYPE_SELECT = 20;
 
 	/** 選択コード長さ */
 	public static final int LENGTH_OF_SELECTION_CODE = 5;
@@ -132,6 +143,83 @@ public class Constant {
 	/** カレンダー日付表示部: 月名表示部分の背景色の月による変化 */
 	public static final int VAR_OF_BACK_BASE = 25;
 
+
+
+	public static enum COLOR_TYPE {
+			STATUS(10,"ステータスカラー"),
+			STONE(20,"ストーンカラー");
+
+			private int code;
+
+			private String name;
+
+			COLOR_TYPE(int code,String name){
+				this.code = code;
+				this.name = name;
+			}
+
+			public int getCode(){
+				return this.code;
+			}
+
+			public String getName(){
+				return this.name;
+			}
+	}
+
+	public static enum ATTRIBUTE_TYPE {
+		FREE(10,"自由入力"),
+		SELECTION(20,"選択");
+
+		public final int CODE;
+
+		public final String NAME;
+
+		ATTRIBUTE_TYPE(int code,String name){
+			this.CODE = code;
+			this.NAME = name;
+		}
+
+		public static ATTRIBUTE_TYPE findByCode(String name){
+			return ATTRIBUTE_TYPE.valueOf(ATTRIBUTE_TYPE.class, name);
+		}
+	}
+
+	public static enum TAB_KIND{
+		PROJECT(0,"プロジェクト"),
+		TASK(1,"タスク"),
+		CONFIG(2,"設定"),
+		COLOR(0,"カラー"),
+		ATTRIBUTE(1,"属性");
+
+		private int index;
+
+		private String name;
+
+
+		public int getIndex() {
+			return index;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		TAB_KIND(int index,String name){
+			this.index = index;
+			this.name = name;
+		}
+	}
+
+
+	public static final double WORK_DISP_TAB_PREF_HEIGHT = 370;
+
+	public static final double WORK_DISP_TAB_MAX_HEIGHT = 370;
+
+	public static final double WORK_DISP_SCROLL_VMAX = 700;
+
+
+	public static final double APP_VBOX_SPACING = 45;
 
 
 

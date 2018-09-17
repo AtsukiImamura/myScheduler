@@ -9,7 +9,6 @@ import scheduler.bean.TaskBean;
 import scheduler.common.constant.Constant;
 import scheduler.common.utils.Util;
 import scheduler.facade.ProjectBeanFacade;
-import scheduler.facade.TAttributeBeanFacade;
 import scheduler.facade.TaskFacade;
 import scheduler.view.calendar.CalendarDateCTRLView;
 import scheduler.view.calendar.CalendarDateView;
@@ -24,12 +23,6 @@ public class ProjectsController extends Controller{
 
 	/** 案件のリスト */
 	private final List<ProjectBean> projectList;
-
-	/** 案件ファサード */
-	private final ProjectBeanFacade projectBeanFacade;
-
-	/** 属性ファサード */
-	private final TAttributeBeanFacade tAttributeBeanFacade;
 
 	/** 案件のビュー */
 	private final ProjectsView projectsView;
@@ -57,7 +50,7 @@ public class ProjectsController extends Controller{
 
 
 	public void addProject(String projectCode){
-		ProjectBean project = projectBeanFacade.one(projectCode);
+		ProjectBean project = ProjectBeanFacade.getInstance().one(projectCode);
 		if(project == null){
 			return;
 		}
@@ -67,12 +60,13 @@ public class ProjectsController extends Controller{
 
 	public void removeProject(ProjectBean project){
 		projectsView.removeProject(project);
-		projectBeanFacade.logicalDelete(project);
+		ProjectBeanFacade.getInstance().logicalDelete(project);
+		TaskFacade.getInstance().deleteByProjectCode(project.getProjectCode());
 	}
 
 
 	public void removeProject(String projectCode){
-		ProjectBean project = projectBeanFacade.one(projectCode);
+		ProjectBean project = ProjectBeanFacade.getInstance().one(projectCode);
 		if(project == null){
 			return;
 		}
@@ -82,6 +76,10 @@ public class ProjectsController extends Controller{
 
 	public void addTask(TaskBean task){
 		this.projectsView.addTask(task);
+	}
+
+	public boolean removeTask(TaskBean task){
+		return this.projectsView.removeTask(task);
 	}
 
 
@@ -118,18 +116,10 @@ public class ProjectsController extends Controller{
 
 
 	public ProjectsController(){
-		projectBeanFacade = new ProjectBeanFacade();
-		tAttributeBeanFacade = new TAttributeBeanFacade();
-		TaskFacade taskFacade = new TaskFacade();
-		projectList = projectBeanFacade.findAll();
+		projectList = ProjectBeanFacade.getInstance().findAll();
 		calendarDateView = new CalendarDateView(Constant.APP_PREF_WIDTH*Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH);
 
 		calendarDateCTRLView = new CalendarDateCTRLView();
-
-		for(ProjectBean project: projectList){
-			List<TaskBean> taskList = taskFacade.findByProjectCode(project.getProjectCode());
-			project.setTaskBeanList(taskList);
-		}
 
 		//案件のビューを作成
 		projectsView = new ProjectsView(projectList);

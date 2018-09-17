@@ -9,6 +9,18 @@ import scheduler.common.constant.NameConstant;
 
 public class TaskFacade   extends CSVAbstractFacade<TaskBean>{
 
+
+	private static TaskFacade instance;
+
+	static{
+		instance = new TaskFacade();
+	}
+
+	public static TaskFacade getInstance(){
+		return instance;
+	}
+
+
 	@Override
 	public List<TaskBean> findAll(){
 		return this.findAll(TaskBean.class);
@@ -53,6 +65,18 @@ public class TaskFacade   extends CSVAbstractFacade<TaskBean>{
 		int newNum = max + 1;
 		String newNumber = String.format("%04d", newNum);
 		return NameConstant.TASK_CODE_PREFIX+newNumber;
+	}
+
+
+	/**
+	 * プロジェクトに紐づくタスクを全て（論理）削除する
+	 * @param projectCode
+	 */
+	public void deleteByProjectCode(String projectCode){
+		List<TaskBean> taskList = this.findByProjectCode(projectCode);
+		for(TaskBean bean: taskList){
+			this.logicalDelete(bean);
+		}
 	}
 
 }

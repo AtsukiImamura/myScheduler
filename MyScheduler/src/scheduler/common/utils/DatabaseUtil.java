@@ -56,7 +56,6 @@ public class DatabaseUtil {
         System.out.printf("         received : %.2f\n",(double)(System.currentTimeMillis() - start));
 
         if(response.getStatusLine().getStatusCode() != 200 ){
-            System.out.println("StatusCode:" + response.getStatusLine().getStatusCode());
             return null;
         }
 
@@ -134,7 +133,6 @@ public class DatabaseUtil {
 		}
 
         if(response.getStatusLine().getStatusCode() != 200 ){
-            System.out.println("StatusCode:" + response.getStatusLine().getStatusCode());
             return false;
         }
 

@@ -97,11 +97,4 @@ public class AttributeSelectionBean extends DatabaseRelated{
 		this.dispOrder = Integer.parseInt(dispOrder);
 	}
 
-	@Override
-	public String toString(){
-		return this.dispName;
-	}
-
-
-
 }

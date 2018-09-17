@@ -20,7 +20,7 @@ public class StatusShapeCell extends ListCell<String>{
         	if(bean == null){
         		return;
         	}
-            setText(bean.getTytle());
+            setText(bean.getTitle());
 
             Shape shape = new Rectangle(0, 0, 35, 20);
             shape.setFill(bean.getColor());

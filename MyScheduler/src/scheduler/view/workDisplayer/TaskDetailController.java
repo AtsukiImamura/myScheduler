@@ -10,10 +10,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import scheduler.App;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import scheduler.bean.TaskBean;
+import scheduler.common.constant.Constant;
 import scheduler.common.utils.Util;
+import scheduler.controller.ProjectsController;
+import scheduler.facade.TaskFacade;
 
 public class TaskDetailController implements Initializable{
 
@@ -36,12 +41,21 @@ public class TaskDetailController implements Initializable{
 	@FXML
 	private Label finishDateLabel;
 
+	@FXML
+	private Button editTaskButton;
 
+	@FXML
+	private Button deleteButton;
+
+	/** このビューが持つタスク */
 	private TaskBean taskBean;
+
+	private static  ScrollPane root;
 
 	protected static TaskDetailController instance;
 
 	protected static Parent view;
+
 
 
     /**
@@ -58,9 +72,14 @@ public class TaskDetailController implements Initializable{
      * 表示する
      */
     public void show() {
-    	App.setEditorHBoxField(view,true);
+    	WorkDispTabsController.getInstance().setTab(Constant.TAB_KIND.TASK,view);
     }
 
+
+    /**
+     * 指定するタスクの情報を表示する
+     * @param task
+     */
     public void show(TaskBean task){
     	this.setTask(task);
     	this.show();
@@ -71,8 +90,15 @@ public class TaskDetailController implements Initializable{
     	return view;
     }
 
+
 	static {
         FXMLLoader fxmlLoader = Util.createProjectFxmlLoader("scheduler/view/workDisplayer/taskDetail.fxml");
+        root = new ScrollPane();
+		root.setMinHeight(Constant.WORK_DISP_TAB_MAX_HEIGHT);
+		root.setMaxHeight(Constant.WORK_DISP_TAB_MAX_HEIGHT);
+		root.setVmax(Constant.WORK_DISP_SCROLL_VMAX);
+		root.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+        fxmlLoader.setRoot(root);
         try {
         	view = fxmlLoader.load();
         } catch (IOException e) {
@@ -84,7 +110,8 @@ public class TaskDetailController implements Initializable{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		editTaskButton.setDisable(true);
+		deleteButton.setDisable(true);
 	}
 
 
@@ -95,7 +122,37 @@ public class TaskDetailController implements Initializable{
 		taskEditorController.show();
 	}
 
+	@FXML
+	public void onDeleteButtonClicked(ActionEvent ev){
+		boolean deleted = ProjectsController.currentInstance().removeTask(this.taskBean);
+		if(!deleted){
+			return;
+		}
+		deleteButton.setDisable(true);
+		editTaskButton.setDisable(true);
+		TaskFacade.getInstance().logicalDelete(taskBean);
+		this.clear();
+	}
 
+
+	/**
+	 * 表示内容をクリアする
+	 */
+	private void clear(){
+		labelProjectCode.setText("");
+		labelTaskCode.setText("");
+		labelTaskName.setText("");
+		labelDetail.setText("");
+		startDateLabel.setText("");
+		finishDateLabel.setText("");
+
+	}
+
+
+	/**
+	 * このビューに表示するタスクをセットする
+	 * @param task
+	 */
 	public void setTask(TaskBean task){
 		this.taskBean = task;
 		labelProjectCode.setText(taskBean.getProjectCode());
@@ -104,7 +161,11 @@ public class TaskDetailController implements Initializable{
 		labelDetail.setText(taskBean.getDetail());
 		startDateLabel.setText(Util.getBarFormatCalendarValue(taskBean.getStartAt(), true));
 		finishDateLabel.setText(Util.getBarFormatCalendarValue(taskBean.getFinishAt(), true));
+
+		editTaskButton.setDisable(false);
+		deleteButton.setDisable(false);
 	}
+
 
 
 }

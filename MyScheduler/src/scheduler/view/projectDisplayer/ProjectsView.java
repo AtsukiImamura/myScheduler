@@ -1,15 +1,15 @@
 package scheduler.view.projectDisplayer;
 
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import javafx.scene.Node;
 import scheduler.bean.ProjectBean;
 import scheduler.bean.TaskBean;
 import scheduler.common.constant.Constant;
-import scheduler.facade.TAttributeBeanFacade;
 import scheduler.view.AbstractView;
 
 /**
@@ -26,6 +26,7 @@ public class ProjectsView extends AbstractView{
 		return instance;
 	}
 
+
 	/**
 	 * 案件のリスト
 	 */
@@ -34,15 +35,10 @@ public class ProjectsView extends AbstractView{
 
 	/**
 	 * 案件のビューのリスト
+	 * key: 案件コード
+	 * value: ProjectView
 	 */
-	private List<ProjectView> projectViewList;
-
-
-	/**
-	 *
-	 */
-	private final TAttributeBeanFacade tAttributeBeanFacade;
-
+	private final Map<String,ProjectView> projectViewList;
 
 
 
@@ -51,10 +47,12 @@ public class ProjectsView extends AbstractView{
 	 */
 	public void refreshHeight(){
 		double transY = 0;
-		for(ProjectView projectView : projectViewList){
+
+		for (Entry<String, ProjectView> entry : projectViewList.entrySet()) {
+			ProjectView projectView = entry.getValue();
 			projectView.setTranslateY(transY);
 			transY += projectView.viewHeight.get()+Constant.PROJECTS_SPACE;
-		}
+	    }
 	}
 
 
@@ -64,30 +62,33 @@ public class ProjectsView extends AbstractView{
 	 * @param project
 	 */
 	public void addProject(ProjectBean project){
-		projectList.add(project);
-		double transY = this.viewHeight.doubleValue();
+
+		double transY = 0;
+
+		String projectCode = project.getProjectCode();
+		if(projectViewList.containsKey(projectCode)){
+			projectViewList.get(projectCode).setProject(project);
+			return;
+		}
+		for(ProjectView projectView : projectViewList.values()){
+			transY += projectView.viewHeight.doubleValue() +Constant.PROJECTS_SPACE;
+		}
 
 		ProjectView projectView = this.createInitializedProjectView(project,transY);
-		projectViewList.add(projectView);
+		projectViewList.put(projectCode,projectView);
 		this.getChildren().add(0, projectView);
+		return;
 	}
 
 
 	public void addTask(TaskBean task){
 		String projectCode = task.getProjectCode();
 
-		List<ProjectView> viewList = projectViewList.stream().filter(view->{
-			if(view.getProject().getProjectCode().equals(projectCode)){
-				return true;
-			}
-			return false;
-		}).collect(Collectors.toList());
-		if(viewList.isEmpty()){
+		if(!projectViewList.containsKey(projectCode)){
 			return;
 		}
-		viewList.forEach(view->{
-			view.addTask(task);
-		});
+
+		projectViewList.get(projectCode).addTask(task);
 	}
 
 
@@ -104,42 +105,17 @@ public class ProjectsView extends AbstractView{
 
 	public void removeProject(String projectCode){
 
-		//表示している案件の中でコードに該当するものを得る
-		List<ProjectBean> validProjectList = projectList.stream().filter(project->project.getProjectCode().equals(projectCode)).collect(Collectors.toList());
-		if(validProjectList.isEmpty()){
-			return;
-		}
-
-		//ProjectViewを消す
-		this.getChildren().removeAll(
-				this.getChildren()
-				.stream()
-				.filter((child)->{
-					//ProjectViewのインスタンスでないものは除外
-					if(!(child instanceof ProjectView)){
-						return false;
-					}
-					//対象のプロジェクトリストに含まれているかを調べる
-					for(ProjectBean proejct: validProjectList){
-						//コードが合致していれば
-						if(((ProjectView)child).getProject().getProjectCode().equals(proejct.getProjectCode())){
-							return true;
-						}
-					}
-					return false;
-				}).collect(Collectors.toList())
-			);
+		this.getChildren().remove(projectViewList.get(projectCode));
+		projectViewList.remove(projectCode);
 
 		double transY = 0;
 
-		int from = this.getChildren().size()-1;
+		List<ProjectView> list = projectViewList.values().stream().collect(Collectors.toList());
+		int from =list.size()-1;
 		for(int index = from; index >= 0;index--){
-			Node child = this.getChildren().get(index);
-			if(!(child instanceof ProjectView)){
-				continue;
-			}
-			((ProjectView)child).setTranslateY(transY);
-			transY += ((ProjectView)child).viewHeight.doubleValue() + Constant.PROJECTS_SPACE;
+			ProjectView view = list.get(index);
+			view.setTranslateY(transY);
+			transY += view.viewHeight.doubleValue() + Constant.PROJECTS_SPACE;
 		}
 
 	}
@@ -147,7 +123,7 @@ public class ProjectsView extends AbstractView{
 
 
 	public void clearClicked(){
-		projectViewList.forEach(view->{
+		projectViewList.forEach((code,view)->{
 			view.clearClicked();
 		});
 	}
@@ -159,21 +135,21 @@ public class ProjectsView extends AbstractView{
 		projectView.setTranslateY(transY);
 
 		projectView.selectedIndex.addListener((ov,oldValue,newValue)->{
-			for(ProjectView view : projectViewList){
+			projectViewList.forEach((code,view)->{
 				if(view.equals(projectView)){
-					continue;
+					return;
 				}
 				view.setSelected(newValue.intValue());
-			}
+			});
 		});
 
 		projectView.hoveredIndex.addListener((ov,oldValue,newValue)->{
-			for(ProjectView view : projectViewList){
+			projectViewList.forEach((code,view)->{
 				if(view.equals(projectView)){
-					continue;
+					return;
 				}
 				view.setHovered(newValue.intValue());
-			}
+			});
 		});
 
 
@@ -188,9 +164,8 @@ public class ProjectsView extends AbstractView{
 	 * @param attributeLists
 	 */
 	public ProjectsView(List<ProjectBean> projects){
-		tAttributeBeanFacade = new TAttributeBeanFacade();
 		this.projectList = projects;
-		projectViewList = new ArrayList<ProjectView>();
+		projectViewList = new HashMap<String,ProjectView>();
 
 		initPrjectViewList();
 
@@ -207,7 +182,7 @@ public class ProjectsView extends AbstractView{
 		double transY = 0;
 		for(ProjectBean project : projectList){
 			ProjectView projectView = this.createInitializedProjectView(project, transY);
-			projectViewList.add(projectView);
+			projectViewList.put(project.getProjectCode(),projectView);
 
 			//ここまでのy軸報告調整の累積
 			transY += projectView.viewHeight.doubleValue() + Constant.PROJECTS_SPACE;
@@ -220,17 +195,19 @@ public class ProjectsView extends AbstractView{
 
 		this.viewHeight.set(transY);
 
-		for(int index = projectViewList.size()-1;index>=0 ; index--){
-			this.getChildren().add(this.projectViewList.get(index));
+		List<ProjectView> list = projectViewList.values().stream().collect(Collectors.toList());
+
+		for(int index = list.size()-1;index>=0 ; index--){
+			this.getChildren().add(list.get(index));
 		}
 	}
 
 
 
 	public void setViewWidth(double width){
-		for(ProjectView view : projectViewList){
+		projectViewList.forEach((projectCode,view)->{
 			view.setViewWidth(width);
-		}
+		});
 	}
 
 	@Override
@@ -241,9 +218,9 @@ public class ProjectsView extends AbstractView{
 
 
 	public void setViewStartAt(Calendar date){
-		for(ProjectView view : projectViewList){
+		projectViewList.forEach((projectCode,view)->{
 			view.setViewStartAt(date);
-		}
+		});
 	}
 
 
@@ -251,9 +228,9 @@ public class ProjectsView extends AbstractView{
 	 * カレンダーを一日前にする
 	 */
 	public void backViewDate(){
-		for(ProjectView view : projectViewList){
+		projectViewList.forEach((projectCode,view)->{
 			view.backViewDate();
-		}
+		});
 	}
 
 
@@ -262,9 +239,9 @@ public class ProjectsView extends AbstractView{
 	 * カレンダーを一日後ろにする
 	 */
 	public void forwardViewDate(){
-		for(ProjectView view : projectViewList){
+		projectViewList.forEach((projectCode,view)->{
 			view.forwardViewDate();
-		}
+		});
 	}
 
 
@@ -275,13 +252,17 @@ public class ProjectsView extends AbstractView{
 	 * @return タスクの除去に成功したかどうか
 	 */
 	public boolean removeTask(String projectCode,String taskCode){
-		for(ProjectView projectView : this.projectViewList){
-			if(projectView.getProject().getProjectCode() != projectCode){
-				continue;
-			}
-			return true && projectView.removeTask(taskCode);
+
+		if(!projectViewList.containsKey(projectCode)){
+			return false;
 		}
-		return false;
+
+		return true && projectViewList.get(projectCode).removeTask(taskCode);
+	}
+
+
+	public boolean removeTask(TaskBean task){
+		return this.removeTask(task.getProjectCode(), task.getTaskCode());
 	}
 
 }

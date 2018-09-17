@@ -106,7 +106,11 @@ public class TaskBean  extends DatabaseRelated{
 		this.detail = detail;
 	}
 
-	public String getStoneCode() {
+	public String getCode() {
+		return stoneCode;
+	}
+
+	public String isStoneCode(){
 		return stoneCode;
 	}
 

@@ -31,8 +31,6 @@ public class ProjectView extends AbstractView{
 	/** 案件の属性リスト */
 	private List<TAttributeBean> attributeList;
 
-	private final TAttributeBeanFacade tAttributeFacade;
-
 	/** 案件のカレンダー */
 	private final CalenderRow calenderRow;
 
@@ -59,6 +57,7 @@ public class ProjectView extends AbstractView{
 
 	public void setProject(ProjectBean project) {
 		this.project = project;
+		projectAttributesView.redraw(project);
 	}
 
 
@@ -104,12 +103,14 @@ public class ProjectView extends AbstractView{
 	 * @param attributes 案件の属性
 	 */
 	public ProjectView(ProjectBean project){
-		tAttributeFacade = new TAttributeBeanFacade();
 		this.project = project;
-		this.attributeList = tAttributeFacade.findByProjectCode(project.getProjectCode());
-		this.rateOfCalendarWidth = Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH;
+
 		selectedIndex = new SimpleIntegerProperty();
 		hoveredIndex = new SimpleIntegerProperty();
+
+		this.attributeList = TAttributeBeanFacade.getInstance().findByProjectCode(project.getProjectCode());
+		this.rateOfCalendarWidth = Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH;
+
 
 		//カレンダー部
 		calenderRow = new CalenderRow(project);
@@ -121,13 +122,8 @@ public class ProjectView extends AbstractView{
 		this.viewHeight.set(height);
 		this.viewWidth.set(Constant.APP_PREF_WIDTH);
 
-
-		TAttributeBean projectNameAttr = new TAttributeBean();
-		projectNameAttr.setAttributeCode(Constant.ATTRIBUTE_CODE_PROJECT_NAME);
-		projectNameAttr.setValue(project.getProjectName());
-		attributeList.add(Constant.ATTRIBUTE_INDEX_PROJECT_NAME, projectNameAttr);
 		//属性部
-		projectAttributesView = new ProjectAttributesView(attributeList,calenderRow.viewHeight.doubleValue());
+		projectAttributesView = new ProjectAttributesView(project,calenderRow.viewHeight.doubleValue());
 		projectAttributesView.setSize(Constant.APP_PREF_WIDTH*(1-rateOfCalendarWidth), this.viewHeight.doubleValue());
 
 		StatusFacade statusFacade = new StatusFacade();
@@ -167,6 +163,8 @@ public class ProjectView extends AbstractView{
 				calenderRow,
 				projectAttributesView
 				);
+
+		this.getStyleClass().addAll("project_view");
 	}
 
 

@@ -1,4 +1,4 @@
-package scheduler.view;
+package scheduler.view.projectDisplayer;
 
 import java.util.List;
 
@@ -15,6 +15,7 @@ import scheduler.common.constant.Constant;
 import scheduler.common.constant.NameConstant;
 import scheduler.common.utils.Util;
 import scheduler.facade.AttributeSelectionBeanFacade;
+import scheduler.view.AbstractView;
 
 
 /**

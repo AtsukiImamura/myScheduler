@@ -2,19 +2,17 @@ package scheduler;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import scheduler.common.constant.Constant;
 import scheduler.controller.ProjectsController;
-import scheduler.view.workDisplayer.ProjectEditorController;
+import scheduler.view.workDisplayer.WorkDispTabsController;
 
 /**
  * スケジュール管理アプリ
@@ -28,24 +26,14 @@ public class App extends Application{
 
 	private VBox appVBox;
 
-	private static HBox editorHBox;
-
-	public static void setEditorHBoxField(Parent parent,boolean clear){
-		if(clear){
-			editorHBox.getChildren().clear();
-		}
-		editorHBox.getChildren().add(parent);
-	}
-
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
 		appVBox = new VBox();
-		editorHBox = new HBox();
-		appVBox.getChildren().add(editorHBox);
-
-		editorHBox.getChildren().add(ProjectEditorController.getInstance().getView());
-
+		appVBox.setSpacing(Constant.APP_VBOX_SPACING);
+		//作業部
+		appVBox.getChildren().add(WorkDispTabsController.getInstance().getView());
+		//表示部
 		projectsController = new ProjectsController();
 		appVBox.getChildren().add(projectsController.getView());
 
@@ -61,12 +49,15 @@ public class App extends Application{
 		primaryStage.setTitle("MyScheduler App 0.0");
 		primaryStage.show();
 
+		//ScrollPane scroll = new ScrollPane();
+
 
 
 
 		//横幅変化時のリスナー
 		scene.widthProperty().addListener((ov,oldValue,newValue)->{
 			projectsController.setWidth(newValue.doubleValue());
+			WorkDispTabsController.getInstance().setWidth(newValue.doubleValue());
 		});
 
 		//横幅変化時のリスナー

@@ -1,6 +1,6 @@
 package scheduler;
 
-import scheduler.facade.TaskFacade;
+import scheduler.facade.MAttributeBeanFacade;
 
 public class DataBaseCreationBatch {
 
@@ -14,17 +14,17 @@ public class DataBaseCreationBatch {
 //		TAttributeBeanFacade tAttributeBeanFacade = new TAttributeBeanFacade();
 //		tAttributeBeanFacade.createNewDatabase();
 //
-		TaskFacade taskFacade = new TaskFacade();
-		taskFacade.createNewDatabase();
-//
+//		TaskFacade taskFacade = new TaskFacade();
+//		taskFacade.createNewDatabase();
+////
 //		StoneFacade stoneFacade = new StoneFacade();
 //		stoneFacade.createNewDatabase();
-//
+////
 //		StatusFacade statusFacade = new StatusFacade();
 //		statusFacade.createNewDatabase();
 //
-//		MAttributeBeanFacade mAttributeBeanFacade = new MAttributeBeanFacade();
-//		mAttributeBeanFacade.createNewDatabase();
+		MAttributeBeanFacade mAttributeBeanFacade = new MAttributeBeanFacade();
+		mAttributeBeanFacade.createNewDatabase();
 //
 //		AttributeSelectionBeanFacade attributeSelectionBeanFacade = new AttributeSelectionBeanFacade();
 //		attributeSelectionBeanFacade.createNewDatabase();

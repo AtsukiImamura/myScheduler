@@ -6,8 +6,21 @@ import java.util.Map;
 
 import javafx.scene.paint.Color;
 import scheduler.bean.StatusBean;
+import scheduler.common.constant.NameConstant;
 
 public class StatusFacade extends CSVAbstractFacade<StatusBean>{
+
+
+	private static StatusFacade instance;
+
+	static{
+		instance = new StatusFacade();
+	}
+
+	public static StatusFacade getInstance(){
+		return instance;
+	}
+
 
 	@Override
 	public List<StatusBean> findAll(){
@@ -32,8 +45,25 @@ public class StatusFacade extends CSVAbstractFacade<StatusBean>{
 
 	public StatusBean one(String code){
 		Map<String,String> primaryKeys = new HashMap<String,String>();
-		primaryKeys.put("STATUS_CODE", code);
+		primaryKeys.put("CODE", code);
 		return this.one(StatusBean.class, primaryKeys);
+	}
+
+	public String createNewCode(){
+		List<StatusBean> statusList = this.findAll();
+		int max = 0;
+		for(StatusBean status: statusList){
+			String statusCode = status.getCode();
+			String number = statusCode.split("_")[1];
+			number = number.replaceAll("^0*","");
+			int num = Integer.parseInt(number);
+			if(num > max){
+				max = num;
+			}
+		}
+		int newNum = max + 1;
+		String newNumber = String.format("%03d", newNum);
+		return NameConstant.STATUS_CODE_PREFIX+newNumber;
 	}
 
 
@@ -48,7 +78,7 @@ public class StatusFacade extends CSVAbstractFacade<StatusBean>{
 		//TODO 実装
 		StatusBean status = new StatusBean();
 		status.setColor(Color.rgb(255, 245, 210));
-		status.setStatusCode(projectCode);
+		status.setCode(projectCode);
 		return status;
 	}
 

@@ -122,9 +122,9 @@ public class FuncTest {
         }
 		System.out.printf("         received : %.1f\n",(double)(System.currentTimeMillis() - start));
 
-        if(response.getStatusLine().getStatusCode() != 200 ){
+        if(response.getStatusLine().getCode() != 200 ){
 
-            System.out.println("StatusCode:" + response.getStatusLine().getStatusCode());
+            System.out.println("StatusCode:" + response.getStatusLine().getCode());
             return;
         }
 

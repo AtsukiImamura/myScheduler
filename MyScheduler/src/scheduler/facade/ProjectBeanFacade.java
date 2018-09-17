@@ -15,6 +15,20 @@ import scheduler.common.constant.NameConstant;
  */
 public class ProjectBeanFacade extends CSVAbstractFacade<ProjectBean>{
 
+	private static ProjectBeanFacade instance;
+
+	static{
+		instance = new ProjectBeanFacade();
+	}
+
+
+	public static ProjectBeanFacade getInstance(){
+		return instance;
+	}
+
+
+
+
 	@Override
 	public List<ProjectBean> findAll(){
 		return this.findAll(ProjectBean.class);
@@ -44,6 +58,7 @@ public class ProjectBeanFacade extends CSVAbstractFacade<ProjectBean>{
 		for(ProjectBean project: projects){
 			String projectCode = project.getProjectCode();
 			String number = projectCode.split("_")[1];
+			number = number.replaceAll("^0*","");
 			int num = Integer.parseInt(number);
 			if(num > max){
 				max = num;
