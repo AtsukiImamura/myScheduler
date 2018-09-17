@@ -1,58 +1,35 @@
 package scheduler.bean;
 
+import scheduler.common.constant.Constant.COLOR_TYPE;
 import scheduler.common.constant.NameConstant;
 
-public class StoneBean  implements DatabaseRelated{
+public class StoneBean  extends ColorAttribute{
 
+	@Override
 	public String getTableName(){
 		return NameConstant.TABLE_NAME_M_STONE;
 	}
 
-	/**
-	 * 主キー
-	 * ストーンカラーコード*/
-	private String stoneColorCode;
-
-	/**色*/
-	private String color;
-
-	/**タイトル*/
-	private String tytle;
-
-	/**説明*/
-	private String detail;
-
-
-	public String getStatusColorCode() {
-		return stoneColorCode;
+	public StoneBean clone(){
+		StoneBean colorAttribute = null;
+		try {
+			colorAttribute =StoneBean.class.newInstance();
+			colorAttribute.setCode(this.code);
+			colorAttribute.setTitle(this.title);
+			colorAttribute.setColor(this.color);
+			colorAttribute.setDetail(this.detail);
+			colorAttribute.setDeleted(this.deleted);
+			colorAttribute.setChangedAt(this.changedAt);
+			colorAttribute.setChangedBy(this.changedBy);
+			colorAttribute.setCreatedAt(this.createdAt);
+			colorAttribute.setCreatedBy(this.createdBy);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return colorAttribute;
 	}
 
-	public void setStatusColorCode(String statusColorCode) {
-		this.stoneColorCode = statusColorCode;
+	public COLOR_TYPE getColorType(){
+		return COLOR_TYPE.STONE;
 	}
-
-	public String getColor() {
-		return color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
-	}
-
-	public String getTytle() {
-		return tytle;
-	}
-
-	public void setTytle(String tytle) {
-		this.tytle = tytle;
-	}
-
-	public String getDetail() {
-		return detail;
-	}
-
-	public void setDetail(String detail) {
-		this.detail = detail;
-	}
-
 }

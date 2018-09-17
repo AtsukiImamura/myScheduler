@@ -1,15 +1,38 @@
 package scheduler.facade;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import scheduler.bean.TAttributeBean;
-import scheduler.common.constant.NameConstant;
 
-public class TAttributeBeanFacade  extends AbstractFacade<TAttributeBean> {
-
+public class TAttributeBeanFacade  extends CSVAbstractFacade<TAttributeBean>{
 
 
+	private static TAttributeBeanFacade instance;
+
+	static{
+		instance = new TAttributeBeanFacade();
+	}
+
+
+	public static TAttributeBeanFacade getInstance(){
+		return instance;
+	}
+
+
+	@Override
+	public List< TAttributeBean> findAll(){
+		return this.findAll( TAttributeBean.class);
+	}
+
+
+
+	@Override
+	public void createNewDatabase(){
+		this.createNewDatabase(TAttributeBean.class);
+	}
+	/*
 	@Override
 	public List<TAttributeBean> findAll() {
 		//this.findAll(TAttributeBean.class);
@@ -17,6 +40,7 @@ public class TAttributeBeanFacade  extends AbstractFacade<TAttributeBean> {
 		List<TAttributeBean> attributeBeanList = this.findAll(NameConstant.TABLE_NAME_T_ATTRIBUTES, NameConstant.TEST_USER_CODE, NameConstant.TEST_PASSWORD,TAttributeBean.class);
 		return attributeBeanList;
 	}
+	*/
 
 	/**
 	 * 案件番号に基づいて紐づく属性のリストを取得する
@@ -24,24 +48,18 @@ public class TAttributeBeanFacade  extends AbstractFacade<TAttributeBean> {
 	 * @return
 	 */
 	public List<TAttributeBean> findByProjectCode(String projectCode){
+		Map<String,String> keys = new HashMap<String,String>();
+		keys.put("PROJECT_CODE", projectCode);
+		return this.find(TAttributeBean.class, keys);
+	}
 
-		/*
-		//TODO 実装
-		return new ArrayList<TAttributeBean>();
-		*/
 
-		List<TAttributeBean> attributes = new ArrayList<TAttributeBean>();
-		for(int i=0;i<3;i++){
-			TAttributeBean attr = new TAttributeBean();
-			attr.setAttributeCode("ATTR-"+i);
-			attr.setDispOrder(i);
-			attr.setProjectCode(projectCode);
-			attr.setValue("valuevalue");
-			attr.setSelectionCode("");
-			attributes.add(attr);
-		}
 
-		return attributes;
+	public TAttributeBean one(String projectCode,String attributeCode){
+		Map<String,String> primaryKeys = new HashMap<String,String>();
+		primaryKeys.put("PROJECT_CODE", projectCode);
+		primaryKeys.put("ATTRIBUTE_CODE", attributeCode);
+		return this.one(TAttributeBean.class, primaryKeys);
 	}
 
 }

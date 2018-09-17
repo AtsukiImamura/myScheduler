@@ -1,11 +1,21 @@
 package scheduler.common.utils;
 
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import scheduler.bean.AttributeSelectionBean;
 import scheduler.bean.ProjectBean;
+import scheduler.bean.StatusBean;
 import scheduler.bean.TaskBean;
+import scheduler.common.constant.Constant;
+import scheduler.facade.TaskFacade;
 
 public class Util {
 
@@ -47,7 +57,7 @@ public class Util {
      * @return 案件を表示するのに必要な行数
      */
     public static int getNumOfNecessaryColumns(ProjectBean project){
-    	List<TaskBean> taskBeanList = project.getTaskBeanList();
+    	List<TaskBean> taskBeanList = TaskFacade.getInstance().findByProjectCode(project.getProjectCode());
 
     	int numOfNecessaryColumns = 1;
     	for(TaskBean task : taskBeanList){
@@ -100,7 +110,8 @@ public class Util {
     	for(int i=0;i<taskList.size();i++){
     		int k=i;
     		TaskBean tmp;
-    		while( k+1<taskList.size() && (tmp = taskList.get(k)).getStartAt().after(taskList.get(k+1).getStartAt())){
+
+    		while( k+1<taskList.size() && Util.compareCalendarDate((tmp = taskList.get(k)).getStartAt(), taskList.get(k+1).getStartAt()) > 0){
     			taskList.set(k, taskList.get(k+1));
     			taskList.set(k+1, tmp);
 
@@ -226,6 +237,17 @@ public class Util {
 	}
 
 
+	public static Calendar copyCalendar(Calendar date){
+		int 	year = date.get(Calendar.YEAR),
+				month = date.get(Calendar.MONTH)+1,
+				day = date.get(Calendar.DAY_OF_MONTH);
+		Calendar copiedCalendar = Calendar.getInstance();
+		copiedCalendar.set(year, month, day);
+
+		return copiedCalendar;
+	}
+
+
 	private static String getFormatCalendarValue(Calendar date,String split,boolean addZero){
 		if(date == null){
 			return "  "+split+"  "+split+"  ";
@@ -282,8 +304,125 @@ public class Util {
 
 
 
+	public static Calendar createCalendarByStringValue(String date) throws ParseException{
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar calendarDate = Calendar.getInstance();
+		calendarDate.setTime(format.parse(date));
+
+		return calendarDate;
+	}
 
 
+	public static Color createColorByString(String color){
+		color = color.substring(0, 8);
+		int colorCode = Integer.decode(color);
+		int blue = colorCode%(256);
+		int green = (colorCode/256)%(256);
+		int red = (colorCode/(256*256))%(256);
+
+		return  Color.rgb(red, green, blue);
+	}
+
+
+
+
+	/**
+	 * [(code)] selection value の形のものからcodeだけを取り出す
+	 * @param value
+	 * @return
+	 */
+	public static  String decodeSelectionCodeFromSelection(String selectedValue,int lengthOfCode){
+		if(selectedValue == null){
+			return "";
+		}
+		return selectedValue.substring(1,lengthOfCode+1);
+
+	}
+
+
+	/**
+	 * [(code)] selection valueの形の選択表示を作成する
+	 * @param selectedValue
+	 * @return
+	 */
+	public static  String createSelection(AttributeSelectionBean selectedValue){
+		return createSelection(selectedValue.getSelectionCode(), selectedValue.getDispName());
+	}
+
+
+	public static  String createSelection(String code,String value){
+		StringBuilder builder = new StringBuilder();
+		builder.append("[");
+		builder.append(code);
+		builder.append("] ");
+		builder.append(value);
+		return builder.toString();
+	}
+
+
+	public static  String createSelection(StatusBean status){
+		return createSelection(status.getCode(), status.getTitle());
+	}
+
+
+
+	/**
+	 * 指定したURLのfxmlファイルを読み込んだローダーを取得する
+	 * @param url fxmlのURL
+	 * @return
+	 */
+	public static FXMLLoader createProjectFxmlLoader(String url){
+		URL location = ClassLoader.getSystemResource(url);
+        FXMLLoader fxmlLoader = new FXMLLoader(location);
+        fxmlLoader.setRoot( new VBox());
+
+        return fxmlLoader;
+	}
+
+
+
+	public static Color createHighLightColor(Color color){
+		double blue = color.getBlue();
+		double red = color.getRed();
+		double green = color.getGreen();
+
+		Color highLightColor = Color.rgb(
+				Math.min(255, (int)(red*255)+5),
+				Math.min(255, (int)(green*255)+5),
+				Math.min(255, (int)(blue*255)+5));
+
+		return highLightColor;
+	}
+
+	public static Color createClickedColor(Color color){
+
+		int diff = 13;
+		double[] colorValues = {color.getRed(),color.getGreen(),color.getBlue()};
+		double max = colorValues[0];
+		int maxIndex = 0;
+		for(int index=0;index<colorValues.length;index++){
+			if(colorValues[index] > max){
+				maxIndex = index;
+				max = colorValues[index];
+			}
+		}
+		colorValues[maxIndex] += diff/255.0;
+
+		Color clickedColor = Color.rgb(
+				Math.max(0, (int)(colorValues[0]*255)-diff),
+				Math.max(0, (int)(colorValues[1]*255)-diff),
+				Math.max(0, (int)(colorValues[2]*255)-diff));
+
+		return clickedColor;
+	}
+
+
+	public static double getAttributePartWidth(double width){
+		double attributeWidth = Math.min(width*(1-Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH), Constant.MAX_ATTRIBUTE_WIDTH);
+		attributeWidth = Math.max(attributeWidth, Constant.MIN_ATTRIBUTE_WIDTH);
+
+		return attributeWidth;
+	}
 
 
 

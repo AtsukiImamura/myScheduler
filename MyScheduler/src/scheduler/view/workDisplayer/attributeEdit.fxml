@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.control.*?>
+<?import scheduler.common.constant.Constant?>
+<?import scheduler.common.constant.Constant.ATTRIBUTE_TYPE?>
+
+<fx:root type="javafx.scene.layout.FlowPane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.AttributeEditController">
+	<children>
+		<VBox>
+			<HBox>
+				<Label styleClass="title_label">
+					<text>名称</text>
+				</Label>
+				<TextField fx:id="dispNameInput" styleClass="input_basic ,input_textfield ,editor_font"/>
+			</HBox>
+			<HBox>
+				<Label styleClass="title_label">
+					<text>詳細</text>
+				</Label>
+				<TextArea fx:id="detailTextArea" styleClass="input_basic ,input_textarea ,editor_font" prefHeight="120"/>
+			</HBox>
+			<HBox>
+				<Label styleClass="title_label">
+					<text>タイプ</text>
+				</Label>
+				<fx:define>
+				    <ToggleGroup fx:id="raidToggle"/>
+				</fx:define>
+				<RadioButton toggleGroup="$raidToggle" styleClass="radio_button">
+					<text>自由入力</text>
+				</RadioButton>
+				<RadioButton toggleGroup="$raidToggle" styleClass="radio_button">
+					<text>選択</text>
+				</RadioButton>
+			</HBox>
+			<Button onAction="#onRegistButtonClicked" styleClass="regist_button,work_disp_button_base">
+				<text>登録</text>
+			</Button>
+		</VBox>
+	</children>
+</fx:root>

@@ -3,12 +3,14 @@ package scheduler.view.projectDisplayer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import scheduler.bean.ProjectBean;
 import scheduler.bean.StatusBean;
 import scheduler.bean.TAttributeBean;
 import scheduler.common.constant.Constant;
-import scheduler.facade.StatusFacade;
+import scheduler.facade.TAttributeBeanFacade;
 import scheduler.view.AbstractView;
-import scheduler.view.AttributePrimitiveView;
 
 /**
  * 案件の属性部を担うビュークラス
@@ -18,16 +20,49 @@ import scheduler.view.AttributePrimitiveView;
 public class ProjectAttributesView extends AbstractView{
 
 
+	private final Color HOVERED_STROKE_COLOR = Color.rgb(170, 170, 170);
+
+	private final Color CLICKED_STROKE_COLOR = Color.rgb(20, 20, 20);
+
+
 	/** 個別の属性表示用ビュー */
 	private final List<AttributePrimitiveView> primitiveViewList;
 
 	/** 属性リスト */
-	private final List<TAttributeBean>  attributeList;
+	private List<TAttributeBean>  attributeList;
+
+	private final Rectangle rect;
 
 
-	private final StatusBean status;
+	private StatusBean status;
 
-	private final StatusFacade statusFacade;
+	private boolean clicked = false;
+
+	public void setClicked(boolean clicked){
+		this.clicked = clicked;
+		if(clicked){
+			this.onMouseClicked();
+		}else{
+			this.onMouseExited();
+		}
+	}
+
+
+	public void setStatus(StatusBean status){
+		if(status == null){
+			return;
+		}
+		this.status = status;
+		primitiveViewList.forEach(view->{
+			view.setStatus(status);
+		});
+	}
+
+
+	public void redraw(ProjectBean project){
+		this.initAttributeList(project);
+		init();
+	}
 
 	@Override
 	protected void init() {
@@ -35,6 +70,9 @@ public class ProjectAttributesView extends AbstractView{
 		if(attributeList == null || primitiveViewList == null || viewWidth == null){
 			return;
 		}
+
+		this.getChildren().clear();
+		this.primitiveViewList.clear();
 
 		/** 案件名以外の属性に対して案件名の幅をどれだけ増分させて表示するか */
 		double incrementaRate = Constant.ATTRIBUTES_VIEW_INCREMENTAL_RATE_OF_ATTR_NAME;
@@ -48,7 +86,7 @@ public class ProjectAttributesView extends AbstractView{
 			AttributePrimitiveView primitiveView;
 
 			//位置・高さ・幅決め
-			if(attribute.getAttributeCode() == Constant.ATTRIBUTE_CODE_PROJECT_NAME){
+			if(attribute.getAttributeCode().equals(Constant.ATTRIBUTE_CODE_PROJECT_NAME)){
 				primitiveView  = new AttributePrimitiveView(attribute,defaultPrimitiveViewWidth*incrementaRate, this.viewHeight.doubleValue());
 				primitiveView.setTranslateX(0);
 			}else{
@@ -66,22 +104,68 @@ public class ProjectAttributesView extends AbstractView{
 
 
 
+	public void onMouseEntered(){
+		if(clicked){
+			return;
+		}
+		rect.setStroke(HOVERED_STROKE_COLOR);
+//		for(AttributePrimitiveView primitiveView: primitiveViewList){
+//			primitiveView.onMouseEntered();
+//		}
+	}
+
+
+	public void onMouseExited(){
+		if(clicked){
+			return;
+		}
+		rect.setStroke(Color.TRANSPARENT);
+//		for(AttributePrimitiveView primitiveView: primitiveViewList){
+//			primitiveView.onMouseExited();
+//		}
+	}
+
+
+	public void onMouseClicked(){
+		rect.setStroke(CLICKED_STROKE_COLOR);
+//		for(AttributePrimitiveView primitiveView: primitiveViewList){
+//			primitiveView.onClicked();
+//		}
+		clicked = true;
+	}
+
+
+
 	/**
 	 * コンストラクタ
 	 * @param attributes 属性のリスト
 	 * @param height 表示高さ
 	 */
-	public ProjectAttributesView(List<TAttributeBean> attributes,double height){
+	public ProjectAttributesView(ProjectBean project,double height){
 		primitiveViewList = new ArrayList<AttributePrimitiveView>();
-		attributeList = attributes;
-		statusFacade = new StatusFacade();
-		status = statusFacade.findByProjectCode(attributes.get(0).getProjectCode());
+		this.initAttributeList(project);
 
 		this.viewHeight.set(height);
 		this.setViewWidth((1-Constant.DEFAULT_RATE_OF_CALENDAR_WIDTH)*Constant.APP_PREF_WIDTH);
 
+		this.getStyleClass().addAll("project_attributes_view");
+
 		init();
 
+		rect = new Rectangle(this.viewWidth.doubleValue(),this.viewHeight.doubleValue());
+		rect.setFill(Color.TRANSPARENT);
+		rect.setStroke(Color.TRANSPARENT);
+		this.getChildren().add(rect);
+	}
+
+
+	private void initAttributeList(ProjectBean project){
+		attributeList = TAttributeBeanFacade.getInstance().findByProjectCode(project.getProjectCode());
+
+		TAttributeBean projectNameAttr = new TAttributeBean();
+		projectNameAttr.setAttributeCode(Constant.ATTRIBUTE_CODE_PROJECT_NAME);
+		projectNameAttr.setValue(project.getProjectName());
+		attributeList.add(Constant.ATTRIBUTE_INDEX_PROJECT_NAME, projectNameAttr);
 	}
 
 

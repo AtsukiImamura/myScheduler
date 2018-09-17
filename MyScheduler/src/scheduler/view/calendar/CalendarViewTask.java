@@ -8,11 +8,14 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
+import scheduler.bean.StoneBean;
 import scheduler.bean.TaskBean;
 import scheduler.common.constant.Constant;
 import scheduler.common.utils.Util;
+import scheduler.facade.StoneFacade;
 import scheduler.view.AbstractView;
 import scheduler.view.projectDisplayer.TaskPopup;
+import scheduler.view.workDisplayer.TaskDetailController;
 
 /**
  * カレンダーで一つのタスクを保持するビューのクラス。
@@ -21,6 +24,7 @@ import scheduler.view.projectDisplayer.TaskPopup;
  */
 public class CalendarViewTask  extends AbstractView{
 
+	private final StoneFacade stoneFacade;
 
 	/** カレンダーの日のリスト */
 	private final List<CalendarDay> CalendarDayList;
@@ -37,7 +41,6 @@ public class CalendarViewTask  extends AbstractView{
 	/**viewが表すタスク*/
 	private TaskBean task;
 
-
 	/** ビューに表示する開始日 */
 	private Calendar viewStartAt;
 
@@ -51,11 +54,19 @@ public class CalendarViewTask  extends AbstractView{
 	 * @param viewStartAt
 	 * @throws Exception
 	 */
-	public void setViewStartAt(Calendar viewStartAt) throws Exception{
+	public void setViewStartAt(Calendar viewStartAt){
 		//更新
 		this.viewStartAt = viewStartAt;
 
 		//調整を加える
+		ajustNumOfCalendarDays();
+	}
+
+
+	public void setViewPeriod(Calendar viewStartAt,Calendar viewFinishAt){
+		this.viewStartAt = viewStartAt;
+		this.viewFinishAt = viewFinishAt;
+
 		ajustNumOfCalendarDays();
 	}
 
@@ -65,13 +76,19 @@ public class CalendarViewTask  extends AbstractView{
 	 */
 	public void ajustNumOfCalendarDays(){
 		int numOfDuplicatedPeriod = getNumOfDuplicatedPeriod();
+		if(numOfDuplicatedPeriod >= 0){
+			this.setVisible(true);
+		}else{
+			this.setVisible(false);
+			return;
+		}
 		int index = 0;
 		List<Node> deleteChildList = new ArrayList<Node>();
 		for(Node child : this.getChildren()){
 			if(!(child instanceof CalendarDay)){
 				continue;
 			}
-			if(index >=numOfDuplicatedPeriod){
+			if(index >numOfDuplicatedPeriod){
 				//以前より重なる期間が少なくなった場合は無駄なものを削除する
 				deleteChildList.add(child);
 				continue;
@@ -82,8 +99,8 @@ public class CalendarViewTask  extends AbstractView{
 			index ++;
 		}
 		//ビューの持つCalendarDayが必要数に足りていなければ新たに作成する
-		while(index < numOfDuplicatedPeriod){
-			CalendarDay calendarDay = this.getInitializedCalendarDay();
+		while(index <= numOfDuplicatedPeriod){
+			CalendarDay calendarDay = this.getInitializedCalendarDay(stoneColor);
 			calendarDay.setIndex(index);
 			calendarDay.setTranslateX(CalendarDay.DEFAULT_WIDTH*calendarDay.getScaleX()*index);
 			this.getChildren().add(calendarDay);
@@ -96,6 +113,18 @@ public class CalendarViewTask  extends AbstractView{
 
 
 	/**
+	 * 塗りつぶす色をリフレッシュする。stoneColorを変更したときに呼び出す
+	 */
+	private void refreshColor(){
+		for(Node child : this.getChildren()){
+			if(!(child instanceof CalendarDay)){
+				continue;
+			}
+			((CalendarDay)child).setStoneColor(stoneColor);
+		}
+	}
+
+	/**
 	 * このビューの表示対象の期間とタスクの期間の重なっている日数を返す
 	 * @return
 	 */
@@ -103,7 +132,7 @@ public class CalendarViewTask  extends AbstractView{
 		Calendar start = this.getTaskViewStartAt();
 		Calendar finish = this.getTaskViewFinishAt();
 
-		return Util.getAbsOffsetOfDate(start, finish);
+		return Util.getOffsetOfDate(finish, start);
 	}
 
 
@@ -180,9 +209,10 @@ public class CalendarViewTask  extends AbstractView{
 			tmpFinishAt = this.getTaskViewFinishAt();
 		}
 
+
 		int index = 0;
 		while(Util.compareCalendarDate(tmpDate, tmpFinishAt)!=1){
-			CalendarDay calendarDay = getInitializedCalendarDay();
+			CalendarDay calendarDay = getInitializedCalendarDay(stoneColor);
 			calendarDay.setTranslateX(CalendarDay.DEFAULT_WIDTH*calendarDay.getScaleX()*index);
 			calendarDay.setIndex(index);
 
@@ -205,11 +235,11 @@ public class CalendarViewTask  extends AbstractView{
 	 * ただし、index,translateXはあとで登録する必要がある。
 	 * @return
 	 */
-	private CalendarDay getInitializedCalendarDay(){
+	private CalendarDay getInitializedCalendarDay(Color stoneColor){
 		CalendarDay calendarDay = new CalendarDay();
 
 		//カラーリング
-		Color stoneColor = task.getStoneColor() == null ? Color.RED : task.getStoneColor();
+
 		calendarDay.setStoneColor(stoneColor);
 
 		calendarDay.selectedProperty.addListener((ov,oldValue,newValue)->{
@@ -247,6 +277,12 @@ public class CalendarViewTask  extends AbstractView{
 			undisplayPopup();
 		});
 
+		/* クリックされたとき : タスクの詳細を表示する */
+		calendarDay.setOnMouseClicked(event->{
+			TaskDetailController.getInstance().setTask(task);
+			TaskDetailController.getInstance().show();
+		});
+
 		return calendarDay;
 
 	}
@@ -272,10 +308,11 @@ public class CalendarViewTask  extends AbstractView{
 	}
 
 
-
-	//TODO セットするときにはinitする必要があるが、ほかに影響が出るかもしれないので要修正
 	public void setTask(TaskBean task) {
 		this.task = task;
+		stoneColor = findStoneColor(task);
+		ajustNumOfCalendarDays();
+		refreshColor();
 	}
 
 
@@ -284,6 +321,8 @@ public class CalendarViewTask  extends AbstractView{
 	 * @param task このビューが扱うタスク
 	 */
 	public CalendarViewTask(TaskBean task,Calendar viewStartAt,Calendar viewFinishAt){
+
+		stoneFacade = new StoneFacade();
 		this.task = task;
 		CalendarDayList = new ArrayList<CalendarDay>();
 		selectedIndexProperty = new SimpleIntegerProperty();
@@ -292,7 +331,17 @@ public class CalendarViewTask  extends AbstractView{
 		this.viewStartAt = viewStartAt;
 		this.viewFinishAt = viewFinishAt;
 
+		stoneColor = findStoneColor(task);
+
 		init();
 	}
 
+
+	private Color findStoneColor(TaskBean task){
+		String stoneCode = task.getCode();
+		StoneBean stoneBean = stoneFacade.one(stoneCode);
+		stoneColor = stoneBean == null ? Color.RED : stoneBean.getColor();
+
+		return stoneColor;
+	}
 }

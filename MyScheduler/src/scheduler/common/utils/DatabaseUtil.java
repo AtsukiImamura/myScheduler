@@ -27,8 +27,8 @@ import scheduler.common.constant.NameConstant;
 
 public class DatabaseUtil {
 
-    private static int socketTimeout = 12200;
-    private static int connectionTimeout = 1500;
+    private static int socketTimeout = 9000;
+    private static int connectionTimeout = 300;
 
 
     /**
@@ -40,16 +40,22 @@ public class DatabaseUtil {
      * @throws Exception
      */
 	public static JsonArray findData(String requestType,String userCode,String password) throws Exception{
+
+		long start = System.currentTimeMillis();
+		System.out.printf("**** findData start **** %s \n",requestType);
+
 	    HttpPost post = null;
 	    HttpEntity entity = null;
 
 	    HttpClient httpclient = getInitializedHttpClient();
         post = getInitializedHttpPost(requestType, userCode, password,NameConstant.DATABASE_URL_GET_DATA);
 
+        System.out.printf("         execute : %.2f\n",(double)(System.currentTimeMillis() - start));
         HttpResponse response = httpclient.execute(post);
 
+        System.out.printf("         received : %.2f\n",(double)(System.currentTimeMillis() - start));
+
         if(response.getStatusLine().getStatusCode() != 200 ){
-            System.out.println("StatusCode:" + response.getStatusLine().getStatusCode());
             return null;
         }
 
@@ -59,6 +65,7 @@ public class DatabaseUtil {
         	return null;
         }
 
+        System.out.printf("         get json start : %.2f\n",(double)(System.currentTimeMillis() - start));
         String json  = EntityUtils.toString(entity);
 
         JsonObject jsonResponse = (JsonObject) new Gson().fromJson(json, JsonObject.class);
@@ -67,6 +74,7 @@ public class DatabaseUtil {
         EntityUtils.consume(entity);
         post.abort();
 
+        System.out.printf("**** findData finish **** : %.2f\n\n",(double)(System.currentTimeMillis() - start));
         return jsonData;
 
 	}
@@ -104,6 +112,8 @@ public class DatabaseUtil {
 
 
 
+
+
 	private static boolean send(String url,String requestType,String userCode,String password,Map<String,Object> data,List<String> primaryKeys){
 	    HttpEntity entity = null;
 
@@ -123,7 +133,6 @@ public class DatabaseUtil {
 		}
 
         if(response.getStatusLine().getStatusCode() != 200 ){
-            System.out.println("StatusCode:" + response.getStatusLine().getStatusCode());
             return false;
         }
 

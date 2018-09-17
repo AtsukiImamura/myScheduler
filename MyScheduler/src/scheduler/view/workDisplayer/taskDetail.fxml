@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
+<?import scheduler.common.constant.Constant?>
+
+
+<fx:root type="javafx.scene.control.ScrollPane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.TaskDetailController">
+	<VBox styleClass="tab_content_back">
+		<minHeight><Constant fx:constant="WORK_DISP_TAB_PREF_HEIGHT"/></minHeight>
+		<prefWidth><Constant fx:constant="APP_PREF_WIDTH"/></prefWidth>
+		<HBox>
+			<Label styleClass="title_label">
+				<text>案件番号</text>
+			</Label>
+			<Label fx:id="labelProjectCode" styleClass="task_detail_color,code_label,output_basic,displayer_font"/>
+			<Label styleClass="title_label">
+				<text>タスク番号</text>
+			</Label>
+			<Label fx:id="labelTaskCode" styleClass="task_detail_color,code_label,output_basic,displayer_font">
+				<text></text>
+			</Label>
+		</HBox>
+		<HBox>
+			<Label styleClass="title_label">
+				<text>タスク名</text>
+			</Label>
+			<Label fx:id="labelTaskName" styleClass="task_detail_color,output_label,output_basic,displayer_font"/>
+		</HBox>
+		<HBox>
+			<Label styleClass="title_label">
+				<text>詳細</text>
+			</Label>
+			<Label fx:id="labelDetail" styleClass="task_detail_color,output_area,output_basic,displayer_font" prefHeight="150"/>
+		</HBox>
+		<HBox>
+			<Label styleClass="title_label">
+				<text>開始日</text>
+			</Label>
+			<Label fx:id="startDateLabel" styleClass="task_detail_color,date_output_label,output_basic,displayer_font"/>
+			<Label styleClass="title_label">
+				<text>終了日</text>
+			</Label>
+			<Label fx:id="finishDateLabel" styleClass="task_detail_color,date_output_label,output_basic,displayer_font"/>
+		</HBox>
+		<HBox styleClass="buttons_component">
+			<Button fx:id="deleteButton" styleClass="delete_button,work_disp_button_base" onAction="#onDeleteButtonClicked">
+				<text>削除</text>
+			</Button>
+			<Button fx:id="editTaskButton" styleClass="edit_button,work_disp_button_base" onAction="#onEditButtonClicked">
+				<text>編集</text>
+			</Button>
+		</HBox>
+	</VBox>
+</fx:root>

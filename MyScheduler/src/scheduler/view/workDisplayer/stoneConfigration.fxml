@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
+
+
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.ColorConfigController">
+	<children>
+		<HBox>
+			<VBox fx:id="colorListVbox" styleClass="">
+
+			</VBox>
+		</HBox>
+	</children>
+</fx:root>

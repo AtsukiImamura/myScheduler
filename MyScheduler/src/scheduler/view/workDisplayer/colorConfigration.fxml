@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.control.*?>
+
+
+<fx:root type="javafx.scene.layout.HBox" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.ColorConfigController">
+	<children>
+		<VBox>
+			<HBox styleClass="div_color_type_hbox">
+				<Label fx:id="divStoneLabel" styleClass="div_label">
+					<text>ストーンカラー</text>
+				</Label>
+				<Label fx:id="divStatusLabel" styleClass="div_label">
+					<text>ステータスカラー</text>
+				</Label>
+			</HBox>
+
+			<FlowPane fx:id="colorListFlow" styleClass="color_list_box" >
+
+			</FlowPane>
+			<Button fx:id="addColorButton" styleClass="add_color_button" onAction="#onAddColorButtonClicked">
+				<text>追加</text>
+			</Button>
+		</VBox>
+		<FlowPane fx:id="detailPane">
+
+		</FlowPane>
+	</children>
+</fx:root>

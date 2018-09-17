@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+
+
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.ColorEditController">
+	<children>
+		<VBox fx:id="colorEditVBox">
+			<HBox>
+				<Label styleClass="title_label">
+					<text>名称</text>
+				</Label>
+				<TextField  fx:id="editNameForm" styleClass="input_basic ,input_textfield ,editor_font">
+					<text></text>
+				</TextField>
+			</HBox>
+			
+			<HBox>
+				<Label styleClass="title_label">
+					<text>カラー</text>
+				</Label>
+				<Rectangle fx:id="selectedColorRect" width="280" height="37"/>
+				<Button fx:id="colorSelectionButton" onAction="#onSelectColorButtonClicked" styleClass="edit_button,work_disp_button_base">
+					<text>選択</text>
+				</Button>
+			</HBox>
+			<HBox>
+				<Label styleClass="title_label">
+					<text>詳細</text>
+				</Label>
+				<TextArea fx:id="editDetailForm" styleClass="input_basic ,input_textarea ,editor_font" prefHeight="120">
+					<text></text>
+				</TextArea>
+			</HBox>
+			<HBox>
+				<Button fx:id="deleteButton" onAction="#onClearButtonClicked" styleClass="clear_button,work_disp_button_base">
+					<text>クリア</text>
+				</Button>
+				<Button fx:id="deleteButton" onAction="#onRegistButtonClicked" styleClass="regist_button,work_disp_button_base">
+					<text>登録</text>
+				</Button>
+			</HBox>
+		</VBox>
+	</children>
+</fx:root>

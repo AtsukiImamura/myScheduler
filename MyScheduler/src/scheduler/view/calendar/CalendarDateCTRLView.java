@@ -34,6 +34,10 @@ public class CalendarDateCTRLView extends AbstractView{
 	/** 現在から何年前・後まで選択できるようにするか */
 	private static final int RANGE_OF_VIEW_YEAR  =3;
 
+	private static final int YEAR_TO_NEXT = 3;
+
+	private static final int YEAR_FROM_BEFORE = 2;
+
 	/** 年月日選択用 */
 	private final ComboBox<Integer> selectYearBox,selectMonthBox,selectDayBox;
 
@@ -111,19 +115,19 @@ public class CalendarDateCTRLView extends AbstractView{
 
 		selectYearBox = new ComboBox<Integer>();
 		selectYearBox.setPrefSize(110, 35);
-		selectYearBox.setTranslateX(90);
+		selectYearBox.setTranslateX(160);
 		selectYearBox.getStyleClass().add(NameConstant.CALENDAR_DATE_CTRL_SELECT_YEAR_CSS);
 		initSelectYearBox();
 
 		selectMonthBox = new ComboBox<Integer>();
-		selectMonthBox.setPrefSize(70, 35);
-		selectMonthBox.setTranslateX(210);
+		selectMonthBox.setPrefSize(74, 35);
+		selectMonthBox.setTranslateX(280);
 		selectMonthBox.getStyleClass().add(NameConstant.CALENDAR_DATE_CTRL_SELECT_MONTH_CSS);
 		initSelectMonthBox();
 
 		selectDayBox = new ComboBox<Integer> ();
-		selectDayBox.setPrefSize(70, 35);
-		selectDayBox.setTranslateX(290);
+		selectDayBox.setPrefSize(74, 35);
+		selectDayBox.setTranslateX(360);
 		selectDayBox.getStyleClass().add(NameConstant.CALENDAR_DATE_CTRL_SELECT_DAY_CSS);
 		this.setDaysSelection(this.currentDate.get(Calendar.MONTH),true);
 
@@ -161,12 +165,13 @@ public class CalendarDateCTRLView extends AbstractView{
 	 * 年の選択用ボックスを初期化する
 	 */
 	private void initSelectYearBox(){
-		int firstYear = this.currentDate.get(Calendar.YEAR)-RANGE_OF_VIEW_YEAR;
-		int lastYear = this.currentDate.get(Calendar.YEAR)+RANGE_OF_VIEW_YEAR;
+		int firstYear = this.currentDate.get(Calendar.YEAR)-YEAR_FROM_BEFORE;
+		int lastYear = this.currentDate.get(Calendar.YEAR)+YEAR_TO_NEXT;
 		for(int year = firstYear ; year<lastYear ; year++){
 			selectYearBox.getItems().add(year);
 		}
-		selectYearBox.setValue(selectYearBox.getItems().get(this.currentDate.get(Calendar.YEAR)-firstYear));
+		//selectYearBox.setValue(selectYearBox.getItems().get(this.currentDate.get(Calendar.YEAR)-firstYear));
+		selectYearBox.setValue(this.currentDate.get(Calendar.YEAR));
 
 		selectYearBox.getSelectionModel().selectedItemProperty().addListener((r,o,newValue)->{
 			onChangeYear(newValue);
@@ -257,9 +262,9 @@ public class CalendarDateCTRLView extends AbstractView{
 	 * @param selectedValue
 	 */
 	private void onChangeDay(int selectedValue){
-		System.out.printf("\nonChangeDay\n");
-		System.out.println("   currentDate = "+Util.getSlashFormatCalendarValue(currentDate, true));
-		System.out.println("   dayOffset = "+this.dayOffset.intValue());
+//		System.out.printf("\nonChangeDay\n");
+//		System.out.println("   currentDate = "+Util.getSlashFormatCalendarValue(currentDate, true));
+//		System.out.println("   dayOffset = "+this.dayOffset.intValue());
 
 		int currentOffset = this.dayOffset.intValue();
 		int currentDay = this.currentDate.get(Calendar.DAY_OF_MONTH);
@@ -268,8 +273,8 @@ public class CalendarDateCTRLView extends AbstractView{
 		this.dayOffset.set(newOffset);
 
 
-		System.out.println("     --> currentDate = "+Util.getSlashFormatCalendarValue(currentDate, true));
-		System.out.println("     --> dayOffset = "+this.dayOffset.intValue());
+//		System.out.println("     --> currentDate = "+Util.getSlashFormatCalendarValue(currentDate, true));
+//		System.out.println("     --> dayOffset = "+this.dayOffset.intValue());
 	}
 
 
@@ -322,7 +327,7 @@ public class CalendarDateCTRLView extends AbstractView{
 		int day = currentDate.get(Calendar.DAY_OF_MONTH);
 
 		try{
-			selectYearBox.setValue(selectYearBox.getItems().get(year-firstYear)+RANGE_OF_VIEW_YEAR);
+			selectYearBox.setValue(year);
 		}catch(ArrayIndexOutOfBoundsException e){
 
 		}
@@ -376,7 +381,7 @@ public class CalendarDateCTRLView extends AbstractView{
 		forwardWeekButtonImage.setFitWidth(32);
 		forwardWeekButton.setGraphic(forwardWeekButtonImage);
 		forwardWeekButton.setPrefSize(35, 35);
-		forwardWeekButton.setTranslateX(410);
+		forwardWeekButton.setTranslateX(120);
 		forwardWeekButton.getStyleClass().add(NameConstant.CALENDAR_DATE_CTRL_FORWARD_WEEK_CSS);
 		forwardWeekButton.setOnMouseClicked(event->{
 			currentDate.add(Calendar.DAY_OF_MONTH, 7);
@@ -389,7 +394,7 @@ public class CalendarDateCTRLView extends AbstractView{
 		forwardDayButtonImage.setFitWidth(32);
 		forwardDayButton.setGraphic(forwardDayButtonImage);
 		forwardDayButton.setPrefSize(35, 35);
-		forwardDayButton.setTranslateX(370);
+		forwardDayButton.setTranslateX(80);
 		forwardDayButton.getStyleClass().add(NameConstant.CALENDAR_DATE_CTRL_FORWARD_DAY_CSS);
 		forwardDayButton.setOnMouseClicked(event->{
 			currentDate.add(Calendar.DAY_OF_MONTH, 1);

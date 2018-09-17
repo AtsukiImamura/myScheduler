@@ -1,5 +1,7 @@
 package scheduler.view.calendar;
 
+import java.util.Calendar;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
@@ -11,6 +13,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import scheduler.common.constant.Constant;
 import scheduler.view.AbstractView;
 
 /**
@@ -48,12 +51,33 @@ public class CalendarDay extends AbstractView{
 	private int index;
 
 
-	/** （日付表示用）曜日の値 */
-	private int dayOfWeek;
 
+	private Calendar displayDate;
 
-	private int displayDate;
+	public void setDisplayDate(Calendar date,boolean display){
+		this.displayDate = date;
+		switch(date.get(Calendar.DAY_OF_WEEK)){
+		case Calendar.SUNDAY:
+			this.setStoneColor(Constant.CALENDAR_DATE_VIEW_SUNDAY);
+			this.setMouseClickedColor(Constant.CALENDAR_DATE_VIEW_SUNDAY_CLICKED);
+			this.setMouseHoveredColor(Constant.CALENDAR_DATE_VIEW_SUNDAY_HOVERED);
+			break;
+		case Calendar.SATURDAY:
+			this.setStoneColor(Constant.CALENDAR_DATE_VIEW_SATURDAY);
+			this.setMouseClickedColor(Constant.CALENDAR_DATE_VIEW_SATURDAY_CLICKED);
+			this.setMouseHoveredColor(Constant.CALENDAR_DATE_VIEW_SATURDAY_HOVERED);
+			break;
+		default:
+			this.setStoneColor(Constant.CALENDAR_DATE_VIEW_NOMAL);
+			this.setMouseClickedColor(Constant.CALENDAR_DATE_VIEW_NOMAL_CLICKED);
+			this.setMouseHoveredColor(Constant.CALENDAR_DATE_VIEW_NOMAL_HOVERED);
+			break;
+		}
 
+		if(display){
+			displayDateLabel.setText(date.get(Calendar.DAY_OF_MONTH)+"");
+		}
+	}
 
 	private Label displayDateLabel;
 
@@ -93,26 +117,6 @@ public class CalendarDay extends AbstractView{
 		this.index = index;
 	}
 
-	/**
-	 * （日付表示用）日付をセットする
-	 * @param date
-	 */
-	public void setDisplayDate(int date){
-		displayDate = date;
-		if(displayDateLabel !=null){
-			displayDateLabel.setText(date+"");
-		}
-	}
-
-
-
-	public int getDayOfWeek() {
-		return dayOfWeek;
-	}
-
-	public void setDayOfWeek(int dayOfWeek) {
-		this.dayOfWeek = dayOfWeek;
-	}
 
 	public boolean isSelected() {
 		return isSelected;
@@ -184,9 +188,11 @@ public class CalendarDay extends AbstractView{
 	public void setCurrentColor(Color currentColor) {
 		this.currentColor = currentColor;
 		try{
-			((Shape) this.getChildren().get(0)).setFill(currentColor);
+			Shape rect = ((Shape) this.getChildren().get(0));
+			rect.setFill(currentColor);
+			rect.setStroke(currentColor);
 		}catch(IndexOutOfBoundsException e){
-
+			e.printStackTrace();
 		}
 	}
 
@@ -237,15 +243,14 @@ public class CalendarDay extends AbstractView{
 	@Override
 	protected void init(){
 
-		this.setStoneColor(DEFAULT_COLOR);
-		this.setMouseHoveredColor(DEFAULT_MOUSE_HOVER_COLOR);
-		this.setMouseClickedColor(DEFAULT_MOUSE_CLICKED_COLOR);
-
 		//四角形作成・配置
 		Rectangle rect = new Rectangle(DEFAULT_WIDTH,DEFAULT_HEIGHT);
-		rect.setStroke(this.stoneColor);
+		rect.setStroke(DEFAULT_COLOR);
 		rect.setFill(DEFAULT_COLOR);
 		this.getChildren().add(rect);
+
+		this.viewWidth.set(DEFAULT_WIDTH);
+		this.viewHeight.set(DEFAULT_HEIGHT);
 
 
 		//（イベントリスナー）マウスが入ったとき
@@ -277,8 +282,14 @@ public class CalendarDay extends AbstractView{
 		displayDateLabel.setPrefSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
 		displayDateLabel.setAlignment(Pos.CENTER);
 		//重なっても大丈夫なように色は透明にしておく
-		displayDateLabel.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,new CornerRadii(0),new Insets(3))));
+		displayDateLabel.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT,new CornerRadii(0),new Insets(0))));
 		this.getChildren().add(displayDateLabel);
+
+
+
+		this.setStoneColor(DEFAULT_COLOR);
+		this.setMouseHoveredColor(DEFAULT_MOUSE_HOVER_COLOR);
+		this.setMouseClickedColor(DEFAULT_MOUSE_CLICKED_COLOR);
 	}
 
 

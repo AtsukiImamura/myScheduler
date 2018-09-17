@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +28,12 @@ import scheduler.common.utils.DatabaseUtil;
 public abstract class AbstractFacade<T extends DatabaseRelated> {
 
 
-	protected CSVReader csv;
-	protected final static String FILENAME = "";
 
 	public AbstractFacade(){
-		csv = new CSVReader(FILENAME);
+
 	}
+
+
 
 	/**
 	 * 各継承クラスで実装する用
@@ -41,9 +41,16 @@ public abstract class AbstractFacade<T extends DatabaseRelated> {
 	 */
 	public abstract List<T> findAll();
 
+	/*TODO 継承必須にする
+	public abstract void insert(T bean);
+
+	public abstract void update(T bean);
+	*/
+
+
+
 	/**
 	 * 継承先のクラスでこのメソッドを呼び出す
-	 * TODO おそらくcsvは使わないのでＤＢから引き当てるように変更する必要がある。
 	 * @param c
 	 * @return
 	 */
@@ -51,6 +58,7 @@ public abstract class AbstractFacade<T extends DatabaseRelated> {
 
 		JsonArray data = null;
 		try {
+			//データを取ってくる
 			data = DatabaseUtil.findData(requestType, userCode, password);
 		} catch (Exception e2) {
 			e2.printStackTrace();
@@ -93,7 +101,7 @@ public abstract class AbstractFacade<T extends DatabaseRelated> {
 				}
 
 				try {
-					//属性を追加
+					//属性を追加 : どの属性にもStringでsetできるメソッドを持つようにしている
 					Method m = c.getMethod(nameOfSetMethod,String.class);
 					m.invoke(bean, columnValue);
 				} catch (Exception e) {
@@ -106,7 +114,29 @@ public abstract class AbstractFacade<T extends DatabaseRelated> {
 	}
 
 
-	protected void insert(String requestType,String userCode,String password,T bean,List<String> primaryKey) {
+	protected void insert(String userCode,String password,T bean) {
+		Map<String,Object> dataMap = this.getDataMap(bean);
+		List<String> primaryKeys = bean.getPrimaryKeyList();
+		String requestType = bean.getTableName();
+		DatabaseUtil.insert(requestType, userCode, password,dataMap,primaryKeys);
+	}
+
+
+	protected void update(String userCode,String password,T bean){
+		Map<String,Object> dataMap = this.getDataMap(bean);
+		List<String> primaryKeys = bean.getPrimaryKeyList();
+		String requestType = bean.getTableName();
+		DatabaseUtil.update(requestType, userCode, password,dataMap,primaryKeys);
+	}
+
+
+
+	/**
+	 * insert,updateで送信するためのbeanのデータマップを作成する
+	 * @param bean
+	 * @return bean情報を詰めたマップ (key: データベースのカラム名 value: 送信する値 )
+	 */
+	private Map<String,Object> getDataMap(T bean){
 		Field[] fields = bean.getClass().getDeclaredFields();
 		Map<String,Object> dataMap = new HashMap<String,Object>();
 		for(Field field : fields){
@@ -129,17 +159,17 @@ public abstract class AbstractFacade<T extends DatabaseRelated> {
 				PropertyDescriptor prop = new PropertyDescriptor(keyArg, bean.getClass());
 				Method propGetter = prop.getReadMethod();
 				value = propGetter.invoke(bean, (Object[]) null);
-				if(value instanceof Date){
+				if(value instanceof Calendar){
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-					value = sdf.format(((Date)value));
+					value = sdf.format(((Calendar)value).getTime());
 				}
+
+				dataMap.put(key, value);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			dataMap.put(key, value);
 		}
-
-		DatabaseUtil.insert(requestType, userCode, password,dataMap,primaryKey);
+		return dataMap;
 	}
 
 

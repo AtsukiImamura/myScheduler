@@ -100,21 +100,21 @@
 
 
 
-.select_year_box>.combo-box-popup .list-view {
+.select_date_box>.combo-box-popup .list-view {
 	-fx-border-color:#0000ff;
 	-fx-background-color:#a0fff0;
 }
 
-.select_year_box>.combo-box-popup .list-view .list-cell:filled:hover
+.select_date_box>.combo-box-popup .list-view .list-cell:filled:hover
 {
     -fx-background-color: #d6eaff;
 }
-.select_year_box>.combo-box-popup .list-view .list-cell:selected
+.select_date_box>.combo-box-popup .list-view .list-cell:selected
 {
     -fx-background-color: #90b7ff;
 }
 
-.combo-box-base.select_year_box {
+.combo-box-base.select_date_box {
 	-fx-background-color: #a0e4ff;
 	-fx-border-color: #80b4ff;
 }
@@ -129,28 +129,363 @@
 
 }
 
+// --------------------------------
+// 案件登録用
+// --------------------------------
+
+.back_white{
+	-fx-background-color: #ffffff;
+}
+
+.date_output_label{
+	-fx-pref-width: 180;
+	-fx-min-width: 180;
+	-fx-pref-height: 37;
+}
+
+
+.output_label{
+	-fx-alignment: center-left;
+	-fx-pref-height: 38;
+	-fx-min-height: 38;
+	-fx-pref-width: 600;
+}
+
+.output_basic{
+	-fx-background-color: #ffffff;
+	-fx-border-color: #00aeb5;
+	-fx-background-insets: 3 3 3 3;
+	-fx-border-insets: 3 3 3 3;
+	-fx-padding: 2 2 2 12
+
+}
+
+.code_label{
+	-fx-min-width: 210;
+	-fx-pref-width: 210;
+	-fx-min-height: 38;
+	-fx-pref-height: 38;
+}
+
+
+.output_area{
+	-fx-alignment: top-left;
+	-fx-min-width: 600;
+}
+
+.editor_font{
+	-fx-font-size: 17px;
+	-fx-text-fill: #004080;
+}
+
+.displayer_font{
+	-fx-font-size: 17px;
+	-fx-text-fill: #004080;
+}
+
+.title_label{
+	-fx-pref-width:95;
+	-fx-min-width: 90;
+	-fx-pref-height: 45;
+	-fx-padding: 5 5 5 12;;
+	-fx-alignment: top-left;
+}
+
+.input_basic{
+	-fx-border-insets: 3 5 5 3;
+	-fx-background-insets: 3 5 3 3;
+	-fx-border-color:#a050ff;
+	-fx-background-radius: 0;
+	-fx-border-radius: 0;
+}
+
+.input_basic .content{
+	/*-fx-background-color: #fbf4ff;*/
+}
+
+.input_textarea{
+	-fx-pref-width: 600;
+}
+
+.input_textfield{
+	-fx-max-height: 34;
+	-fx-pref-width: 600;
+}
+
+.color_select_combo{
+	-fx-pref-width: 240;
+	fx-min-width: 240;
+	-fx-pref-height: 40;
+}
+
+.project_edit_attribute_selection{
+	-fx-pref-width: 270;
+	-fx-background-insets: 4;
+	-fx-border-insets: 4;
+	-fx-border-insets: 3 6 3 3;
+	-fx-background-insets: 3 6 3 3;
+}
+
+.project_edit_attribute_selection>.combo-box-popup.list-view {
+	-fx-border-color:#fbf4ff;
+	/*-fx-background-color:#fbf4ff;*/
+	-fx-background-color:#ffffff;
+}
+
+
+.project_edit_attribute_selection>.combo-box-popup .list-view .list-cell:filled:hover
+{
+    -fx-background-color: #d6eaff;
+}
+
+
+.combo-box-base.project_edit_attribute_selection {
+	/*-fx-background-color: #fbf4ff;*/
+	-fx-background-color:#ffffff;
+	-fx-border-color: #a050ff;
+}
+
+
+
 
 // --------------------------------
-//　テスト用
+// 案件詳細用
 // --------------------------------
-.test_text_area{
-	-fx-border-insets: 10 10 5 0;
-	-fx-background-insets: 10 10 5 0;
-	-fx-border-color:#a050ff;
-	-fx-background-radius: 3px;
-	-fx-border-radius: 3px;
+
+
+
+
+
+.project_editor_color{
+	/*-fx-background-color: #fbf4ff;*/
 }
 
-.test_text_area .content{
+.project_detail_color{
+	/*-fx-background-color: #f7ffec;*/
+}
+
+.task_editor_color{
 	-fx-background-color: #fbf4ff;
 }
-.test_text_field{
-	-fx-border-insets: 10 10 5 0;
-	-fx-background-insets: 10 10 5 0;
-	-fx-border-color:#a050ff;
-	-fx-background-color: #fbf4ff;
-	-fx-background-radius: 3px;
-	-fx-border-radius: 3px;
+
+.task_detail_color{
+	-fx-background-color: #f7ffec;
+}
+
+.buttons_component{
+	-fx-alignment: center-right;
+	-fx-min-width: 695;
+	-fx-max-width: 695;
+}
+
+.work_disp_button_base{
+	-fx-pref-height: 35;
+	-fx-min-width: 120;
+	-fx-border-insets: 0 3 0 3;
+	-fx-background-insets: 0 3 0 3;
+	-fx-font-size: 18;
+	-fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,2 );
+}
+
+.regist_button:hover{
+	-fx-background-color: #0452bb;
+}
+
+.regist_button{
+	-fx-background-color: #004cb4;
+	-fx-text-fill: #ffffff;
+}
+
+.clear_button:hover{
+	-fx-background-color: #96939d;
+}
+
+.clear_button{
+	-fx-background-color: #928e9a;
+	-fx-text-fill: #ffffff;
+}
+
+.delete_button:hover{
+	-fx-background-color: #96939d;
+	/*-fx-background-color:#dd5600;*/
 
 }
+
+.delete_button{
+	-fx-background-color: #928e9a;
+	/*-fx-background-color:#d95000 ;*/
+	-fx-text-fill: #ffffff;
+	-fx-font-weight: bold;
+}
+
+
+.edit_button:hover{
+	-fx-background-color:#009758;
+}
+
+.edit_button{
+	-fx-background-color: #009253;
+	-fx-text-fill: #ffffff;
+	-fx-font-weight: bold;
+}
+
+
+
+/* ---------------------------
+  タブ関連
+---------------------------- */
+.work_disp_tabs{
+
+}
+.work_disp_tabs .tab-label{
+	-fx-text-alignment: center;
+	-fx-alignment: center;
+	-fx-font-size:17;
+	-fx-pref-width: 105;
+}
+
+.work_disp_tabs .tab{
+	-fx-pref-width: 120;
+	-fx-background-color: #b7e2f0;
+	-fx-text-alignment: center;
+	-fx-alignment: center;
+	-fx-pref-height: 38;
+}
+
+
+.work_disp_tabs .tab:selected{
+	-fx-background-color: #4040c0;
+}
+
+.work_disp_tabs .tab:selected .tab-label {
+	-fx-text-fill: #ffffff;
+}
+
+
+.div_label{
+	-fx-pref-width: 180;
+	-fx-pref-height: 36;
+	-fx-border-color: #c0c0c0;
+	-fx-text-alignment: center;
+	-fx-alignment: center;
+}
+
+.add_color_button{
+	-fx-pref-width: 180;
+	-fx-pref-height: 34;
+	-fx-background-color:#009253;
+	-fx-text-fill: #ffffff;
+	-fx-font-weight: bold;
+}
+
+.add_color_button:hover{
+	-fx-background-color:#009758;
+}
+
+.color_list_box{
+	-fx-padding: 20 0 20 0;
+	-fx-pref-height: 180;
+	-fx-max-height: 220;
+	-fx-pref-width: 650;
+}
+
+.div_color_type_hbox{
+	-fx-padding: 10 0 0 0;
+}
+
+.attr_detail_selection_label{
+	-fx-pref-width:240;
+	-fx-pref-height: 33;
+	-fx-background-color: #fffff0;
+	-fx-padding: 0 0 0 7;
+	-fx-alignment: center-left;
+}
+
+.attr_detail_selection_input{
+	-fx-pref-width:240;
+	-fx-pref-height: 33;
+}
+
+
+.attr_selection_vbox{
+	-fx-padding: 0 0 0 20;
+}
+
+.attr_selection_button_base{
+	-fx-pref-width: 60;
+	-fx-pref-height: 33;
+}
+
+
+.attr_selection_edit_button{
+	-fx-background-color: #aed4ef;
+	-fx-text-fill: #000000;
+}
+
+.attr_selection_edit_button:hover{
+	-fx-background-color: #b6dcf5;
+}
+
+.attr_selection_regist_button{
+	-fx-background-color: #004cb4;
+	-fx-text-fill: #ffffff;
+}
+
+.attr_selection_regist_button:hover{
+	-fx-background-color: #0755bf;
+}
+
+.attr_selection_add_button{
+		-fx-background-color: #f1da7b;
+}
+
+.attr_selection_delete_button{
+	-fx-background-color: #ffcec4;
+}
+
+.attr_selection_delete_button:hover{
+	-fx-background-color: #ffd4cc;
+}
+
+.attr_selection_row{
+	-fx-padding: 2 0 2 0;
+	-fx-spacing: 5;
+}
+
+.color_attribute_row{
+	-fx-padding: 0 0 0 7;
+}
+
+.color_attribute_row:hover{
+
+}
+
+
+
+.project_view:hover{
+
+
+}
+
+.project_attributes_view:hover{
+
+}
+
+.attributes_config_disp_row{
+	-fx-padding: 5;
+}
+
+.tab_content_back{
+	-fx-background-color: #f2f9ff;
+	-fx-padding: 20 5 5 0;
+}
+
+.radio_button{
+	-fx-pref-height: 38;
+	-fx-pref-width: 110;
+	-fx-padding: 2 0 0 0;
+}
+
+
+
 

@@ -1,13 +1,28 @@
 package scheduler.bean;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
+import scheduler.common.constant.Constant.ATTRIBUTE_TYPE;
 import scheduler.common.constant.NameConstant;
 
-public class MAttributeBean implements DatabaseRelated{
+
+/**
+ * （マスタ）属性
+ * @author ohmoon
+ *
+ */
+public class MAttributeBean extends DatabaseRelated{
 
 	public String getTableName(){
 		return NameConstant.TABLE_NAME_M_ATTRIBUTES;
+	}
+
+
+	public List<String> getPrimaryKeyList(){
+		 List<String> primaryKeys = new ArrayList<String>();
+		 primaryKeys.add("ATTR_CODE");
+		 return primaryKeys;
 	}
 
 	/**
@@ -23,16 +38,8 @@ public class MAttributeBean implements DatabaseRelated{
 	private String detail;
 
 	/**カスタマイズタイプ*/
-	private int costamaizeType;
+	private ATTRIBUTE_TYPE costamaizeType;
 
-	/**タスク作成日時*/
-	private Date createdAt;
-
-	/**タスク変更日時*/
-	private Date changedAt;
-
-	/**タスク変更者*/
-	private Date changedBy;
 
 
 	public String getAttrCode() {
@@ -59,38 +66,16 @@ public class MAttributeBean implements DatabaseRelated{
 		this.detail = detail;
 	}
 
-	public int getCostamaizeType() {
+	public ATTRIBUTE_TYPE getCostamaizeType() {
 		return costamaizeType;
 	}
 
-	public void setCostamaizeType(int costamaizeType) {
+	public void setCostamaizeType(ATTRIBUTE_TYPE costamaizeType) {
 		this.costamaizeType = costamaizeType;
 	}
 
-	public Date getCreatedAt() {
-		return createdAt;
+	public void setCostamaizeType(String costamaizeTypeName) {
+		this.costamaizeType = ATTRIBUTE_TYPE.findByCode(costamaizeTypeName);
 	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public Date getChangedAt() {
-		return changedAt;
-	}
-
-	public void setChangedAt(Date changedAt) {
-		this.changedAt = changedAt;
-	}
-
-	public Date getChangedBy() {
-		return changedBy;
-	}
-
-	public void setChangedBy(Date changedBy) {
-		this.changedBy = changedBy;
-	}
-
-
 
 }

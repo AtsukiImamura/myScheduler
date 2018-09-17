@@ -1,21 +1,30 @@
 package scheduler.bean;
 
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
-import javafx.scene.paint.Color;
 import scheduler.common.constant.NameConstant;
+import scheduler.common.utils.Util;
 
 /**
  * タスクを管理するビーン
  * @author ohmoon
  *
  */
-public class TaskBean  implements DatabaseRelated{
+public class TaskBean  extends DatabaseRelated{
 
 	public String getTableName(){
 		return NameConstant.TABLE_NAME_T_TASK;
 	}
 
+	public List<String> getPrimaryKeyList(){
+		 List<String> primaryKeys = new ArrayList<String>();
+		 primaryKeys.add("PROJECT_CODE");
+		 primaryKeys.add("TASK_CODE");
+		 return primaryKeys;
+	}
 
 
 	/** タスクコード */
@@ -31,25 +40,14 @@ public class TaskBean  implements DatabaseRelated{
 	private Calendar finishAt;
 
 	/** 名称 */
-	private String projectName;
+	private String taskName;
 
 	/** 詳細 */
-	private String projectDetail;
+	private String detail;
 
 	/** ストーンカラー */
-	private Color stoneColor;
+	private String stoneCode;
 
-	/**タスク作成日時*/
-	private Calendar createdAt;
-
-	/** タスク作成者 */
-	private String createdBy;
-
-	/**タスク変更日時*/
-	private Calendar changedAt;
-
-	/**タスク変更者*/
-	private Calendar changedBy;
 
 	public String getProjectCode() {
 		return projectCode;
@@ -75,6 +73,10 @@ public class TaskBean  implements DatabaseRelated{
 		this.startAt = startAt;
 	}
 
+	public void setStartAt(String startAt) throws ParseException {
+		this.startAt = Util.createCalendarByStringValue(startAt);
+	}
+
 	public Calendar getFinishAt() {
 		return finishAt;
 	}
@@ -83,61 +85,40 @@ public class TaskBean  implements DatabaseRelated{
 		this.finishAt = finishAt;
 	}
 
-	public String getProjectName() {
-		return projectName;
+	public void setFinishAt(String finishAt) throws ParseException {
+		this.finishAt = Util.createCalendarByStringValue(finishAt);
 	}
 
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
+
+	public String getTaskName() {
+		return taskName;
 	}
 
-	public String getProjectDetail() {
-		return projectDetail;
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
 
-	public void setProjectDetail(String projectDetail) {
-		this.projectDetail = projectDetail;
+	public String getDetail() {
+		return this.detail;
 	}
 
-	public Color getStoneColor() {
-		return stoneColor;
+	public void setDetail(String detail) {
+		this.detail = detail;
 	}
 
-	public void setStoneColor(Color stoneColor) {
-		this.stoneColor = stoneColor;
+	public String getCode() {
+		return stoneCode;
 	}
 
-	public Calendar getCreatedAt() {
-		return createdAt;
+	public String isStoneCode(){
+		return stoneCode;
 	}
 
-	public void setCreatedAt(Calendar createdAt) {
-		this.createdAt = createdAt;
+	public void setStoneCode(String stoneCode) {
+		this.stoneCode = stoneCode;
 	}
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
 
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Calendar getChangedAt() {
-		return changedAt;
-	}
-
-	public void setChangedAt(Calendar changedAt) {
-		this.changedAt = changedAt;
-	}
-
-	public Calendar getChangedBy() {
-		return changedBy;
-	}
-
-	public void setChangedBy(Calendar changedBy) {
-		this.changedBy = changedBy;
-	}
 
 	/**
 	 * 指定した日付がタスクの開始日から終了日の間にあるかどうかを返す
@@ -145,7 +126,9 @@ public class TaskBean  implements DatabaseRelated{
 	 * @return
 	 */
 	public boolean isInPeriod(Calendar date){
-		if(date.after(startAt) && date.before(finishAt)){
+
+		if(Util.compareCalendarDate(date, startAt) > 0
+				&& Util.compareCalendarDate(date, finishAt) < 0){
 			return true;
 		}else{
 			return false;

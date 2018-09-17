@@ -1,6 +1,7 @@
 package scheduler.bean;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import scheduler.common.constant.NameConstant;
 
@@ -9,12 +10,30 @@ import scheduler.common.constant.NameConstant;
  * @author ohmoon
  *
  */
-public class TAttributeBean  implements DatabaseRelated{
+public class TAttributeBean  extends DatabaseRelated{
+
+
+	public TAttributeBean(String projectCode,String attrCode){
+		this.projectCode = projectCode;
+		this.attributeCode = attrCode;
+	}
+
+	public TAttributeBean(){
+
+	}
+
 
 	public String getTableName(){
 		return NameConstant.TABLE_NAME_T_ATTRIBUTES;
 	}
 
+
+	public List<String> getPrimaryKeyList(){
+		 List<String> primaryKeys = new ArrayList<String>();
+		 primaryKeys.add("PROJECT_CODE");
+		 primaryKeys.add("ATTRIBUTE_CODE");
+		 return primaryKeys;
+	}
 
 	/*
 	 * 	案件番号	|	PROJECT_CODE	|	String
@@ -42,18 +61,6 @@ public class TAttributeBean  implements DatabaseRelated{
 
 	/** 表示順 */
 	private int dispOrder;
-
-	/**タスク作成日時*/
-	private Date createdAt;
-
-	/** タスク作成者 */
-	private String createdBy;
-
-	/**タスク変更日時*/
-	private Date changedAt;
-
-	/**タスク変更者*/
-	private Date changedBy;
 
 	public String getProjectCode() {
 		return projectCode;
@@ -95,40 +102,8 @@ public class TAttributeBean  implements DatabaseRelated{
 		this.dispOrder = dispOrder;
 	}
 
-	public Date getCreatedAt() {
-		return createdAt;
+	public void setDispOrder(String dispOrder) throws Exception{
+		this.dispOrder = Integer.parseInt(dispOrder);
 	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Date getChangedAt() {
-		return changedAt;
-	}
-
-	public void setChangedAt(Date changedAt) {
-		this.changedAt = changedAt;
-	}
-
-	public Date getChangedBy() {
-		return changedBy;
-	}
-
-	public void setChangedBy(Date changedBy) {
-		this.changedBy = changedBy;
-	}
-
-
-
-
 
 }

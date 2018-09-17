@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.control.*?>
+
+<fx:root type="javafx.scene.layout.FlowPane" xmlns:fx="http://javafx.com/fxml/1" fx:controller="scheduler.view.workDisplayer.AttributeDetailController">
+	<children>
+		<VBox fx:id="infoVBox">
+			<HBox>
+				<Label styleClass="title_label">
+					<text>名称</text>
+				</Label>
+				<Label fx:id="dispNameLabel" styleClass="project_detail_color,proejct_detail_color,output_label,output_basic,displayer_font" prefWidth="450">
+					<text></text>
+				</Label>
+			</HBox>
+			<HBox>
+				<Label styleClass="title_label">
+					<text>詳細</text>
+				</Label>
+				<Label fx:id="dispDetailLabel" styleClass="project_detail_color,output_area,output_basic,displayer_font" prefHeight="120" prefWidth="450">
+					<text></text>
+				</Label>
+			</HBox>
+			<Button onAction="#onDeleteButtonClicked" styleClass="delete_button,work_disp_button_base">
+				<text>削除</text>
+			</Button>
+		</VBox>
+		<VBox styleClass="attr_selection_vbox">
+			<Label>
+				<text>選択肢</text>
+			</Label>
+			<FlowPane fx:id="selectionPane">
+
+			</FlowPane>
+			<Button fx:id="addSelectionButton">
+				<text>追加</text>
+			</Button>
+		</VBox>
+	</children>
+</fx:root>
